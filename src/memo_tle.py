@@ -145,8 +145,8 @@ Satellite data structure
 PosVel
 - input: date and time
 - output: (x,y,z) position in km and (Vx,Vy,Vz) velocity in km per sec
--- (from 2009-01-01 to 2019-08-19) observation
--- (after 2019-08-19) prediction based on SGP4
+-- (from 2009-01-01 to 2019-08-19) SGP4
+-- (after 2019-08-19) SGP4 prediction based on the TLE data on 2019 Aug 19
 """
 class SatModel:
     def __init__(self, TLEData):
