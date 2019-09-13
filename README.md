@@ -11,10 +11,10 @@ This codebase provides an open-source spatio-temporal model to help analyze the 
 Background and funding
 ======================
 
-**globalsat** has been collaboratively developed by researchers at the Univeristy of Cambridge, University of Oxford and British Antartic Survey. Funding has been provides by UKRI's Engineering and Physical Sciences Research Council (EPSRC).
+**globalsat** has been collaboratively developed by researchers at the Univeristy of Cambridge, University of Oxford and British Antartic Survey. Funding has been provided by UKRI's Engineering and Physical Sciences Research Council (EPSRC). D. Seki has been supported by Overseas Challenge Program for Young Researchers provided by JSPS.
 
 Contributors
 ============
 - Edward J. Oughton (Oxford)
-- Daikichi Seki (Cambridge)
+- Daikichi Seki (Cambridge/Kyoto University)
 - Richard Horne (British Antartic Survey)
