@@ -59,8 +59,8 @@ for i in range(0,len(LEOSatsId)):
         +'/NORAD_CAT_ID/'+str(LEOSatId)+'/'\
         +'orderby/EPOCH asc/format/tle'
     IdPssQury = {
-        'identity': 'seki@kwasan.kyoto-u.ac.jp',
-        'password': 'tepWag-zehryw-rizcy8',
+        'identity': '',
+        'password': '',
         'query': LEOUrl
     }
     response = requests.post('https://www.space-track.org/ajaxauth/login', data=IdPssQury)
