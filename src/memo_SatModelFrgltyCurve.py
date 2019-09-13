@@ -90,7 +90,6 @@ F(a) = PHI(ln(a/Ce)/Ze)
 - Ze: free parameter 2
 - PHI: standard normal cumulative distribution function
 
-author: D. Seki (2019 Sep 12)
 """
 def Frglty(a, Ce, Ze):
     return norm.cdf(np.log(a/Ce)/Ze)
