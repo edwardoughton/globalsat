@@ -16,21 +16,42 @@ SatModel: Satellite data structure
 - input: TLE data
 - output: data structure
 
-physical_quantity
+SatModel.physical_quantity: function to get sat position
 - input: date and time
 - output: (x,y,z) position in km, (Vx,Vy,Vz) velocity in km per sec, and time.
--- cooridination is TEME (True equator and mean equinox of date)
--- (before 2009-01-01) SGP4 prediction based on TLE data on 2009 Jan 01
--- (from 2009-01-01 to 2019-08-19) SGP4
--- (after 2019-08-19) SGP4 prediction based on TLE data on 2019 Aug 19
+-- cooridination is TEME (True Equator and Mean Equinox of date) and ITRS (International Terrestrial Reference System)
+-- (before 1986-01-01) SGP4 prediction based on TLE data on 1986 Jan 01
+-- (from 1986-01-01 to 2019-09-06) SGP4
+-- (after 2019-09-06) SGP4 prediction based on TLE data on 2019 Sep 06
 
-example
+SatModel.Fragility curve fragility curve
+F(a) = PHI(ln(a/Ce)/Ze)
+- a: event severity (e.g. age, total ionizing dose)
+- Ce: free parameter 1
+- Ze: free parameter 2
+- PHI: standard normal cumulative distribution function
+
+
+[example]
 
 > tmpsat = SatModel(TLEdatum)
+> dumtime = datetime.datetime(2010,6,21,20,51,28)
 > tmpsatPosVelTime = tmpsat.physical_quantity(dumtime)
 > SunPos = get_sun(astrotime.Time(dumtime))
 
 Then, compare SunPos with tmpsatPosVelTime['pos_itrs'].gcrs
+
+
+[memo]
+
+RA angle: right ascension
+DEC angle: declination
+ITRS (International Terrestrial Reference System):
+- x-axis: intersection btwn IERS reference meridian (Greenwich) and equator
+- z-axis: referenced polar rotation axis
+GCRS (Geocentric Celestial Reference System):
+- x-axis: vernal equinox (J2000 FK5?)
+- z-axis: perpendicular to Sun-Earth ecliptic plane
 
 """
 class SatModel:
@@ -78,33 +99,10 @@ class SatModel:
 
         return {'time':Datetime,
                 'pos_teme': pos_teme,
-                'vel_teme': vel_teme,
                 'pos_itrs': pos_itrs,
+                'vel_teme': vel_teme,
                 }
 
-"""
-Fragility curve
-F(a) = PHI(ln(a/Ce)/Ze)
-- a: event severity
-- Ce: free parameter 1
-- Ze: free parameter 2
-- PHI: standard normal cumulative distribution function
+    def Frglty(a, Ce, Ze):
+        return norm.cdf(np.log(a/Ce)/Ze)
 
-"""
-def Frglty(a, Ce, Ze):
-    return norm.cdf(np.log(a/Ce)/Ze)
-
-
-"""
-MEMO
-
-RA angle: right ascension
-DEC angle: declination
-ITRS (International Terrestrial Reference System):
-- x-axis: intersection btwn IERS reference meridian (Greenwich) and equator
-- z-axis: referenced polar rotation axis
-GCRS (Geocentric Celestial Reference System):
-- x-axis: vernal equinox (J2000 FK5?)
-- z-axis: perpendicular to Sun-Earth ecliptic plane
-
-"""
