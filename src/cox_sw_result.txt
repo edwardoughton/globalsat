@@ -1,0 +1,400 @@
+
+
+
+[log, 1d, all, pr100, pr60_100]
+Convergence completed after 6 iterations.
+<lifelines.CoxTimeVaryingFitter: fitted with 3322664 periods, 867 subjects, 63 events>
+         event col = 'event'
+number of subjects = 867
+ number of periods = 3322664
+  number of events = 63
+    log-likelihood = -384.51
+  time fit was run = 2019-10-15 13:49:31 UTC
+
+---
+          coef exp(coef)  se(coef)     z      p  -log2(p)  lower 0.95  upper 0.95
+pr100     5.55    257.59      1.18  4.71 <0.005     18.66        3.24        7.86
+pr60_100 -3.99      0.02      0.86 -4.63 <0.005     18.06       -5.68       -2.30
+---
+Log-likelihood ratio test = 17.48 on 2 df, -log2(p)=12.61
+
+
+
+[log, 1d, all, sbtrct]
+Convergence completed after 6 iterations.
+<lifelines.CoxTimeVaryingFitter: fitted with 3322664 periods, 867 subjects, 63 events>
+         event col = 'event'
+number of subjects = 867
+ number of periods = 3322664
+  number of events = 63
+    log-likelihood = -378.52
+  time fit was run = 2019-10-15 13:44:32 UTC
+
+---
+          coef exp(coef)  se(coef)     z      p  -log2(p)  lower 0.95  upper 0.95
+el2      -0.05      0.95      0.33 -0.15   0.88      0.18       -0.70        0.60
+pr100     5.71    302.28      1.53  3.74 <0.005     12.40        2.72        8.71
+pr10_30  -0.19      0.82      2.02 -0.10   0.92      0.11       -4.16        3.77
+pr1_5    -0.50      0.61      0.56 -0.89   0.37      1.43       -1.60        0.60
+pr30_50   0.36      1.44      1.96  0.19   0.85      0.23       -3.47        4.20
+pr50_60   1.04      2.83      0.85  1.23   0.22      2.20       -0.62        2.70
+pr5_10   -1.36      0.26      0.97 -1.40   0.16      2.63       -3.25        0.54
+pr60_100 -3.78      0.02      1.17 -3.23 <0.005      9.64       -6.07       -1.48
+---
+Log-likelihood ratio test = 29.46 on 8 df, -log2(p)=11.89
+
+
+
+
+
+
+
+
+[log, 1d, all, pr100, pr60]
+Convergence completed after 5 iterations.
+<lifelines.CoxTimeVaryingFitter: fitted with 3336733 periods, 868 subjects, 63 events>
+         event col = 'event'
+number of subjects = 868
+ number of periods = 3336733
+  number of events = 63
+    log-likelihood = -385.20
+  time fit was run = 2019-10-15 13:10:15 UTC
+
+---
+       coef exp(coef)  se(coef)     z      p  -log2(p)  lower 0.95  upper 0.95
+pr60  -7.83      0.00      1.88 -4.15 <0.005     14.90      -11.52       -4.13
+pr100  9.56  14127.68      2.24  4.27 <0.005     15.62        5.17       13.95
+---
+Log-likelihood ratio test = 16.99 on 2 df, -log2(p)=12.26
+
+
+[log, 1d, all, pr100, pr60, pr1]
+Convergence completed after 5 iterations.
+<lifelines.CoxTimeVaryingFitter: fitted with 3336733 periods, 868 subjects, 63 events>
+         event col = 'event'
+number of subjects = 868
+ number of periods = 3336733
+  number of events = 63
+    log-likelihood = -383.23
+  time fit was run = 2019-10-15 13:12:07 UTC
+
+---
+       coef exp(coef)  se(coef)     z      p  -log2(p)  lower 0.95  upper 0.95
+pr60  -7.61      0.00      2.01 -3.78 <0.005     12.63      -11.56       -3.66
+pr100  9.93  20594.79      2.38  4.17 <0.005     14.98        5.26       14.60
+pr1   -0.83      0.44      0.42 -1.96   0.05      4.33       -1.66       -0.00
+---
+Log-likelihood ratio test = 20.92 on 3 df, -log2(p)=13.16
+
+
+
+
+
+
+
+
+
+
+
+
+[log, 1d, all, pr1]
+
+Convergence completed after 5 iterations.
+<lifelines.CoxTimeVaryingFitter: fitted with 3336733 periods, 868 subjects, 63 events>
+         event col = 'event'
+number of subjects = 868
+ number of periods = 3336733
+  number of events = 63
+    log-likelihood = -391.97
+  time fit was run = 2019-10-15 13:06:12 UTC
+
+---
+     coef exp(coef)  se(coef)     z    p  -log2(p)  lower 0.95  upper 0.95
+pr1 -0.62      0.54      0.34 -1.82 0.07      3.86       -1.28        0.05
+---
+Log-likelihood ratio test = 3.45 on 1 df, -log2(p)=3.98
+
+
+[log, 1d, all, el2]
+Convergence completed after 4 iterations.
+<lifelines.CoxTimeVaryingFitter: fitted with 3336733 periods, 868 subjects, 63 events>
+         event col = 'event'
+number of subjects = 868
+ number of periods = 3336733
+  number of events = 63
+    log-likelihood = -393.47
+  time fit was run = 2019-10-15 13:06:59 UTC
+
+---
+     coef exp(coef)  se(coef)    z    p  -log2(p)  lower 0.95  upper 0.95
+el2  0.20      1.23      0.31 0.66 0.51      0.97       -0.40        0.81
+---
+Log-likelihood ratio test = 0.44 on 1 df, -log2(p)=0.98
+
+
+[log, 1d, all, pr5]
+Convergence completed after 5 iterations.
+<lifelines.CoxTimeVaryingFitter: fitted with 3336733 periods, 868 subjects, 63 events>
+         event col = 'event'
+number of subjects = 868
+ number of periods = 3336733
+  number of events = 63
+    log-likelihood = -391.89
+  time fit was run = 2019-10-15 13:07:34 UTC
+
+---
+     coef exp(coef)  se(coef)     z    p  -log2(p)  lower 0.95  upper 0.95
+pr5 -0.44      0.64      0.24 -1.85 0.06      3.97       -0.91        0.03
+---
+Log-likelihood ratio test = 3.60 on 1 df, -log2(p)=4.11
+
+
+
+
+[log, 1d, all, pr10]
+Convergence completed after 4 iterations.
+<lifelines.CoxTimeVaryingFitter: fitted with 3336733 periods, 868 subjects, 63 events>
+         event col = 'event'
+number of subjects = 868
+ number of periods = 3336733
+  number of events = 63
+    log-likelihood = -392.84
+  time fit was run = 2019-10-15 13:08:06 UTC
+
+---
+      coef exp(coef)  se(coef)     z    p  -log2(p)  lower 0.95  upper 0.95
+pr10 -0.31      0.74      0.24 -1.28 0.20      2.32       -0.77        0.16
+---
+Log-likelihood ratio test = 1.71 on 1 df, -log2(p)=2.39
+
+
+
+
+
+[log, 1d, all, pr30]
+Convergence completed after 4 iterations.
+<lifelines.CoxTimeVaryingFitter: fitted with 3336733 periods, 868 subjects, 63 events>
+         event col = 'event'
+number of subjects = 868
+ number of periods = 3336733
+  number of events = 63
+    log-likelihood = -393.58
+  time fit was run = 2019-10-15 13:08:33 UTC
+
+---
+      coef exp(coef)  se(coef)     z    p  -log2(p)  lower 0.95  upper 0.95
+pr30 -0.12      0.89      0.25 -0.46 0.65      0.63       -0.60        0.37
+---
+Log-likelihood ratio test = 0.22 on 1 df, -log2(p)=0.64
+
+
+
+
+
+[log, 1d, all, pr50]
+
+Convergence completed after 3 iterations.
+<lifelines.CoxTimeVaryingFitter: fitted with 3336733 periods, 868 subjects, 63 events>
+         event col = 'event'
+number of subjects = 868
+ number of periods = 3336733
+  number of events = 63
+    log-likelihood = -393.69
+  time fit was run = 2019-10-15 13:09:03 UTC
+
+---
+      coef exp(coef)  se(coef)     z    p  -log2(p)  lower 0.95  upper 0.95
+pr50 -0.02      0.98      0.28 -0.07 0.94      0.09       -0.57        0.53
+---
+Log-likelihood ratio test = 0.01 on 1 df, -log2(p)=0.09
+
+
+[log, 1d, all, pr60]
+Convergence completed after 4 iterations.
+<lifelines.CoxTimeVaryingFitter: fitted with 3336733 periods, 868 subjects, 63 events>
+         event col = 'event'
+number of subjects = 868
+ number of periods = 3336733
+  number of events = 63
+    log-likelihood = -393.64
+  time fit was run = 2019-10-15 13:04:13 UTC
+
+---
+      coef exp(coef)  se(coef)     z    p  -log2(p)  lower 0.95  upper 0.95
+pr60 -0.09      0.91      0.31 -0.31 0.76      0.40       -0.69        0.51
+---
+Log-likelihood ratio test = 0.09 on 1 df, -log2(p)=0.40
+
+
+
+
+
+[log, 1day, all, pr100]
+
+Convergence completed after 3 iterations.
+<lifelines.CoxTimeVaryingFitter: fitted with 3336733 periods, 868 subjects, 63 events>
+         event col = 'event'
+number of subjects = 868
+ number of periods = 3336733
+  number of events = 63
+    log-likelihood = -393.63
+  time fit was run = 2019-10-15 13:03:41 UTC
+
+---
+       coef exp(coef)  se(coef)    z    p  -log2(p)  lower 0.95  upper 0.95
+pr100  0.13      1.14      0.37 0.35 0.73      0.46       -0.59        0.84
+---
+Log-likelihood ratio test = 0.12 on 1 df, -log2(p)=0.45
+
+
+[log, 1days, all]
+
+Convergence completed after 6 iterations.
+<lifelines.CoxTimeVaryingFitter: fitted with 3336733 periods, 868 subjects, 63 events>
+         event col = 'event'
+number of subjects = 868
+ number of periods = 3336733
+  number of events = 63
+    log-likelihood = -378.83
+  time fit was run = 2019-10-15 12:59:45 UTC
+
+---
+       coef exp(coef)  se(coef)     z      p  -log2(p)  lower 0.95  upper 0.95
+el2   -0.14      0.87      0.33 -0.41   0.68      0.55       -0.78        0.51
+pr1   -0.60      0.55      0.65 -0.92   0.36      1.49       -1.86        0.67
+pr10  -2.82      0.06      6.45 -0.44   0.66      0.59      -15.47        9.83
+pr100  9.92  20324.15      3.44  2.89 <0.005      8.01        3.19       16.65
+pr30   6.69    804.21      9.07  0.74   0.46      1.12      -11.09       24.47
+pr5   -1.11      0.33      2.87 -0.39   0.70      0.52       -6.73        4.52
+pr50  -1.70      0.18      6.14 -0.28   0.78      0.35      -13.73       10.33
+pr60  -8.93      0.00      2.58 -3.46 <0.005     10.85      -13.99       -3.87
+---
+Log-likelihood ratio test = 29.73 on 8 df, -log2(p)=12.05
+
+
+[norm, 1days, cycle23]
+
+	Convergence completed after 12 iterations.
+	<lifelines.CoxTimeVaryingFitter: fitted with 1581412 periods, 322 subjects, 30 events>
+			 event col = 'event'
+	number of subjects = 322
+	 number of periods = 1581412
+	  number of events = 30
+		log-likelihood = -156.05
+	  time fit was run = 2019-10-15 05:04:09 UTC
+
+	---
+		   coef exp(coef)  se(coef)     z    p  -log2(p)  lower 0.95  upper 0.95
+	el2   -0.00      1.00      0.00 -1.27 0.21      2.28       -0.01        0.00
+	pr1    0.13      1.14      0.06  2.17 0.03      5.05        0.01        0.25
+	pr10   0.88      2.41      0.42  2.11 0.04      4.83        0.06        1.70
+	pr100 -0.09      0.92      0.18 -0.48 0.63      0.66       -0.45        0.27
+	pr30  -0.45      0.64      0.42 -1.09 0.28      1.86       -1.27        0.36
+	pr5   -0.79      0.45      0.33 -2.43 0.02      6.06       -1.43       -0.15
+	pr50   0.12      1.13      0.25  0.48 0.63      0.66       -0.38        0.62
+	pr60   0.17      1.19      0.21  0.81 0.42      1.26       -0.24        0.59
+	---
+	Log-likelihood ratio test = 14.19 on 8 df, -log2(p)=3.70<Paste>
+
+
+[norm, 7days, cycle23]
+
+	Convergence completed after 12 iterations.
+	<lifelines.CoxTimeVaryingFitter: fitted with 226049 periods, 322 subjects, 30 events>
+			 event col = 'event'
+	number of subjects = 322
+	 number of periods = 226049
+	  number of events = 30
+		log-likelihood = -156.16
+	  time fit was run = 2019-10-15 05:01:44 UTC
+
+	---
+		   coef exp(coef)  se(coef)     z    p  -log2(p)  lower 0.95  upper 0.95
+	el2   -0.00      1.00      0.00 -1.27 0.20      2.30       -0.01        0.00
+	pr1    0.13      1.14      0.06  2.23 0.03      5.28        0.02        0.25
+	pr10   0.91      2.48      0.42  2.18 0.03      5.10        0.09        1.72
+	pr100 -0.10      0.91      0.18 -0.54 0.59      0.76       -0.45        0.26
+	pr30  -0.50      0.61      0.41 -1.21 0.23      2.15       -1.31        0.31
+	pr5   -0.81      0.45      0.32 -2.49 0.01      6.29       -1.44       -0.17
+	pr50   0.15      1.16      0.25  0.59 0.56      0.84       -0.34        0.64
+	pr60   0.19      1.21      0.21  0.91 0.36      1.47       -0.22        0.60
+	---
+	Log-likelihood ratio test = 13.97 on 8 df, -log2(p)=3.60
+
+
+[log10, 1day, cycle23]
+
+	Convergence completed after 9 iterations.
+	<lifelines.CoxTimeVaryingFitter: fitted with 1581412 periods, 322 subjects, 30 events>
+			 event col = 'event'
+	number of subjects = 322
+	 number of periods = 1581412
+	  number of events = 30
+		log-likelihood = -151.34
+	  time fit was run = 2019-10-14 15:51:38 UTC
+
+	---
+			coef exp(coef)  se(coef)     z    p  -log2(p)  lower 0.95  upper 0.95
+	el2     0.52      1.69      0.81  0.65 0.52      0.95       -1.06        2.11
+	pr1    -2.48      0.08      1.26 -1.97 0.05      4.36       -4.95       -0.01
+	pr10    0.26      1.30     19.93  0.01 0.99      0.02      -38.79       39.32
+	pr100  17.77  5.24e+07      8.36  2.13 0.03      4.90        1.39       34.15
+	pr30   12.98  4.35e+05     24.57  0.53 0.60      0.74      -35.17       61.13
+	pr5    -5.68      0.00     11.37 -0.50 0.62      0.70      -27.98       16.61
+	pr50   -5.18      0.01     16.43 -0.32 0.75      0.41      -37.39       27.02
+	pr60  -16.19      0.00      6.80 -2.38 0.02      5.85      -29.52       -2.86
+	---
+	Log-likelihood ratio test = 23.61 on 8 df, -log2(p)=8.56
+
+
+
+[log10, 3days, cycle23]
+
+	Convergence completed after 9 iterations.
+	<lifelines.CoxTimeVaryingFitter: fitted with 527248 periods, 322 subjects, 30 events>
+			 event col = 'event'
+	number of subjects = 322
+	 number of periods = 527248
+	  number of events = 30
+		log-likelihood = -151.50
+	  time fit was run = 2019-10-14 15:49:40 UTC
+
+	---
+			coef exp(coef)  se(coef)     z    p  -log2(p)  lower 0.95  upper 0.95
+	el2     0.44      1.55      0.82  0.54 0.59      0.76       -1.16        2.04
+	pr1    -2.41      0.09      1.26 -1.91 0.06      4.14       -4.88        0.07
+	pr10    0.37      1.45     20.09  0.02 0.99      0.02      -39.01       39.76
+	pr100  17.30  3.27e+07      8.67  2.00 0.05      4.45        0.32       34.29
+	pr30   14.13  1.37e+06     24.90  0.57 0.57      0.81      -34.67       62.93
+	pr5    -6.12      0.00     11.44 -0.53 0.59      0.75      -28.54       16.31
+	pr50   -6.06      0.00     16.65 -0.36 0.72      0.48      -38.69       26.57
+	pr60  -16.00      0.00      7.00 -2.29 0.02      5.49      -29.71       -2.28
+	---
+	Log-likelihood ratio test = 23.29 on 8 df, -log2(p)=8.37
+
+
+
+[log10, 7days, cycle23]
+
+	Convergence completed after 9 iterations.
+	<lifelines.CoxTimeVaryingFitter: fitted with 226049 periods, 322 subjects, 30 events>
+			 event col = 'event'
+	number of subjects = 322
+	 number of periods = 226049
+	  number of events = 30
+		log-likelihood = -151.74
+	  time fit was run = 2019-10-14 15:46:49 UTC
+
+	---
+			coef exp(coef)  se(coef)     z    p  -log2(p)  lower 0.95  upper 0.95
+	el2     0.09      1.09      0.82  0.11 0.91      0.13       -1.52        1.69
+	pr1    -2.02      0.13      1.27 -1.59 0.11      3.15       -4.51        0.48
+	pr10    0.38      1.46     19.98  0.02 0.98      0.02      -38.78       39.53
+	pr100  14.05  1.26e+06      9.52  1.48 0.14      2.84       -4.61       32.70
+	pr30   17.49  3.95e+07     24.35  0.72 0.47      1.08      -30.23       65.21
+	pr5    -7.21      0.00     11.36 -0.63 0.53      0.93      -29.48       15.06
+	pr50   -8.50      0.00     16.03 -0.53 0.60      0.75      -39.92       22.93
+	pr60  -14.15      0.00      7.41 -1.91 0.06      4.15      -28.67        0.37
+	---
+	Log-likelihood ratio test = 22.81 on 8 df, -log2(p)=8.11
+
