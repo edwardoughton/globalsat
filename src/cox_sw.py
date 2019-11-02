@@ -1,13 +1,110 @@
+"""
+lifelines ver.0.21.0:
+    https://github.com/CamDavidsonPilon/lifelines/
+    doi:10.5281/zenodo.2638135
+"""
 import pandas as pd
 import numpy as np
-from lifelines import KaplanMeierFitter
+from lifelines import KaplanMeierFitter, NelsonAalenFitter
 from lifelines import CoxTimeVaryingFitter
 from scipy.interpolate import interp1d
+from lifelines.utils import inv_normal_cdf
+
+"""
+figures for paper seki10
+run Cox analysis
+"""
+# pr100 time plot
+ax.plot(pr100_8618Df.index, pr100_8618Df.values, color='black')
+ax.set_yscale('log')
+plt.subplots_adjust(bottom=0.15, top=0.95, left=0.05,right=0.95)
+ ax.set_xlim(pd.Timestamp(1986,1,1), pd.Timestamp(2018,12,31))
+
+
+# beta_ci_delta
+img = ctv1.plot()
+img.set_xlabel('beta')
+plt.subplots_adjust(left=0.20, right=0.95, top=0.95)
+img.axes.set_ylim(-0.55,3.5)
+plt.subplots_adjust(bottom=0.20, top=0.9, left=0.2,right=0.95)
+img.axes.set_title('1986–1995')
+
+
+# beta_ci with 3 different time
+CoxDf = pd.read_csv('./data/log_1d_2006-2015_delta_SbtrctCoxDf.csv', index_col=0)
+subCoxDf = CoxDf[['norad_id', 'event', 'start', 'stop', 'pr60_100', 'pr100']]
+ctv1 = CoxTimeVaryingFitter()
+ctv1.fit(subCoxDf, id_col='norad_id', event_col='event',
+        start_col='start', stop_col='stop', show_progress=True)
+ctv1.print_summary()
+### repeat
+ctv = ctv1
+z = inv_normal_cdf(1 - ctv.alpha / 2)
+symmetric_errors = z*ctv.standard_errors_.values.copy()
+ax.errorbar(
+    ctv.hazards_.values.copy(),[0,1],
+    xerr=symmetric_errors,
+    c='k', fmt='s', markerfacecolor='white',
+    markeredgewidth=1.25,elinewidth=1.25, capsize=3)
+###
+ax.vlines(0, -2,6, linestyles="dashed", linewidths=1, alpha=0.65)
+ax.set_ylim(-0.5,5.5)
+ax.set_yticklabels([
+    '1986-1995\npr60_100',
+    '1986-1995\npr100',
+    '1996-2005\npr60_100',
+    '1996-2005\npr100',
+    '2006-2015\npr60_100',
+    '2006-2015\npr100',
+    ])
+ax.set_xlabel('beta')
+
+
+# beta_ci
+img = ctv.plot()
+img.set_xlabel('beta')
+plt.subplots_adjust(left=0.20, right=0.95, top=0.95)
+
+# cumulative hazard ratio
+fig = plt.figure()
+ax = fig.add_subplot()
+Periods = pd.DatetimeIndex([
+    '1966-01-01','1975-12-31','1985-12-31','1995-12-31','2005-12-31',
+    '2015-12-31'])
+Periods = pd.date_range(
+        start=StartCycleAll, end=EndCycleAll, freq='10Y')-pd.Timedelta('364d')
+i = 0
+StartCycle =  Periods[i]
+EndCycle = Periods[i+1]
+trgtEventsDf = EventsDf[(EventsDf['Launch Date'] < EndCycle)&\
+                        (EventsDf['Launch Date'] > StartCycle)]
+subtrgtEventsDf = trgtEventsDf[['Catalogue Number', 'duration', 'event', 'Launch Date']]
+naf = NelsonAalenFitter()
+naf.fit(subtrgtEventsDf.duration, event_observed=subtrgtEventsDf.event)
+naf.plot(ax=ax)
+ax.set_xlabel('year')
+ax.set_ylabel('cumulative hazard ratio')
+ax.set_xlim(0,15)
+ax.set_ylim(0,0.75)
+plt.subplots_adjust(bottom=0.125, top=0.95)
+ax.legend([
+    '{}-{}'.format(Periods[0].year, Periods[1].year),
+    '{}-{}'.format(Periods[1].year, Periods[2].year),
+    '{}-{}'.format(Periods[2].year, Periods[3].year),
+    '{}-{}'.format(Periods[3].year, Periods[4].year),
+    '{}-{}'.format(Periods[4].year, Periods[5].year),
+    ])
+
 
 """
 Cox analysis
 """
-subCoxDf = CoxDf[['norad_id', 'event', 'start', 'stop', 'pr100', 'pr60_100']]
+CoxDf = pd.read_csv('./data/log_1d_1986-2018_delta_SbtrctCoxDf.csv', index_col=0)
+Columns = ['norad_id', 'start','stop',
+        'el2','pr1_5','pr5_10','pr10_30','pr30_50',
+        'pr50_60','pr60_100', 'pr100',
+        'event']
+subCoxDf = CoxDf[Columns]
 ctv = CoxTimeVaryingFitter()
 ctv.fit(subCoxDf, id_col='norad_id', event_col='event',
         start_col='start', stop_col='stop', show_progress=True)
@@ -39,10 +136,17 @@ EndCycle22 = pd.Timestamp(1997,1,1)
 StartCycle23 = pd.Timestamp(1997,1,1)
 EndCycle23 = pd.Timestamp(2009,1,1)
 StartCycleAll = pd.Timestamp(1986,1,1)
-EndCycleAll = pd.Timestamp(2018,1,1)
+EndCycleAll = pd.Timestamp(2018,12,31)
+#EndCycleAll = pd.Timestamp(2005,12,31)
+Periods = pd.date_range(
+        start=StartCycleAll, end=EndCycleAll, freq='20Y')-pd.Timedelta('364d')
 
 StartCycle = StartCycleAll
 EndCycle = EndCycleAll
+#StartCycle =  Periods[0]
+#EndCycle = Periods[1]
+#StartCycle =  EndCycleAll-pd.Timedelta('20y')
+#EndCycle = EndCycleAll
 
 # load events
 EventsDf = pd.read_excel('./data/failure/seki10_events.xlsx')
@@ -168,11 +272,14 @@ dT = pd.Timedelta('1 days')
 YtoD = pd.Timedelta('1 y').total_seconds()/pd.Timedelta('1 day').total_seconds()
 subtrgtEventsDf['Event_Date'] = subtrgtEventsDf['Launch Date'] +\
         pd.to_timedelta(subtrgtEventsDf['duration'], unit='Y')
-whereCensor = np.where(subtrgtEventsDf['Event_Date'] > pd.Timestamp(2018,12,31))[0]
-subtrgtEventsDf.iloc[whereCensor,[-1]] = pd.Timestamp(2018,12,31)
+#CensorTime = EndCycle
+CensorTime = pd.Timestamp(2018, 12, 31)
+whereCensor = np.where(subtrgtEventsDf['Event_Date'] > CensorTime)[0]
+subtrgtEventsDf.iloc[whereCensor,[-1]] = CensorTime
 subtrgtEventsDf.iloc[whereCensor,[-4]] =\
         (subtrgtEventsDf['Event_Date']-subtrgtEventsDf['Launch Date']
             ).iloc[whereCensor].astype('timedelta64[s]')/24/3600/YtoD
+subtrgtEventsDf.iloc[whereCensor,[2]] = 0
 
 #Columns = ['norad_id', 'start','stop',
 #        'el2','pr1','pr5','pr10','pr30',
@@ -180,7 +287,7 @@ subtrgtEventsDf.iloc[whereCensor,[-4]] =\
 #        'event']
 Columns = ['norad_id', 'start','stop',
         'el2','pr1_5','pr5_10','pr10_30','pr30_50',
-        'pr50_60','pr60_100', 'pr100',
+        'pr50_60','pr60_100', 'pr100', 'delta',
         'event']
 CoxDf = pd.DataFrame(columns=Columns, data=np.zeros((1,len(Columns))), index=['nan'])
 for i in subtrgtEventsDf.index:
@@ -203,6 +310,8 @@ for i in subtrgtEventsDf.index:
     tmpCoxDf = tmpCoxDf.assign(
         norad_id = subtrgtEventsDf.loc[i]['Catalogue Number'],
         stop = np.append(StartStops[1:], EventDuration),
+        delta = (subtrgtEventsDf.loc[i]['Launch Date']-StartCycle
+            ).total_seconds()/pd.Timedelta('1 y').total_seconds(),
         el2 = np.append(el2_cumsum[dT.days::dT.days], el2_cumsum[-1]),
         pr1 = np.append(pr1_cumsum[dT.days::dT.days], pr1_cumsum[-1]),
         pr5 = np.append(pr5_cumsum[dT.days::dT.days], pr5_cumsum[-1]),
@@ -216,7 +325,7 @@ for i in subtrgtEventsDf.index:
     tmpCoxDf.iloc[-1, -1] = subtrgtEventsDf.loc[i]['event']
     tmpCoxDf[['start', 'stop']] -= LaunchDuration
 
-    SbtrcttmpCoxDf = tmpCoxDf[['norad_id', 'start', 'stop', 'event']]
+    SbtrcttmpCoxDf = tmpCoxDf[['norad_id', 'start', 'stop', 'event', 'delta']]
     SbtrcttmpCoxDf = SbtrcttmpCoxDf.assign(
         el2 = tmpCoxDf.el2,
         pr1_5 = tmpCoxDf.pr1 - tmpCoxDf.pr5,
@@ -241,11 +350,70 @@ for i in subtrgtEventsDf.index:
 
 CoxDf.drop('nan', axis=0, inplace=True)
 CoxDf.dropna(inplace=True)
+CoxDf['delta2'] = CoxDf.delta**2
+CoxDf['delta3'] = CoxDf.delta**3
+
+# convergence error
+#CoxDf = CoxDf.assign(
+#    el2_delta = CoxDf.el2/CoxDf.delta,
+#    el2_delta2 = CoxDf.el2/CoxDf.delta2,
+#    el2_delta3 = CoxDf.el2/CoxDf.delta3,
+#    pr1_5_delta = CoxDf.pr1_5/CoxDf.delta,
+#    pr1_5_delta2 = CoxDf.pr1_5/CoxDf.delta2,
+#    pr1_5_delta3 = CoxDf.pr1_5/CoxDf.delta3,
+#    pr5_10_delta = CoxDf.pr5_10/CoxDf.delta,
+#    pr5_10_delta2 = CoxDf.pr5_10/CoxDf.delta2,
+#    pr5_10_delta3 = CoxDf.pr5_10/CoxDf.delta3,
+#    pr10_30_delta = CoxDf.pr10_30/CoxDf.delta,
+#    pr10_30_delta2 = CoxDf.pr10_30/CoxDf.delta2,
+#    pr10_30_delta3 = CoxDf.pr10_30/CoxDf.delta3,
+#    pr30_50_delta = CoxDf.pr30_50/CoxDf.delta,
+#    pr30_50_delta2 = CoxDf.pr30_50/CoxDf.delta2,
+#    pr30_50_delta3 = CoxDf.pr30_50/CoxDf.delta3,
+#    pr50_60_delta = CoxDf.pr50_60/CoxDf.delta,
+#    pr50_60_delta2 = CoxDf.pr50_60/CoxDf.delta2,
+#    pr50_60_delta3 = CoxDf.pr50_60/CoxDf.delta3,
+#    pr60_100_delta = CoxDf.pr60_100/CoxDf.delta,
+#    pr60_100_delta2 = CoxDf.pr60_100/CoxDf.delta2,
+#    pr60_100_delta3 = CoxDf.pr60_100/CoxDf.delta3,
+#    pr100_delta = CoxDf.pr100/CoxDf.delta,
+#    pr100_delta2 = CoxDf.pr100/CoxDf.delta2,
+#    pr100_delta3 = CoxDf.pr100/CoxDf.delta3,
+#    )
+
+# convergence error
+#CoxDf = CoxDf.assign(
+#    el2_delta = CoxDf.el2 - np.log10(CoxDf.delta),
+#    el2_delta2 = CoxDf.el2 - np.log10(CoxDf.delta2),
+#    el2_delta3 = CoxDf.el2 - np.log10(CoxDf.delta3),
+#    pr1_5_delta = CoxDf.pr1_5 - np.log10(CoxDf.delta),
+#    pr1_5_delta2 = CoxDf.pr1_5 - np.log10(CoxDf.delta2),
+#    pr1_5_delta3 = CoxDf.pr1_5 - np.log10(CoxDf.delta3),
+#    pr5_10_delta = CoxDf.pr5_10 - np.log10(CoxDf.delta),
+#    pr5_10_delta2 = CoxDf.pr5_10 - np.log10(CoxDf.delta2),
+#    pr5_10_delta3 = CoxDf.pr5_10 - np.log10(CoxDf.delta3),
+#    pr10_30_delta = CoxDf.pr10_30 - np.log10(CoxDf.delta),
+#    pr10_30_delta2 = CoxDf.pr10_30 - np.log10(CoxDf.delta2),
+#    pr10_30_delta3 = CoxDf.pr10_30 - np.log10(CoxDf.delta3),
+#    pr30_50_delta = CoxDf.pr30_50 - np.log10(CoxDf.delta),
+#    pr30_50_delta2 = CoxDf.pr30_50 - np.log10(CoxDf.delta2),
+#    pr30_50_delta3 = CoxDf.pr30_50 - np.log10(CoxDf.delta3),
+#    pr50_60_delta = CoxDf.pr50_60 - np.log10(CoxDf.delta),
+#    pr50_60_delta2 = CoxDf.pr50_60 - np.log10(CoxDf.delta2),
+#    pr50_60_delta3 = CoxDf.pr50_60 - np.log10(CoxDf.delta3),
+#    pr60_100_delta = CoxDf.pr60_100 - np.log10(CoxDf.delta),
+#    pr60_100_delta2 = CoxDf.pr60_100 - np.log10(CoxDf.delta2),
+#    pr60_100_delta3 = CoxDf.pr60_100 - np.log10(CoxDf.delta3),
+#    pr100_delta = CoxDf.pr100 - np.log10(CoxDf.delta),
+#    pr100_delta2 = CoxDf.pr100 - np.log10(CoxDf.delta2),
+#    pr100_delta3 = CoxDf.pr100 - np.log10(CoxDf.delta3),
+#    )
+
 #CoxDf.to_csv('log_1d_all_CoxDf.csv')
 
-subCoxDf = CoxDf[['norad_id', 'event', 'start', 'stop', 'pr100']]
+#subCoxDf = CoxDf[['norad_id', 'event', 'start', 'stop', 'pr100', 'pr60_100']]
 ctv = CoxTimeVaryingFitter()
-ctv.fit(subCoxDf, id_col='norad_id', event_col='event',
+ctv.fit(CoxDf, id_col='norad_id', event_col='event',
         start_col='start', stop_col='stop', show_progress=True)
 ctv.print_summary()
 
