@@ -9,6 +9,352 @@ null is the hypothesis in which no covariates are included, i.e. beta = 0.
 
 
 
+
+
+
+[log_1d_1986-2018_delta_TID_>5y_SbtrctCoxDf]
+
+        event col = 'event'
+number of subjects = 696
+ number of periods = 3180201
+  number of events = 31
+    log-likelihood = -178.17
+  time fit was run = 2019-11-05 13:59:36 UTC
+
+---
+           coef exp(coef)  se(coef)    z    p  -log2(p)  lower 0.95  upper 0.95
+log_pr100  1.50      4.49      0.88 1.71 0.09      3.52       -0.22        3.22
+---
+Log-likelihood ratio test = 3.13 on 1 df, -log2(p)=3.70
+
+
+       event col = 'event'
+number of subjects = 696
+ number of periods = 3180201
+  number of events = 31
+    log-likelihood = -178.19
+  time fit was run = 2019-11-05 13:59:21 UTC
+
+---
+              coef exp(coef)  se(coef)    z    p  -log2(p)  lower 0.95  upper 0.95
+log_pr60-100  1.12      3.06      0.67 1.68 0.09      3.42       -0.19        2.42
+---
+Log-likelihood ratio test = 3.08 on 1 df, -log2(p)=3.66
+
+
+        event col = 'event'
+number of subjects = 696
+ number of periods = 3180201
+  number of events = 31
+    log-likelihood = -178.06
+  time fit was run = 2019-11-05 13:59:07 UTC
+
+---
+             coef exp(coef)  se(coef)    z    p  -log2(p)  lower 0.95  upper 0.95
+log_pr50-60  1.01      2.74      0.58 1.74 0.08      3.61       -0.13        2.15
+---
+Log-likelihood ratio test = 3.35 on 1 df, -log2(p)=3.90
+
+
+       event col = 'event'
+number of subjects = 696
+ number of periods = 3180201
+  number of events = 31
+    log-likelihood = -177.99
+  time fit was run = 2019-11-05 13:58:50 UTC
+
+---
+             coef exp(coef)  se(coef)    z    p  -log2(p)  lower 0.95  upper 0.95
+log_pr30-50  1.01      2.73      0.56 1.80 0.07      3.79       -0.09        2.10
+---
+Log-likelihood ratio test = 3.50 on 1 df, -log2(p)=4.02
+
+
+
+        event col = 'event'
+number of subjects = 696
+ number of periods = 3180201
+  number of events = 31
+    log-likelihood = -178.26
+  time fit was run = 2019-11-05 13:58:35 UTC
+
+---
+             coef exp(coef)  se(coef)    z    p  -log2(p)  lower 0.95  upper 0.95
+log_pr10-30  1.02      2.78      0.61 1.67 0.10      3.39       -0.18        2.22
+---
+Log-likelihood ratio test = 2.94 on 1 df, -log2(p)=3.53
+
+
+
+         event col = 'event'
+number of subjects = 696
+ number of periods = 3180201
+  number of events = 31
+    log-likelihood = -178.89
+  time fit was run = 2019-11-05 13:58:18 UTC
+
+---
+            coef exp(coef)  se(coef)    z    p  -log2(p)  lower 0.95  upper 0.95
+log_pr5-10  1.05      2.85      0.83 1.26 0.21      2.28       -0.58        2.67
+---
+Log-likelihood ratio test = 1.68 on 1 df, -log2(p)=2.36
+
+
+
+        event col = 'event'
+number of subjects = 696
+ number of periods = 3180201
+  number of events = 31
+    log-likelihood = -178.95
+  time fit was run = 2019-11-05 13:58:01 UTC
+
+---
+           coef exp(coef)  se(coef)    z    p  -log2(p)  lower 0.95  upper 0.95
+log_pr1-5  0.99      2.68      0.80 1.23 0.22      2.20       -0.58        2.55
+---
+Log-likelihood ratio test = 1.56 on 1 df, -log2(p)=2.24
+
+
+        event col = 'event'
+number of subjects = 696
+ number of periods = 3180201
+  number of events = 31
+    log-likelihood = -179.47
+  time fit was run = 2019-11-05 13:57:36 UTC
+
+---
+         coef exp(coef)  se(coef)     z    p  -log2(p)  lower 0.95  upper 0.95
+log_el2 -0.82      0.44      1.11 -0.74 0.46      1.12       -3.00        1.36
+---
+Log-likelihood ratio test = 0.53 on 1 df, -log2(p)=1.10
+
+
+
+
+
+
+
+         event col = 'event'
+number of subjects = 696
+ number of periods = 3180201
+  number of events = 31
+    log-likelihood = -178.36
+  time fit was run = 2019-11-05 13:55:39 UTC
+
+---
+     coef exp(coef)  se(coef)    z    p  -log2(p)  lower 0.95  upper 0.95
+TID  1.35      3.86      0.86 1.57 0.12      3.09       -0.34        3.04
+---
+Log-likelihood ratio test = 2.75 on 1 df, -log2(p)=3.36
+
+
+[age]
+convergence failed
+
+[log. 1d, 1986-2018, deltaPr100]
+        event col = 'event'
+number of subjects = 904
+ number of periods = 3332319
+  number of events = 63
+    log-likelihood = -392.03
+  time fit was run = 2019-11-04 15:28:10 UTC
+
+---
+        coef exp(coef)  se(coef)     z    p  -log2(p)  lower 0.95  upper 0.95
+pr100   0.01      1.01      0.40  0.02 0.99      0.02       -0.78        0.80
+delta   0.04      1.04      0.07  0.63 0.53      0.93       -0.09        0.18
+delta2 -0.00      1.00      0.00 -1.07 0.29      1.80       -0.01        0.00
+---
+Log-likelihood ratio test = 3.91 on 3 df, -log2(p)=1.88
+
+
+
+[log. 1d, 1986-2018, pr60_100-100-5_10-1_5]
+         event col = 'event'
+number of subjects = 904
+ number of periods = 3332319
+  number of events = 63
+    log-likelihood = -384.13
+  time fit was run = 2019-11-04 15:26:20 UTC
+
+---
+          coef exp(coef)  se(coef)     z    p  -log2(p)  lower 0.95  upper 0.95
+pr1_5     0.05      1.05      0.34  0.15 0.88      0.18       -0.62        0.72
+pr5_10   -1.13      0.32      0.45 -2.51 0.01      6.35       -2.02       -0.25
+pr60_100 -1.68      0.19      1.34 -1.25 0.21      2.25       -4.30        0.95
+pr100     3.99     54.20      1.46  2.73 0.01      7.31        1.13        6.86
+---
+Log-likelihood ratio test = 19.71 on 4 df, -log2(p)=10.77
+
+
+
+
+[log. 1d, 1986-2018, pr60-100_100_5-10]
+         event col = 'event'
+number of subjects = 904
+ number of periods = 3332319
+  number of events = 63
+    log-likelihood = -384.14
+  time fit was run = 2019-11-04 15:19:11 UTC
+
+---
+          coef exp(coef)  se(coef)     z    p  -log2(p)  lower 0.95  upper 0.95
+pr5_10   -1.13      0.32      0.45 -2.49 0.01      6.30       -2.02       -0.24
+pr60_100 -1.66      0.19      1.33 -1.25 0.21      2.23       -4.27        0.95
+pr100     4.00     54.58      1.46  2.74 0.01      7.35        1.14        6.86
+---
+Log-likelihood ratio test = 19.68 on 3 df, -log2(p)=12.31
+
+
+
+[log. 1d, 1986-2018, pr60100]
+         event col = 'event'
+number of subjects = 904
+ number of periods = 3332319
+  number of events = 63
+    log-likelihood = -387.65
+  time fit was run = 2019-11-04 15:17:46 UTC
+
+---
+          coef exp(coef)  se(coef)     z      p  -log2(p)  lower 0.95  upper 0.95
+pr60_100 -3.63      0.03      0.96 -3.80 <0.005     12.74       -5.50       -1.76
+pr100     4.98    145.59      1.25  3.98 <0.005     13.83        2.53        7.43
+---
+Log-likelihood ratio test = 12.66 on 2 df, -log2(p)=9.13
+
+
+
+
+
+
+[log. 1d, 1986-2018, el2]
+        event col = 'event'
+number of subjects = 904
+ number of periods = 3332319
+  number of events = 63
+    log-likelihood = -393.71
+  time fit was run = 2019-11-04 15:35:15 UTC
+
+---
+     coef exp(coef)  se(coef)    z    p  -log2(p)  lower 0.95  upper 0.95
+el2  0.23      1.25      0.30 0.74 0.46      1.12       -0.37        0.82
+---
+Log-likelihood ratio test = 0.56 on 1 df, -log2(p)=1.14
+
+
+[log. 1d, 1986-2018, pr1_5]
+       event col = 'event'
+number of subjects = 904
+ number of periods = 3332319
+  number of events = 63
+    log-likelihood = -393.94
+  time fit was run = 2019-11-04 15:34:41 UTC
+
+---
+       coef exp(coef)  se(coef)     z    p  -log2(p)  lower 0.95  upper 0.95
+pr1_5 -0.09      0.91      0.31 -0.30 0.77      0.38       -0.70        0.51
+---
+Log-likelihood ratio test = 0.09 on 1 df, -log2(p)=0.38
+
+
+
+[log. 1d, 1986-2018, pr5_10]
+        event col = 'event'
+number of subjects = 904
+ number of periods = 3332319
+  number of events = 63
+    log-likelihood = -391.61
+  time fit was run = 2019-11-04 15:33:59 UTC
+
+---
+        coef exp(coef)  se(coef)     z    p  -log2(p)  lower 0.95  upper 0.95
+pr5_10 -0.49      0.61      0.23 -2.13 0.03      4.91       -0.94       -0.04
+---
+Log-likelihood ratio test = 4.76 on 1 df, -log2(p)=5.10
+
+
+
+[log. 1d, 1986-2018, pr10_30]
+         event col = 'event'
+number of subjects = 904
+ number of periods = 3332319
+  number of events = 63
+    log-likelihood = -392.92
+  time fit was run = 2019-11-04 15:33:21 UTC
+
+---
+         coef exp(coef)  se(coef)     z    p  -log2(p)  lower 0.95  upper 0.95
+pr10_30 -0.32      0.72      0.23 -1.43 0.15      2.70       -0.77        0.12
+---
+Log-likelihood ratio test = 2.12 on 1 df, -log2(p)=2.79
+
+
+
+[log. 1d, 1986-2018, pr30_50]
+        event col = 'event'
+number of subjects = 904
+ number of periods = 3332319
+  number of events = 63
+    log-likelihood = -393.73
+  time fit was run = 2019-11-04 15:32:32 UTC
+
+---
+         coef exp(coef)  se(coef)     z    p  -log2(p)  lower 0.95  upper 0.95
+pr30_50 -0.15      0.86      0.21 -0.71 0.48      1.07       -0.57        0.27
+---
+Log-likelihood ratio test = 0.52 on 1 df, -log2(p)=1.08
+
+
+
+
+[log. 1d, 1986-2018, pr50_60]
+       event col = 'event'
+number of subjects = 904
+ number of periods = 3332319
+  number of events = 63
+    log-likelihood = -393.81
+  time fit was run = 2019-11-04 15:31:44 UTC
+
+---
+         coef exp(coef)  se(coef)     z    p  -log2(p)  lower 0.95  upper 0.95
+pr50_60 -0.13      0.88      0.22 -0.59 0.56      0.84       -0.55        0.30
+---
+Log-likelihood ratio test = 0.35 on 1 df, -log2(p)=0.85
+
+
+
+[log. 1d, 1986-2018, pr60_100]
+         event col = 'event'
+number of subjects = 904
+ number of periods = 3332319
+  number of events = 63
+    log-likelihood = -393.98
+  time fit was run = 2019-11-04 15:30:17 UTC
+
+---
+          coef exp(coef)  se(coef)     z    p  -log2(p)  lower 0.95  upper 0.95
+pr60_100 -0.02      0.98      0.28 -0.09 0.93      0.10       -0.57        0.52
+---
+Log-likelihood ratio test = 0.01 on 1 df, -log2(p)=0.10
+
+
+
+[log. 1d, 1986-2018, pr100]
+         event col = 'event'
+number of subjects = 904
+ number of periods = 3332319
+  number of events = 63
+    log-likelihood = -393.68
+  time fit was run = 2019-11-04 15:16:57 UTC
+
+---
+       coef exp(coef)  se(coef)    z    p  -log2(p)  lower 0.95  upper 0.95
+pr100  0.29      1.33      0.36 0.81 0.42      1.25       -0.41        0.98
+---
+Log-likelihood ratio test = 0.62 on 1 df, -log2(p)=1.21
+
+
+
 [log, 1d, 1996-2005, pr60100]
   event col = 'event'
 number of subjects = 272

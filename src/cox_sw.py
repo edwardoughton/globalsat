@@ -99,7 +99,7 @@ ax.legend([
 """
 Cox analysis
 """
-CoxDf = pd.read_csv('./data/log_1d_1986-2018_delta_SbtrctCoxDf.csv', index_col=0)
+CoxDf = pd.read_csv('./data/log_1d_1986-2018_delta_TID_SbtrctCoxDf.csv', index_col=0)
 Columns = ['norad_id', 'start','stop',
         'el2','pr1_5','pr5_10','pr10_30','pr30_50',
         'pr50_60','pr60_100', 'pr100',
@@ -154,6 +154,7 @@ EventsDf.sort_values(by='Catalogue Number', inplace=True)
 trgtEventsDf = EventsDf[(EventsDf['Launch Date'] < EndCycle)&\
                         (EventsDf['Launch Date'] > StartCycle)]
 subtrgtEventsDf = trgtEventsDf[['Catalogue Number', 'duration', 'event', 'Launch Date']]
+#subtrgtEventsDf = subtrgtEventsDf.copy()[subtrgtEventsDf.duration > 5]
 
 # load covariate
 elpr8600Df = pd.read_csv('./data/goes/elpr_1986-2000.csv', index_col=0)
@@ -342,16 +343,28 @@ for i in subtrgtEventsDf.index:
 #        np.log10(tmpCoxDf[['el2', 'pr1', 'pr5', 'pr10',
 #            'pr30','pr50', 'pr60', 'pr100']])
 #    CoxDf = pd.concat([CoxDf, tmpCoxDf], axis=0)
-    SbtrcttmpCoxDf[['el2', 'pr1_5', 'pr5_10', 'pr10_30',
-        'pr30_50','pr50_60', 'pr60_100', 'pr100']] =\
-        np.log10(SbtrcttmpCoxDf[['el2', 'pr1_5', 'pr5_10', 'pr10_30',
-            'pr30_50','pr50_60', 'pr60_100', 'pr100']])
+#    SbtrcttmpCoxDf[['el2', 'pr1_5', 'pr5_10', 'pr10_30',
+#        'pr30_50','pr50_60', 'pr60_100', 'pr100']] =\
+#        np.log10(SbtrcttmpCoxDf[['el2', 'pr1_5', 'pr5_10', 'pr10_30',
+#            'pr30_50','pr50_60', 'pr60_100', 'pr100']])
     CoxDf = pd.concat([CoxDf, SbtrcttmpCoxDf], axis=0)
 
 CoxDf.drop('nan', axis=0, inplace=True)
-CoxDf.dropna(inplace=True)
 CoxDf['delta2'] = CoxDf.delta**2
 CoxDf['delta3'] = CoxDf.delta**3
+CoxDf['TID'] = np.log10(
+    CoxDf.pr1_5*3.0+\
+    CoxDf.pr5_10*7.5+\
+    CoxDf.pr10_30*20.0+\
+    CoxDf.pr30_50*40.0+\
+    CoxDf.pr50_60*55.0+\
+    CoxDf.pr60_100*80.0+\
+    CoxDf.pr100*100.0)
+CoxDf[['log_el2', 'log_pr1-5', 'log_pr5-10', 'log_pr10-30',
+    'log_pr30-50','log_pr50-60', 'log_pr60-100', 'log_pr100']] =\
+    np.log10(CoxDf[['el2', 'pr1_5', 'pr5_10', 'pr10_30',
+        'pr30_50','pr50_60', 'pr60_100', 'pr100']])
+CoxDf.dropna(inplace=True)
 
 # convergence error
 #CoxDf = CoxDf.assign(
@@ -409,14 +422,13 @@ CoxDf['delta3'] = CoxDf.delta**3
 #    pr100_delta3 = CoxDf.pr100 - np.log10(CoxDf.delta3),
 #    )
 
-#CoxDf.to_csv('log_1d_all_CoxDf.csv')
 
 #subCoxDf = CoxDf[['norad_id', 'event', 'start', 'stop', 'pr100', 'pr60_100']]
 ctv = CoxTimeVaryingFitter()
 ctv.fit(CoxDf, id_col='norad_id', event_col='event',
         start_col='start', stop_col='stop', show_progress=True)
 ctv.print_summary()
-
+#CoxDf.to_csv('log_1d_all_CoxDf.csv')
 
 """
 proton & electron data downloading
