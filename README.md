@@ -1,20 +1,27 @@
 # globalsat
-A Global Satellite Fleet Model
+Global Satellite Fleet Model
 
-Human activity is increasibly reliant on satellite connectivity services for timing, syncronization, positioning etc. 
+Human activity is increasibly reliant on satellite connectivity services for broadband
+internet access, timing, syncronization, positioning etc.
 
-However, we lack analytics to help understand the vulnerability and resilience of global satellite systems. 
+However, we lack analytics to help model global satellite systems, whether we wish to
+understand capacity, coverage, cost, vulnerability or resilience.
 
-This codebase provides an open-source spatio-temporal model to help analyze the global satellite fleet. Such a model can be used for numerous applications, including risk analysis and digital connectivity assessment.
+This codebase provides an open-source model to help analyze the global satellite fleet.
+Such a model can be used for numerous applications, including assessment of digital
+connectivity or understanding the vulnerability and resilience of the global satellite fleet.
 
 
 Background and funding
 ======================
 
-**globalsat** has been collaboratively developed by researchers at the Univeristy of Cambridge, University of Oxford and British Antartic Survey. Funding has been provided by UKRI's Engineering and Physical Sciences Research Council (EPSRC). D. Seki has been supported by Overseas Challenge Program for Young Researchers provided by Japan Society for the Promotion of Sceince (JSPS).
+**globalsat** is being collaboratively developed by researchers at George Mason University, as
+well as colleagues at the British Antartic Survey and University of Cambridge.
+
 
 Contributors
 ============
-- Edward J. Oughton (Oxford)
+- Edward J. Oughton (George Mason University/Oxford)
+- Bonface Osaro (George Mason University)
 - Daikichi Seki (Cambridge/Kyoto University)
 - Richard Horne (British Antartic Survey)
