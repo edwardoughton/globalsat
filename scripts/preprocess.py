@@ -61,14 +61,6 @@ def find_country_list(continent_list):
 
     for index, country in selected_countries.iterrows():
 
-        # if country['GID_0'] in ['MDV']:#'ABW', 'AIA', 'ATA', 'LBY', 'ESH']:
-        #     continue
-
-        # if country['GID_0'] in ['COM', 'CPV', 'LSO', 'MUS'] :
-        # regional_level =  1
-        # else:
-        # regional_level = 2
-
         countries.append({
             'country_name': country['country'],
             'iso3': country['GID_0'],
@@ -119,10 +111,9 @@ def process_country_shapes(country):
     single_country = single_country.merge(
         load_glob_info,left_on='GID_0', right_on='ISO_3digit')
 
-    # print('Exporting processed country shape')
     single_country.to_file(shape_path, driver='ESRI Shapefile')
 
-    return #print('Processing country shape complete')
+    return
 
 
 def process_regions(country):
@@ -150,9 +141,6 @@ def process_regions(country):
         if os.path.exists(path_processed):
             continue
 
-        # print('----')
-        # print('Working on {} level {}'.format(iso3, regional_level))
-
         if not os.path.exists(folder):
             os.mkdir(folder)
 
@@ -160,22 +148,16 @@ def process_regions(country):
         path_regions = os.path.join(DATA_RAW, 'gadm36_levels_shp', filename)
         regions = gpd.read_file(path_regions)
 
-        # print('Subsetting {} level {}'.format(iso3, regional_level))
         regions = regions[regions.GID_0 == iso3]
 
-        # print('Excluding small shapes')
         regions['geometry'] = regions.apply(exclude_small_shapes, axis=1)
 
         try:
-            # print('Writing global_regions.shp to file')
             regions.to_file(path_processed, driver='ESRI Shapefile')
         except:
-            # print('Unable to write {}'.format(filename))
             pass
 
-    # print('Completed processing of regional shapes level {}'.format(level))
-
-    return #print('Complete')
+    return
 
 
 def process_settlement_layer(country):
@@ -190,7 +172,6 @@ def process_settlement_layer(country):
 
     """
     iso3 = country['iso3']
-    regional_level = country['regional_level']
 
     path_settlements = os.path.join(DATA_RAW,'settlement_layer',
         'ppp_2020_1km_Aggregated.tif')
@@ -212,10 +193,7 @@ def process_settlement_layer(country):
     shape_path = os.path.join(path_country, 'settlements.tif')
 
     if os.path.exists(shape_path):
-        return #print('Completed settlement layer processing')
-
-    # print('----')
-    # print('Working on {} level {}'.format(iso3, regional_level))
+        return
 
     bbox = country.envelope
     geo = gpd.GeoDataFrame()
@@ -239,7 +217,7 @@ def process_settlement_layer(country):
     with rasterio.open(shape_path, "w", **out_meta) as dest:
             dest.write(out_img)
 
-    return #print('Completed processing of settlement layer')
+    return
 
 
 def exclude_small_shapes(x):
@@ -311,9 +289,9 @@ def create_pop_regional_lookup(country):
     filename = 'population_lookup_level_{}.csv'.format(level)
     path_output = os.path.join(DATA_INTERMEDIATE, iso3, filename)
 
-    # if os.path.exists(path_output):
-    #     output = pd.read_csv(path_output).to_dict('records')
-    #     return output
+    if os.path.exists(path_output):
+        output = pd.read_csv(path_output).to_dict('records')
+        return output
 
     filename = 'settlements.tif'
     path_settlements = os.path.join(DATA_INTERMEDIATE, iso3, filename)
@@ -438,6 +416,9 @@ if __name__ == '__main__':
     output = []
 
     for country in tqdm(countries):
+
+        if not country['iso3'] == 'MNG':
+            continue
 
         print('-Working on {}: {}'.format(country['country_name'], country['iso3']))
 
