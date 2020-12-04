@@ -1,5 +1,5 @@
 # globalsat
-Global Satellite Fleet Model
+Global Satellite Assessment Tool
 
 Human activity is increasibly reliant on satellite connectivity services for broadband
 internet access, timing, syncronization, positioning etc.
