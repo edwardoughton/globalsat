@@ -28,7 +28,7 @@ Activate it (run this each time you switch projects):
 
 First, install optional packages:
 
-    conda install geopandas rasterio rasterstats
+    conda install geopandas rasterio rasterstats matplotlib seaborn contextily descartes
 
 
 Background and funding
