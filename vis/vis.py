@@ -64,7 +64,7 @@ def plot_regions_by_geotype(data, regions):
     """
     """
     data = data.loc[data['scenario'] == 'baseline']
-    data = data.loc[data['constellation'] == 'starlink']
+    data = data.loc[data['constellation'] == 'Starlink']
     data['pop_density_km2'] = round(data['pop_density_km2'])
     n = len(regions)
 
@@ -107,7 +107,7 @@ def plot_regions_by_geotype(data, regions):
 
     ctx.add_basemap(ax, crs=regions.crs, source=ctx.providers.CartoDB.Voyager)
 
-    fig.suptitle('Population Density Deciles for Sub-National Regions (n={})'.format(n))
+    fig.suptitle('Population Density by Sub-National Region (n={})'.format(n))
 
     fig.tight_layout()
     fig.savefig(os.path.join(VIS, 'region_by_pop_density.png'))
@@ -121,9 +121,14 @@ def plot_capacity_per_user(data, regions):
     """
     n = len(regions)
     data = data.loc[data['scenario'] == 'baseline']
-    data['per_user_capacity'] = round(data['per_user_capacity'].copy())
+
+    regions = regions[['GID_id', 'geometry']]#[:1000]
 
     constellations = data['constellation'].unique()#[:1]
+
+    fig, axs = plt.subplots(3, 1, figsize=(10, 12)) #width height
+
+    i = 0
 
     for constellation in list(constellations):
 
@@ -131,10 +136,8 @@ def plot_capacity_per_user(data, regions):
 
         subset = subset[['GID_id', 'per_user_capacity']]
 
-        regions = regions[['GID_id', 'geometry']]#[:1000]
-
-        regions = regions.merge(subset, left_on='GID_id', right_on='GID_id')
-        regions.reset_index(drop=True, inplace=True)
+        regions_merged = regions.merge(subset, left_on='GID_id', right_on='GID_id')
+        regions_merged.reset_index(drop=True, inplace=True)
 
         metric = 'per_user_capacity'
 
@@ -151,29 +154,46 @@ def plot_capacity_per_user(data, regions):
             '250-300 Mbps',
             '>300 Mbps',
         ]
-        regions['bin'] = pd.cut(
-            regions[metric],
+        regions_merged['bin'] = pd.cut(
+            regions_merged[metric],
             bins=bins,
             labels=labels
         )#.fillna('<20')
 
-        fig, ax = plt.subplots(1, 1, figsize=(10,10))
+        minx, miny, maxx, maxy = regions_merged.total_bounds
+        axs[i].set_xlim(minx, maxx)
+        axs[i].set_ylim(miny, maxy)
 
-        minx, miny, maxx, maxy = regions.total_bounds
-        ax.set_xlim(minx+7, maxx-12)
-        ax.set_ylim(miny+5, maxy)
+        regions_merged.plot(column='bin', ax=axs[i], cmap='inferno_r', linewidth=0, legend=True)
 
-        regions.plot(column='bin', ax=ax, cmap='inferno_r', linewidth=0, legend=True)
+        ctx.add_basemap(axs[i], crs=regions_merged.crs, source=ctx.providers.CartoDB.Voyager)
 
-        ctx.add_basemap(ax, crs=regions.crs, source=ctx.providers.CartoDB.Voyager)
+        letter = get_letter(constellation)
 
-        plt.subplots_adjust(top=1.5)
-        fig.suptitle("{} Per User Capacity (Mbps per User) based on 10'%' adoption (n={})".format(constellation, n))
+        axs[i].set_title("({}) {} Per User Capacity Based on 10 Percent Adoption (n={})".format(
+            letter, constellation, n))
 
-        fig.tight_layout()
-        fig.savefig(os.path.join(VIS, 'per_user_capacity_{}.png'.format(constellation)))
-        # fig.savefig(os.path.join(VIS, 'region_by_total_cost.pdf'))
-        plt.close(fig)
+        i += 1
+
+    fig.tight_layout()
+    fig.savefig(os.path.join(VIS, 'per_user_capacity_panel.png'))
+
+    plt.close(fig)
+
+
+def get_letter(constellation):
+    """
+    Return the correct letter.
+
+    """
+    if constellation == 'Starlink':
+        return 'A'
+    elif constellation == 'OneWeb':
+        return 'B'
+    elif constellation == 'Telesat':
+        return 'C'
+    else:
+        print('Did not recognize constellation')
 
 
 if __name__ == '__main__':
@@ -193,7 +213,8 @@ if __name__ == '__main__':
     else:
         shapes = gpd.read_file(path, crs='epsg:4326')#[:1000]
 
-    # plot_regions_by_geotype
+    print('Plotting population density per area')
+    plot_regions_by_geotype(data, shapes)
 
     print('Plotting capacity per user')
     plot_capacity_per_user(data, shapes)
