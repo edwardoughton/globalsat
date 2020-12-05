@@ -63,12 +63,13 @@ def get_regional_shapes():
 def plot_regions_by_geotype(data, regions):
     """
     """
-    # data = data.loc[data['scenario'] == 'Baseline']
+    data = data.loc[data['scenario'] == 'baseline']
+    data = data.loc[data['constellation'] == 'starlink']
     data['pop_density_km2'] = round(data['pop_density_km2'])
     n = len(regions)
 
     data = data[['GID_id', 'pop_density_km2']]
-    regions = regions[['GID_id', 'geometry']]#[:1000]
+    regions = regions[['GID_id', 'geometry']]
 
     regions = regions.merge(data, left_on='GID_id', right_on='GID_id')
     regions.reset_index(drop=True, inplace=True)
@@ -86,28 +87,23 @@ def plot_regions_by_geotype(data, regions):
         '30-35 $\mathregular{km^2}$',
         '35-40 $\mathregular{km^2}$',
         '40-45 $\mathregular{km^2}$',
-        '>45 $\mathregular{km^2}$']
+        '>45 $\mathregular{km^2}$'
+    ]
 
     regions['bin'] = pd.cut(
         regions[metric],
         bins=bins,
         labels=labels
-    )#.fillna('<20')
+    )
 
-    fig, ax = plt.subplots(1, 1, figsize=(15, 10))
+    fig, ax = plt.subplots(1, 1, figsize=(15, 6))
 
     minx, miny, maxx, maxy = regions.total_bounds
-    ax.set_xlim(minx+7, maxx+2)
+    ax.set_xlim(minx+10, maxx)
     ax.set_ylim(miny-5, maxy)
 
     regions.plot(column='bin', ax=ax, cmap='inferno_r',
     linewidth=0, legend=True, edgecolor='grey')
-
-    # handles, labels = ax.get_legend_handles_labels()
-
-    # fig.legend(handles, labels)
-    # fig.legend(handles=handles[::-1], labels=labels[::-1], title='Population Density (km^2)',
-    #     loc='lower left')
 
     ctx.add_basemap(ax, crs=regions.crs, source=ctx.providers.CartoDB.Voyager)
 
@@ -119,66 +115,65 @@ def plot_regions_by_geotype(data, regions):
     plt.close(fig)
 
 
-def plot_sub_national_cost_per_square_km(data, regions):
+def plot_capacity_per_user(data, regions):
     """
+
     """
     n = len(regions)
-    data = data.loc[data['scenario'] == 'Baseline']
-    data = data.loc[data['strategy'] == '4G(MW)']
-    data = data.loc[data['confidence'] == 50]
+    data = data.loc[data['scenario'] == 'baseline']
+    data['per_user_capacity'] = round(data['per_user_capacity'].copy())
 
-    data['cost_per_km2'] = (data['total_cost'] / data['area_km2']) / 1e3
-    data = data[['GID_id', 'cost_per_km2']]
-    regions = regions[['GID_id', 'geometry']]#[:1000]
+    constellations = data['constellation'].unique()#[:1]
 
-    regions = regions.merge(data, left_on='GID_id', right_on='GID_id')
-    regions.reset_index(drop=True, inplace=True)
+    for constellation in list(constellations):
 
-    metric = 'cost_per_km2'
+        subset = data.loc[data['constellation'] == constellation]
 
-    # bins = [-1, 2.5, 5, 7.5, 10, 12.5, 15, 17.5, 20, 22.5, 25, 1e9]
-    bins = [-1, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 1e9]
-    labels = [
-        '<1k USD $\mathregular{km^2}$',
-        '1-2k USD $\mathregular{km^2}$',
-        '2-3k USD $\mathregular{km^2}$',
-        '3-4k USD $\mathregular{km^2}$',
-        '4-5k USD $\mathregular{km^2}$',
-        '5-6k USD $\mathregular{km^2}$',
-        '6-7k USD $\mathregular{km^2}$',
-        '7-8k USD $\mathregular{km^2}$',
-        '8-9k USD $\mathregular{km^2}$',
-        '9-10k USD $\mathregular{km^2}$',
-        '>10k USD $\mathregular{km^2}$',
-    ]
-    regions['bin'] = pd.cut(
-        regions[metric],
-        bins=bins,
-        labels=labels
-    )#.fillna('<20')
+        subset = subset[['GID_id', 'per_user_capacity']]
 
-    fig, ax = plt.subplots(1, 1, figsize=(10,10))
+        regions = regions[['GID_id', 'geometry']]#[:1000]
 
-    minx, miny, maxx, maxy = regions.total_bounds
-    ax.set_xlim(minx+7, maxx-12)
-    ax.set_ylim(miny+5, maxy)
+        regions = regions.merge(subset, left_on='GID_id', right_on='GID_id')
+        regions.reset_index(drop=True, inplace=True)
 
-    regions.plot(column='bin', ax=ax, cmap='inferno_r', linewidth=0.2, legend=True, edgecolor='grey')
+        metric = 'per_user_capacity'
 
-    handles, labels = ax.get_legend_handles_labels()
-    fig.legend(handles[::-1], labels[::-1]) #, title='Population Density (km^2)'
+        bins = [-1, 5, 10, 25, 50, 100, 150, 200, 250, 300, 1e9]
+        labels = [
+            '<5 Mbps',
+            '5-10 Mbps',
+            '10-25 Mbps',
+            '25-50 Mbps',
+            '50-100 Mbps',
+            '100-150 Mbps',
+            '150-200 Mbps',
+            '200-250 Mbps',
+            '250-300 Mbps',
+            '>300 Mbps',
+        ]
+        regions['bin'] = pd.cut(
+            regions[metric],
+            bins=bins,
+            labels=labels
+        )#.fillna('<20')
 
-    #we probably need to fine tune the zoom level to bump up the resolution of the tiles
-    ctx.add_basemap(ax, crs=regions.crs, source=ctx.providers.CartoDB.Voyager)
+        fig, ax = plt.subplots(1, 1, figsize=(10,10))
 
-    # plt.subplots_adjust(top=1.5)
-    fig.suptitle(
-        'Square Kilometer Cost for 4G Universal Broadband using Wireless Backhaul (n={})'.format(n)) # fontsize=12
+        minx, miny, maxx, maxy = regions.total_bounds
+        ax.set_xlim(minx+7, maxx-12)
+        ax.set_ylim(miny+5, maxy)
 
-    fig.tight_layout()
-    fig.savefig(os.path.join(VIS, 'sub_national_cost_per_square_km.png'))
-    # fig.savefig(os.path.join(VIS, 'region_by_total_cost.pdf'))
-    plt.close(fig)
+        regions.plot(column='bin', ax=ax, cmap='inferno_r', linewidth=0, legend=True)
+
+        ctx.add_basemap(ax, crs=regions.crs, source=ctx.providers.CartoDB.Voyager)
+
+        plt.subplots_adjust(top=1.5)
+        fig.suptitle("{} Per User Capacity (Mbps per User) based on 10'%' adoption (n={})".format(constellation, n))
+
+        fig.tight_layout()
+        fig.savefig(os.path.join(VIS, 'per_user_capacity_{}.png'.format(constellation)))
+        # fig.savefig(os.path.join(VIS, 'region_by_total_cost.pdf'))
+        plt.close(fig)
 
 
 if __name__ == '__main__':
@@ -198,14 +193,9 @@ if __name__ == '__main__':
     else:
         shapes = gpd.read_file(path, crs='epsg:4326')#[:1000]
 
-    print('Plotting regions by geotype')
-    plot_regions_by_geotype(data, shapes)
+    # plot_regions_by_geotype
 
-    # print('Loading regional results data')
-    # path = os.path.join(BASE_PATH, '..', 'results', 'regional_cost_estimates.csv')
-    # regional_costs = pd.read_csv(path)
-
-    # print('Plotting sub-national regions by cost per km^2')
-    # plot_sub_national_cost_per_square_km(regional_costs, shapes)
+    print('Plotting capacity per user')
+    plot_capacity_per_user(data, shapes)
 
     print('Complete')
