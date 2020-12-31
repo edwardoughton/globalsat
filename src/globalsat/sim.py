@@ -8,8 +8,10 @@ December 2020
 """
 import math
 import numpy as np
+from itertools import tee
+from collections import OrderedDict
 
-def system_capacity(constellation, number_of_satellites, params):
+def system_capacity(constellation, number_of_satellites, params, lut):
     """
     Find the system capacity.
 
@@ -59,7 +61,7 @@ def system_capacity(constellation, number_of_satellites, params):
 
         cnr = calc_cnr(received_power, noise)
 
-        spectral_efficiency = calc_spectral_efficiency(cnr)
+        spectral_efficiency = calc_spectral_efficiency(cnr, lut)
 
         capacity = calc_capacity(spectral_efficiency, params['dl_bandwidth'])
 
@@ -344,7 +346,7 @@ def calc_cnr(received_power, noise):
     return cnr
 
 
-def calc_spectral_efficiency(cnr):
+def calc_spectral_efficiency(cnr, lut):
     """
     Given a cnr, find the spectral efficnecy.
 
@@ -359,73 +361,28 @@ def calc_spectral_efficiency(cnr):
         The number of bits per Hertz able to be transmitted.
 
     """
+    spectral_efficiency = 0.1
 
-    if cnr < 5.12:
-        spectral_efficiency = 1.647211
-    elif (cnr >= 5.13 and cnr < 5.96):
-        spectral_efficiency = 1.972253
-    elif (cnr >= 5.97 and cnr < 6.54):
-        spectral_efficiency = 1.972253
-    elif (cnr >= 6.55 and cnr < 6.83):
-        spectral_efficiency = 2.104850
-    elif (cnr >= 6.84 and cnr < 7.5):
-        spectral_efficiency = 2.193247
-    elif (cnr >= 7.51 and cnr < 7.79):
-        spectral_efficiency = 2.281645
-    elif (cnr >= 7.8 and cnr < 7.40):
-        spectral_efficiency = 2.370043
-    elif (cnr >= 7.41 and cnr < 8.0):
-        spectral_efficiency = 2.370043
-    elif (cnr >= 8.1 and cnr < 8.37):
-        spectral_efficiency = 2.458441
-    elif (cnr >= 8.38 and cnr < 8.42):
-        spectral_efficiency = 2.524739
-    elif (cnr >= 8.43 and cnr < 9.26):
-        spectral_efficiency = 2.635236
-    elif (cnr >= 9.27 and cnr < 9.70):
-        spectral_efficiency = 2.745734
-    elif (cnr >= 9.71 and cnr < 10.64):
-        spectral_efficiency = 2.856231
-    elif (cnr >= 10.65 and cnr < 11.98):
-        spectral_efficiency = 3.077225
-    elif (cnr >= 11.99 and cnr < 11.09):
-        spectral_efficiency = 3.386618
-    elif (cnr >= 11.1 and cnr < 11.74):
-        spectral_efficiency = 3.291954
-    elif (cnr >= 11.75 and cnr < 12.16):
-        spectral_efficiency = 3.510192
-    elif (cnr >= 12.17 and cnr < 13.04):
-        spectral_efficiency = 3.620536
-    elif (cnr >= 13.05 and cnr < 13.97):
-        spectral_efficiency = 3.841226
-    elif (cnr >= 13.98 and cnr < 14.8):
-        spectral_efficiency = 4.206428
-    elif (cnr >= 14.81 and cnr < 15.46):
-        spectral_efficiency = 4.338659
-    elif (cnr >= 15.47 and cnr < 15.86):
-        spectral_efficiency = 4.603122
-    elif (cnr >= 15.87 and cnr < 16.54):
-        spectral_efficiency = 4.735354
-    elif (cnr >= 16.55 and cnr < 17.72):
-        spectral_efficiency = 4.936639
-    elif (cnr >= 17.73 and cnr < 18.52):
-        spectral_efficiency = 5.163248
-    elif (cnr >= 18.53 and cnr < 16.97):
-        spectral_efficiency = 5.355556
-    elif (cnr >= 16.98 and cnr < 17.23):
-        spectral_efficiency = 5.065690
-    elif (cnr >= 17.24 and cnr < 18.0):
-        spectral_efficiency = 5.241514
-    elif (cnr >= 18.1 and cnr < 18.58):
-        spectral_efficiency = 5.417338
-    elif (cnr >= 18.59 and cnr < 18.83):
-        spectral_efficiency = 5.593162
-    elif (cnr >= 18.84 and cnr < 19.56):
-        spectral_efficiency = 5.768987
-    elif (cnr >= 19.57):
-        spectral_efficiency = 5.900855
-    else:
-        print('Could not determine cnr to spectral efficinecy')
+    for lower, upper in pairwise(lut):
+
+        lower_cnr = lower[0]
+        upper_cnr = upper[0]
+
+        if cnr >= lower_cnr and cnr < upper_cnr:
+            spectral_efficiency = lower[1]
+            return spectral_efficiency
+
+        highest_value = lut[-1]
+
+        if cnr >= highest_value[0]:
+            spectral_efficiency = highest_value[1]
+            return spectral_efficiency
+
+        lowest_value = lut[0]
+
+        if cnr < lowest_value[1]:
+            spectral_efficiency = lowest_value[1]
+            return spectral_efficiency
 
     return spectral_efficiency
 
@@ -450,3 +407,28 @@ def calc_capacity(spectral_efficiency, dl_bandwidth):
     capacity = spectral_efficiency * dl_bandwidth / (10**6)
 
     return capacity
+
+
+def pairwise(iterable):
+    """
+    Return iterable of 2-tuples in a sliding window.
+
+    Parameters
+    ----------
+    iterable: list
+        Sliding window
+
+    Returns
+    -------
+    list of tuple
+        Iterable of 2-tuples
+
+    Example
+    -------
+        >>> list(pairwise([1,2,3,4]))
+            [(1,2),(2,3),(3,4)]
+
+    """
+    a, b = tee(iterable)
+    next(b, None)
+    return zip(a, b)
