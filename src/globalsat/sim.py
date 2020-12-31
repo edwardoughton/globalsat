@@ -1,29 +1,22 @@
 """
-LEO Satellite Broadband Simulation
+Globalsat simulation model.
 
 Developed by Bonface Osaro and Ed Oughton.
 
 December 2020
 
 """
-import configparser
-import os
 import math
 import numpy as np
-import pandas as pd
 
-CONFIG = configparser.ConfigParser()
-CONFIG.read(os.path.join(os.path.dirname(__file__), '..', '..', 'scripts', 'script_config.ini'))
-BASE_PATH = CONFIG['file_locations']['base_path']
-
-RESULTS = os.path.join(BASE_PATH, '..', 'results')
-
-def system_capacity(number_of_satellites, params):
+def system_capacity(constellation, number_of_satellites, params):
     """
     Find the system capacity.
 
     Parameters
     ----------
+    constellation : string
+        Consetellation selected for assessment.
     number_of_satellites : int
         Number of satellites in the contellation being simulated.
     params : dict
@@ -71,6 +64,7 @@ def system_capacity(number_of_satellites, params):
         capacity = calc_capacity(spectral_efficiency, params['dl_bandwidth'])
 
         results.append({
+            'constellation': constellation,
             'number_of_satellites': number_of_satellites,
             'distance': distance,
             'satelite_coverage_area': satelite_coverage_area,
@@ -91,8 +85,8 @@ def system_capacity(number_of_satellites, params):
 
 def calc_geographic_metrics(number_of_satellites, params):
     """
-    Calculate geographic metrics, including (i) the distance between the transmitter and
-    reciever, and (ii) the coverage area for each satellite.
+    Calculate geographic metrics, including (i) the distance between the transmitter
+    and reciever, and (ii) the coverage area for each satellite.
 
     Parameters
     ----------
@@ -116,9 +110,9 @@ def calc_geographic_metrics(number_of_satellites, params):
 
     network_density = number_of_satellites / area_of_earth_covered
 
-    satelite_coverage_area = (area_of_earth_covered / number_of_satellites) / 1000
+    satelite_coverage_area = (area_of_earth_covered / number_of_satellites)
 
-    mean_distance_between_assets = math.sqrt(((1) / network_density)) / (2)
+    mean_distance_between_assets = math.sqrt((1 / network_density)) / 2
 
     distance = math.sqrt(((mean_distance_between_assets)**2) + ((params['altitude_km'])**2))
 
@@ -128,6 +122,10 @@ def calc_geographic_metrics(number_of_satellites, params):
 def calc_free_space_path_loss(distance, params, i, random_variations):
     """
     Calculate the free space path loss in decibels.
+
+    FSPL(dB) = 20log(d) + 20log(f) + 32.44
+
+    Where distance (d) is in km and frequency (f) is MHz.
 
     Parameters
     ----------
@@ -146,9 +144,9 @@ def calc_free_space_path_loss(distance, params, i, random_variations):
         The free space path loss over the given distance.
 
     """
-    wavelength_m = params['speed_of_light'] / params['dl_frequency']
+    frequency_MHz = params['dl_frequency'] / 1e6
 
-    path_loss = 10*(math.log10(((4*np.pi*distance*10**3) / wavelength_m)**2))
+    path_loss = 20*math.log10(distance) + 20*math.log10(frequency_MHz) + 32.44
 
     random_variation = random_variations[i]
 
@@ -205,13 +203,13 @@ def calc_antenna_gain(c, d, f, n):
     Parameters
     ----------
     c : float
-        Speed of light
+        Speed of light in m/s.
     d : float
-        Antenna diameter in meters
+        Antenna diameter in meters.
     f : int
-        Carrier frequency in Hertz
+        Carrier frequency in Hertz.
     n : float
-        Antenna efficiency
+        Antenna efficiency.
 
     Returns
     -------
@@ -239,7 +237,7 @@ def calc_eirp(power, antenna_gain, losses):
     Parameters
     ----------
     power : float
-        Transmitter power in ...
+        Transmitter power in watts.
     antenna_gain : float
         Antenna gain in dB.
     losses : float
@@ -362,70 +360,70 @@ def calc_spectral_efficiency(cnr):
 
     """
 
-    if cnr<5.12:
-        spectral_efficiency=1.647211
-    elif (cnr>=5.13 and cnr<5.96):
-        spectral_efficiency=1.972253
-    elif (cnr>=5.97 and cnr<6.54):
-        spectral_efficiency=1.972253
-    elif (cnr>=6.55 and cnr<6.83):
-        spectral_efficiency=2.104850
-    elif (cnr>=6.84 and cnr<7.5):
-        spectral_efficiency=2.193247
-    elif (cnr>=7.51 and cnr<7.79):
-        spectral_efficiency=2.281645
-    elif (cnr>=7.8 and cnr<7.40):
-        spectral_efficiency=2.370043
-    elif (cnr>=7.41 and cnr<8.0):
-        spectral_efficiency=2.370043
-    elif (cnr>=8.1 and cnr<8.37):
-        spectral_efficiency=2.458441
-    elif (cnr>=8.38 and cnr<8.42):
-        spectral_efficiency=2.524739
-    elif (cnr>=8.43 and cnr<9.26):
-        spectral_efficiency=2.635236
-    elif (cnr>=9.27 and cnr<9.70):
-        spectral_efficiency=2.745734
-    elif (cnr>=9.71 and cnr<10.64):
-        spectral_efficiency=2.856231
-    elif (cnr>=10.65 and cnr<11.98):
-        spectral_efficiency=3.077225
-    elif (cnr>=11.99 and cnr<11.09):
-        spectral_efficiency=3.386618
-    elif (cnr>=11.1 and cnr<11.74):
-        spectral_efficiency=3.291954
-    elif (cnr>=11.75 and cnr<12.16):
-        spectral_efficiency=3.510192
-    elif (cnr>=12.17 and cnr<13.04):
-        spectral_efficiency=3.620536
-    elif (cnr>=13.05 and cnr<13.97):
-        spectral_efficiency=3.841226
-    elif (cnr>=13.98 and cnr<14.8):
-        spectral_efficiency=4.206428
-    elif (cnr>=14.81 and cnr<15.46):
-        spectral_efficiency=4.338659
-    elif (cnr>=15.47 and cnr<15.86):
-        spectral_efficiency=4.603122
-    elif (cnr>=15.87 and cnr<16.54):
-        spectral_efficiency=4.735354
-    elif (cnr>=16.55 and cnr<17.72):
-        spectral_efficiency=4.936639
-    elif (cnr>=17.73 and cnr<18.52):
-        spectral_efficiency=5.163248
-    elif (cnr>=18.53 and cnr<16.97):
-        spectral_efficiency=5.355556
-    elif (cnr>=16.98 and cnr<17.23):
-        spectral_efficiency=5.065690
-    elif (cnr>=17.24 and cnr<18.0):
-        spectral_efficiency=5.241514
-    elif (cnr>=18.1 and cnr<18.58):
-        spectral_efficiency=5.417338
-    elif (cnr>=18.59 and cnr<18.83):
-        spectral_efficiency=5.593162
-    elif (cnr>=18.84 and cnr<19.56):
-        spectral_efficiency=5.768987
-    elif (cnr>=19.57):
-        spectral_efficiency=5.900855
+    if cnr < 5.12:
+        spectral_efficiency = 1.647211
+    elif (cnr >= 5.13 and cnr < 5.96):
+        spectral_efficiency = 1.972253
+    elif (cnr >= 5.97 and cnr < 6.54):
+        spectral_efficiency = 1.972253
+    elif (cnr >= 6.55 and cnr < 6.83):
+        spectral_efficiency = 2.104850
+    elif (cnr >= 6.84 and cnr < 7.5):
+        spectral_efficiency = 2.193247
+    elif (cnr >= 7.51 and cnr < 7.79):
+        spectral_efficiency = 2.281645
+    elif (cnr >= 7.8 and cnr < 7.40):
+        spectral_efficiency = 2.370043
+    elif (cnr >= 7.41 and cnr < 8.0):
+        spectral_efficiency = 2.370043
+    elif (cnr >= 8.1 and cnr < 8.37):
+        spectral_efficiency = 2.458441
+    elif (cnr >= 8.38 and cnr < 8.42):
+        spectral_efficiency = 2.524739
+    elif (cnr >= 8.43 and cnr < 9.26):
+        spectral_efficiency = 2.635236
+    elif (cnr >= 9.27 and cnr < 9.70):
+        spectral_efficiency = 2.745734
+    elif (cnr >= 9.71 and cnr < 10.64):
+        spectral_efficiency = 2.856231
+    elif (cnr >= 10.65 and cnr < 11.98):
+        spectral_efficiency = 3.077225
+    elif (cnr >= 11.99 and cnr < 11.09):
+        spectral_efficiency = 3.386618
+    elif (cnr >= 11.1 and cnr < 11.74):
+        spectral_efficiency = 3.291954
+    elif (cnr >= 11.75 and cnr < 12.16):
+        spectral_efficiency = 3.510192
+    elif (cnr >= 12.17 and cnr < 13.04):
+        spectral_efficiency = 3.620536
+    elif (cnr >= 13.05 and cnr < 13.97):
+        spectral_efficiency = 3.841226
+    elif (cnr >= 13.98 and cnr < 14.8):
+        spectral_efficiency = 4.206428
+    elif (cnr >= 14.81 and cnr < 15.46):
+        spectral_efficiency = 4.338659
+    elif (cnr >= 15.47 and cnr < 15.86):
+        spectral_efficiency = 4.603122
+    elif (cnr >= 15.87 and cnr < 16.54):
+        spectral_efficiency = 4.735354
+    elif (cnr >= 16.55 and cnr < 17.72):
+        spectral_efficiency = 4.936639
+    elif (cnr >= 17.73 and cnr < 18.52):
+        spectral_efficiency = 5.163248
+    elif (cnr >= 18.53 and cnr < 16.97):
+        spectral_efficiency = 5.355556
+    elif (cnr >= 16.98 and cnr < 17.23):
+        spectral_efficiency = 5.065690
+    elif (cnr >= 17.24 and cnr < 18.0):
+        spectral_efficiency = 5.241514
+    elif (cnr >= 18.1 and cnr < 18.58):
+        spectral_efficiency = 5.417338
+    elif (cnr >= 18.59 and cnr < 18.83):
+        spectral_efficiency = 5.593162
+    elif (cnr >= 18.84 and cnr < 19.56):
+        spectral_efficiency = 5.768987
+    elif (cnr >= 19.57):
+        spectral_efficiency = 5.900855
     else:
         print('Could not determine cnr to spectral efficinecy')
 
@@ -452,38 +450,3 @@ def calc_capacity(spectral_efficiency, dl_bandwidth):
     capacity = spectral_efficiency * dl_bandwidth / (10**6)
 
     return capacity
-
-
-if __name__ == '__main__':
-
-    params = {
-        'iterations': 5,
-        'seed_value': 42,
-        'mu': 1,
-        'sigma': 7.8,
-        'total_area_earth_km_sq': 510000000, #Area of Earth in km^2
-        'portion_of_earth_covered': 0.8, #We assume the poles aren't covered
-        'altitude_km': 550, #Altitude of starlink satellites in km
-        'dl_frequency': 13.5*10**9, #Downlink frequency in Hertz
-        'dl_bandwidth': 0.25*10**9,
-        'speed_of_light': 3.0*10**8, #Speed of light in vacuum
-        'antenna_diameter': 0.7,
-        'antenna_efficiency': 0.6,
-        'power': 30, #dBw
-        'losses': 4, #dB
-    }
-
-    NUMBER_OF_SATELLITES = 60#5040
-
-    results = []
-
-    for number_of_satellites in range(60, NUMBER_OF_SATELLITES + 60, 60):
-
-        data = system_capacity(number_of_satellites, params)
-
-        results = results + data
-
-    results = pd.DataFrame(results)
-
-    path = os.path.join(RESULTS, 'sim_results.csv')
-    results.to_csv(path, index=False)

@@ -1,0 +1,17 @@
+language: python
+python:
+  # - "3.5"
+  - "3.6"
+  # - "3.7" not available on travis as OpenSSL 1.0.2+ is not available on Ubuntu Trusty
+
+install:
+  - pip install -r requirements-dev.txt
+  - pip install coveralls
+  - python setup.py develop
+  - pip freeze
+
+script:
+  - python -m pytest --cov=globalsat tests
+
+after_success:
+  - if [[ "$TRAVIS_PYTHON_VERSION" == "3.6" ]]; then coveralls || echo "failed"; fi

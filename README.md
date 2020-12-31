@@ -11,8 +11,9 @@ This codebase provides an open-source model to help analyze the global satellite
 Such a model can be used for numerous applications, including assessment of digital
 connectivity or understanding the vulnerability and resilience of the global satellite fleet.
 
+
 Using conda
-==========
+===========
 
 The recommended installation method is to use conda, which handles packages and virtual
 environments, along with the conda-forge channel which has a host of pre-built libraries and
@@ -26,21 +27,54 @@ Activate it (run this each time you switch projects):
 
     conda activate globalsat
 
-First, install optional packages:
+First, to run the just simulation (`sim.py`) you need to install necessary packages:
 
-    conda install geopandas rasterio rasterstats matplotlib seaborn contextily descartes
+    conda install numpy pandas
+
+Secondly, to run the preprocessing (`preprocess.py`) and get_results (`results.py`):
+
+    conda install geopandas rasterio rasterstats tqdm
+
+Finally, to visualize the results (`vis.py`) you will need:
+
+    conda install matplotlib seaborn contextily descartes
+
+
+Quick Start
+===========
+
+To quick start, install the `globalsat` package:
+
+    python setup.py install
+
+Or if you want to develop the package:
+
+    python setup.py develop
+
+Then run the simulation to generate results:
+
+    python scripts/run.py
+
+If you want to create the map try:
+
+    python scripts/preprocess.py
+
+Followed by:
+
+    python scripts/results.py
+
+And then:
+
+    python vis/vis.py
 
 
 Background and funding
 ======================
 
-**globalsat** is being collaboratively developed by researchers at George Mason University, as
-well as colleagues at the British Antartic Survey and University of Cambridge.
+**globalsat** has been developed by researchers at George Mason University.
 
 
 Contributors
 ============
-- Edward J. Oughton (George Mason University/Oxford)
-- Bonface Osaro (George Mason University)
-- Daikichi Seki (Cambridge/Kyoto University)
-- Richard Horne (British Antartic Survey)
+- Bonface Osaro (George Mason University) (Engineering Lead)
+- Ed Oughton (George Mason University) (Project lead)
