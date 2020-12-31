@@ -11,7 +11,7 @@ import os
 import pandas as pd
 
 from globalsat.sim import system_capacity
-from parameters import parameters
+from inputs import parameters, lut
 
 CONFIG = configparser.ConfigParser()
 CONFIG.read(os.path.join(os.path.dirname(__file__), 'script_config.ini'))
@@ -28,7 +28,7 @@ if __name__ == '__main__':
 
         for number_of_satellites in range(60, params['number_of_satellites'] + 60, 60):
 
-            data = system_capacity(constellation, number_of_satellites, params)
+            data = system_capacity(constellation, number_of_satellites, params, lut)
 
             results = results + data
 
