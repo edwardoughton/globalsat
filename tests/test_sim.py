@@ -14,14 +14,14 @@ from globalsat.sim import (
 )
 
 
-def test_system_capacity(setup_params):
+def test_system_capacity(setup_params, setup_lut):
     """
     Integration test for main system capacity function.
 
     """
     number_of_satellites = 10
 
-    results = system_capacity('starlink', number_of_satellites, setup_params)[0]
+    results = system_capacity('starlink', number_of_satellites, setup_params, setup_lut)[0]
 
     assert results['number_of_satellites'] == 10
     assert round(results['distance']) == 10
@@ -33,9 +33,9 @@ def test_system_capacity(setup_params):
     assert round(results['received_power']) == -72
     assert round(results['noise']) == -90
     assert round(results['cnr']) == 18
-    assert results['spectral_efficiency'] == 4.936639
-    assert round(results['capacity']) == 1234
-    assert round(results['capacity_kmsq']) == 154
+    assert results['spectral_efficiency'] == 4.735354
+    assert round(results['capacity']) == 1184
+    assert round(results['capacity_kmsq']) == 148
 
 
 def test_calc_geographic_metrics():
@@ -155,9 +155,16 @@ def test_calc_spectral_efficiency():
     Unit test for finding the spectral efficnecy.
 
     """
-    cnr = 28 #dB
+    lut = [
+        (0, 1),
+        (10, 2),
+        (20, 4),
+    ]
 
-    assert calc_spectral_efficiency(cnr) == 5.900855 # bits/Hz/s
+    assert calc_spectral_efficiency(-2, lut) == 1 # bits/Hz/s
+    assert calc_spectral_efficiency(2, lut) == 1 # bits/Hz/s
+    assert calc_spectral_efficiency(15, lut) == 2 # bits/Hz/s
+    assert calc_spectral_efficiency(28, lut) == 4 # bits/Hz/s
 
 
 def test_calc_capacity():
