@@ -1,6 +1,10 @@
 """
 Process settlement layer
 
+Written by Ed Oughton.
+
+December 2020
+
 """
 import os
 import configparser
@@ -359,56 +363,6 @@ def get_area(modeling_region_geom):
     return area_km
 
 
-def get_global_pop_lookup():
-    """
-
-    """
-    filename = 'global_population_lookup.csv'
-    path_output = os.path.join(DATA_INTERMEDIATE, filename)
-
-    paths = glob.glob(os.path.join(DATA_INTERMEDIATE, '**/national_outline.shp'))
-
-    filename = 'settlements.tif'
-
-    output = []
-
-    for path in paths:
-
-        country_shape = gpd.read_file(path, crs='epsg:4326')
-
-        area_km = get_area(country_shape['geometry'][0])
-
-        iso3 = os.path.basename(os.path.split(path)[0])
-        path_settlements = os.path.join(DATA_INTERMEDIATE, iso3, filename)
-
-        if not os.path.exists(path_settlements):
-            print('{} does not have a settlement.tif file'.format(iso3))
-            continue
-
-        population = find_population(country_shape, path_settlements)
-
-        if not isinstance(population, float):
-            continue
-
-        if population > 0:
-            pop_density_km2 = population / area_km
-        else:
-            pop_density_km2 = 0
-
-        output.append({
-            'iso3': iso3,
-            'population': population,
-            'area_km': area_km,
-            'pop_density_km2': pop_density_km2,
-        })
-
-    output = pd.DataFrame(output)
-
-    output.to_csv(path_output, index=False)
-
-    return
-
-
 if __name__ == '__main__':
 
     countries = find_country_list([])#[:2] #['Africa']
@@ -417,21 +371,14 @@ if __name__ == '__main__':
 
     for country in tqdm(countries):
 
-        if not country['iso3'] == 'MNG':
-            continue
-
         print('-Working on {}: {}'.format(country['country_name'], country['iso3']))
 
-        # print('Processing country boundary ready to export')
         process_country_shapes(country)
 
-        # print('Processing regions ready to export')
         process_regions(country)
 
-        # print('Processing country population raster ready to export')
         process_settlement_layer(country)
 
-        # print('Create population and terrain regional lookup')
         results = create_pop_regional_lookup(country)
 
         output = output + results
@@ -439,8 +386,5 @@ if __name__ == '__main__':
     path_output = os.path.join(DATA_INTERMEDIATE, 'global_regional_population_lookup.csv')
     output = pd.DataFrame(output)
     output.to_csv(path_output, index=False)
-
-    # print('Creating global population lookup')
-    # get_global_pop_lookup()
 
     print('Preprocessing complete')
