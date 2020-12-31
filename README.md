@@ -1,4 +1,9 @@
 # globalsat
+
+[![Build Status](https://travis-ci.com/edwardoughton/globalsat.svg?branch=master)](https://travis-ci.com/edwardoughton/globalsat)
+[![Coverage Status](https://coveralls.io/repos/github/edwardoughton/globalsat/badge.svg?branch=master)](https://coveralls.io/github/edwardoughton/globalsat?branch=master)
+
+
 Global Satellite Assessment Tool
 
 Human activity is increasibly reliant on satellite connectivity services for broadband
