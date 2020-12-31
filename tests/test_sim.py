@@ -21,7 +21,7 @@ def test_system_capacity(setup_params):
     """
     number_of_satellites = 10
 
-    results = system_capacity(number_of_satellites, setup_params)[0]
+    results = system_capacity('starlink', number_of_satellites, setup_params)[0]
 
     assert results['number_of_satellites'] == 10
     assert round(results['distance']) == 10
