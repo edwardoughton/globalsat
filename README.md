@@ -1,21 +1,19 @@
-# globalsat
+# Global Satellite Assessment Tool (globalsat)
 
 [![Build Status](https://travis-ci.com/edwardoughton/globalsat.svg?branch=master)](https://travis-ci.com/edwardoughton/globalsat)
 [![Documentation Status](https://readthedocs.org/projects/globalsat/badge/?version=latest)](https://globalsat.readthedocs.io/en/latest/?badge=latest)
 [![Coverage Status](https://coveralls.io/repos/github/edwardoughton/globalsat/badge.svg?branch=master)](https://coveralls.io/github/edwardoughton/globalsat?branch=master)
 
 
-Global Satellite Assessment Tool
+Human activity is increasibly reliant on satellite broadband connectivity for internet access,
+timing, syncronization, positioning etc.
 
-Human activity is increasibly reliant on satellite connectivity services for broadband
-internet access, timing, syncronization, positioning etc.
+However, we lack analytics to help model the engineering-economics of new global satellite
+constellations, in order to understand capacity, coverage and cost.
 
-However, we lack analytics to help model global satellite systems, whether we wish to
-understand capacity, coverage, cost, vulnerability or resilience.
-
-This codebase provides an open-source model to help analyze the global satellite fleet.
-Such a model can be used for numerous applications, including assessment of digital
-connectivity or understanding the vulnerability and resilience of the global satellite fleet.
+This codebase provides an open-source model to help analyze the global satellite fleet. Such
+a model can be used for numerous applications, such as assessing the role of new Low Earth
+Orbit constellations in delivering universal broadband services.
 
 
 Using conda
