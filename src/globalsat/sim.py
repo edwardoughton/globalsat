@@ -389,8 +389,6 @@ def calc_spectral_efficiency(cnr, lut):
             spectral_efficiency = lowest_value[1]
             return spectral_efficiency
 
-    return spectral_efficiency
-
 
 def calc_capacity(spectral_efficiency, dl_bandwidth):
     """
