@@ -1,10 +1,15 @@
-# globalsat
+Global Satellite Assessment Tool (globalsat)
+=========
 
 [![Build Status](https://travis-ci.com/edwardoughton/globalsat.svg?branch=master)](https://travis-ci.com/edwardoughton/globalsat)
 [![Coverage Status](https://coveralls.io/repos/github/edwardoughton/globalsat/badge.svg?branch=master)](https://coveralls.io/github/edwardoughton/globalsat?branch=master)
 
+.. toctree::
+   :maxdepth: 2
+   :caption: Contents:
 
-Global Satellite Assessment Tool
+Description
+===========
 
 Human activity is increasibly reliant on satellite connectivity services for broadband
 internet access, timing, syncronization, positioning etc.
@@ -83,3 +88,11 @@ Contributors
 ============
 - Bonface Osoro (George Mason University) (Engineering Lead)
 - Ed Oughton (George Mason University) (Project lead)
+
+
+Indices and tables
+==================
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`
