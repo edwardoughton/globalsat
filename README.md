@@ -81,5 +81,5 @@ Background and funding
 
 Contributors
 ============
-- Bonface Osaro (George Mason University) (Engineering Lead)
+- Bonface Osoro (George Mason University) (Engineering Lead)
 - Ed Oughton (George Mason University) (Project lead)
