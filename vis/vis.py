@@ -1,6 +1,10 @@
 """
 Visualize results.
 
+Written by Ed Oughton
+
+December 2020.
+
 """
 import os
 import configparser
