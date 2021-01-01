@@ -2,6 +2,7 @@ Global Satellite Assessment Tool (globalsat)
 =========
 
 [![Build Status](https://travis-ci.com/edwardoughton/globalsat.svg?branch=master)](https://travis-ci.com/edwardoughton/globalsat)
+[![Documentation Status](https://readthedocs.org/projects/globalsat/badge/?version=latest)](https://globalsat.readthedocs.io/en/latest/?badge=latest)
 [![Coverage Status](https://coveralls.io/repos/github/edwardoughton/globalsat/badge.svg?branch=master)](https://coveralls.io/github/edwardoughton/globalsat?branch=master)
 
 .. toctree::
