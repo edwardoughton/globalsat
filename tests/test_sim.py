@@ -93,6 +93,7 @@ def test_generate_log_normal_dist_value():
 
     """
     assert round(generate_log_normal_dist_value(13.5, 2, 1, 1, 1)[0]) == 1
+    assert round(generate_log_normal_dist_value(13.5, 2, 1, None, 1)[0]) == 2
 
 
 def test_antenna_gain():
