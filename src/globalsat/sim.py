@@ -23,6 +23,8 @@ def system_capacity(constellation, number_of_satellites, params, lut):
         Number of satellites in the contellation being simulated.
     params : dict
         Contains all simulation parameters.
+    lut : list of tuples
+        Lookup table for CNR to spectral efficiency.
 
     Returns
     -------
@@ -205,7 +207,7 @@ def calc_antenna_gain(c, d, f, n):
     Parameters
     ----------
     c : float
-        Speed of light in m/s.
+        Speed of light in meters per second (m/s).
     d : float
         Antenna diameter in meters.
     f : int
@@ -258,11 +260,12 @@ def calc_eirp(power, antenna_gain, losses):
 
 def calc_received_power(eirp, path_loss):
     """
+    Calculates the power received at the User Equipment (UE).
 
     Parameters
     ----------
     eirp : float
-        eirp in dB.
+        The Equivalent Isotropically Radiated Power in dB.
     path_loss : float
         The free space path loss over the given distance.
 
@@ -312,7 +315,7 @@ def calc_noise():
     Returns
     -------
     noise : float
-        Received noise at the UE receiver in decibels
+        Received noise at the UE receiver in dB.
 
     """
     k = 1.38e-23 #Boltzmann's constant k = 1.38×10−23 joules per kelvin
@@ -331,9 +334,9 @@ def calc_cnr(received_power, noise):
     Returns
     -------
     received_power : float
-        The received power at the receiver in dB.
+        The received signal power at the receiver in dB.
     noise : float
-        Received noise at the UE receiver in decibels
+        Received noise at the UE receiver in dB.
 
     Returns
     -------
@@ -348,12 +351,14 @@ def calc_cnr(received_power, noise):
 
 def calc_spectral_efficiency(cnr, lut):
     """
-    Given a cnr, find the spectral efficnecy.
+    Given a cnr, find the spectral efficiency.
 
     Parameters
     ----------
     cnr : float
         Carrier-to-Noise Ratio (CNR) in dB.
+    lut : list of tuples
+        Lookup table for CNR to spectral efficiency.
 
     Returns
     -------
@@ -425,8 +430,8 @@ def pairwise(iterable):
 
     Example
     -------
-        >>> list(pairwise([1,2,3,4]))
-            [(1,2),(2,3),(3,4)]
+    >>> list(pairwise([1,2,3,4]))
+        [(1,2),(2,3),(3,4)]
 
     """
     a, b = tee(iterable)
