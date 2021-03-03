@@ -11,6 +11,7 @@ import numpy as np
 from itertools import tee
 from collections import OrderedDict
 
+
 def system_capacity(constellation, number_of_satellites, params, lut):
     """
     Find the system capacity.
@@ -34,7 +35,9 @@ def system_capacity(constellation, number_of_satellites, params, lut):
     """
     results = []
 
-    distance, satelite_coverage_area = calc_geographic_metrics(number_of_satellites, params)
+    distance, satelite_coverage_area_km = calc_geographic_metrics(
+        number_of_satellites, params
+        )
 
     random_variations = generate_log_normal_dist_value(
             params['dl_frequency'],
@@ -46,7 +49,9 @@ def system_capacity(constellation, number_of_satellites, params, lut):
 
     for i in range(0, params['iterations']):
 
-        path_loss = calc_free_space_path_loss(distance, params, i, random_variations)
+        path_loss, random_variation = calc_free_space_path_loss(
+            distance, params, i, random_variations
+        )
 
         antenna_gain = calc_antenna_gain(
             params['speed_of_light'],
@@ -55,11 +60,13 @@ def system_capacity(constellation, number_of_satellites, params, lut):
             params['antenna_efficiency']
         )
 
-        eirp = calc_eirp(params['power'], antenna_gain, params['losses'])
+        eirp = calc_eirp(params['power'], antenna_gain)
 
-        received_power = calc_received_power(eirp, path_loss)
+        losses = calc_losses(params['rain_attenuation'], params['all_other_losses'])
 
         noise = calc_noise()
+
+        received_power = calc_received_power(eirp, path_loss, params['receiver_gain'], losses)
 
         cnr = calc_cnr(received_power, noise)
 
@@ -71,9 +78,10 @@ def system_capacity(constellation, number_of_satellites, params, lut):
             'constellation': constellation,
             'number_of_satellites': number_of_satellites,
             'distance': distance,
-            'satelite_coverage_area': satelite_coverage_area,
+            'satelite_coverage_area': satelite_coverage_area_km,
             'iteration': i,
             'path_loss': path_loss,
+            'random_variation': random_variation,
             'antenna_gain': antenna_gain,
             'eirp': eirp,
             'received_power': received_power,
@@ -81,7 +89,7 @@ def system_capacity(constellation, number_of_satellites, params, lut):
             'cnr': cnr,
             'spectral_efficiency': spectral_efficiency,
             'capacity': capacity,
-            'capacity_kmsq': capacity / satelite_coverage_area,
+            'capacity_kmsq': capacity / satelite_coverage_area_km,
         })
 
     return results
@@ -103,7 +111,7 @@ def calc_geographic_metrics(number_of_satellites, params):
     -------
     distance : float
         The distance between the transmitter and reciever in km.
-    satelite_coverage_area : float
+    satelite_coverage_area_km : float
         The area which each satellite covers on Earth's surface in km.
 
     """
@@ -114,13 +122,13 @@ def calc_geographic_metrics(number_of_satellites, params):
 
     network_density = number_of_satellites / area_of_earth_covered
 
-    satelite_coverage_area = (area_of_earth_covered / number_of_satellites)
+    satelite_coverage_area_km = (area_of_earth_covered / number_of_satellites)
 
     mean_distance_between_assets = math.sqrt((1 / network_density)) / 2
 
     distance = math.sqrt(((mean_distance_between_assets)**2) + ((params['altitude_km'])**2))
 
-    return distance, satelite_coverage_area
+    return distance, satelite_coverage_area_km
 
 
 def calc_free_space_path_loss(distance, params, i, random_variations):
@@ -146,7 +154,8 @@ def calc_free_space_path_loss(distance, params, i, random_variations):
     -------
     path_loss : float
         The free space path loss over the given distance.
-
+    random_variation : float
+        Stochastic component.
     """
     frequency_MHz = params['dl_frequency'] / 1e6
 
@@ -154,7 +163,7 @@ def calc_free_space_path_loss(distance, params, i, random_variations):
 
     random_variation = random_variations[i]
 
-    return path_loss + random_variation
+    return path_loss + random_variation, random_variation
 
 
 def generate_log_normal_dist_value(frequency, mu, sigma, seed_value, draws):
@@ -230,12 +239,12 @@ def calc_antenna_gain(c, d, f, n):
     return antenna_gain
 
 
-def calc_eirp(power, antenna_gain, losses):
+def calc_eirp(power, antenna_gain):
     """
     Calculate the Equivalent Isotropically Radiated Power.
 
     Equivalent Isotropically Radiated Power (EIRP) = (
-        Power + Gain - Losses
+        Power + Gain
     )
 
     Parameters
@@ -253,12 +262,34 @@ def calc_eirp(power, antenna_gain, losses):
         eirp in dB.
 
     """
-    eirp = power + antenna_gain - losses
+    eirp = power + antenna_gain
 
     return eirp
 
 
-def calc_received_power(eirp, path_loss):
+def calc_losses(rain_attenuation, all_other_losses):
+    """
+    Estimates the transmission signal losses.
+
+    Parameters
+    ----------
+    rain_attentuation : int
+        Signal losses from rain attenuation.
+    all_other_losses : float
+        All other signal losses.
+
+    Returns
+    -------
+    losses : float
+        The estimated transmission signal losses.
+
+    """
+    losses = rain_attenuation + all_other_losses
+
+    return losses
+
+
+def calc_received_power(eirp, path_loss, receiver_gain, losses):
     """
     Calculates the power received at the User Equipment (UE).
 
@@ -268,6 +299,10 @@ def calc_received_power(eirp, path_loss):
         The Equivalent Isotropically Radiated Power in dB.
     path_loss : float
         The free space path loss over the given distance.
+    receiver_gain : float
+        Antenna gain at the receiver.
+    losses : float
+        Transmission signal losses.
 
     Returns
     -------
@@ -275,10 +310,7 @@ def calc_received_power(eirp, path_loss):
         The received power at the receiver in dB.
 
     """
-    receiver_gain = 4 # dummy values
-    receiver_loss = 4 # dummy values
-
-    received_power = eirp - path_loss + receiver_gain - receiver_loss
+    received_power = eirp + receiver_gain - path_loss - losses
 
     return received_power
 
@@ -366,15 +398,13 @@ def calc_spectral_efficiency(cnr, lut):
         The number of bits per Hertz able to be transmitted.
 
     """
-    spectral_efficiency = 0.1
-
     for lower, upper in pairwise(lut):
 
-        lower_cnr = lower[0]
-        upper_cnr = upper[0]
+        lower_cnr, lower_se  = lower
+        upper_cnr, upper_se  = upper
 
         if cnr >= lower_cnr and cnr < upper_cnr:
-            spectral_efficiency = lower[1]
+            spectral_efficiency = lower_se
             return spectral_efficiency
 
         highest_value = lut[-1]
@@ -385,7 +415,7 @@ def calc_spectral_efficiency(cnr, lut):
 
         lowest_value = lut[0]
 
-        if cnr < lowest_value[1]:
+        if cnr < lowest_value[0]:
             spectral_efficiency = lowest_value[1]
             return spectral_efficiency
 
@@ -434,4 +464,5 @@ def pairwise(iterable):
     """
     a, b = tee(iterable)
     next(b, None)
+
     return zip(a, b)

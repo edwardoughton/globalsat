@@ -5,6 +5,7 @@ from globalsat.sim import (
     calc_free_space_path_loss,
     generate_log_normal_dist_value,
     calc_antenna_gain,
+    calc_losses,
     calc_eirp,
     calc_received_power,
     calc_noise,
@@ -29,13 +30,13 @@ def test_system_capacity(setup_params, setup_lut):
     assert results['iteration'] == 0
     assert round(results['path_loss']) == 136
     assert round(results['antenna_gain']) == 38
-    assert round(results['eirp']) == 64
-    assert round(results['received_power']) == -72
+    assert round(results['eirp']) == 68
+    assert round(results['received_power']) == -41
     assert round(results['noise']) == -90
-    assert round(results['cnr']) == 18
-    assert results['spectral_efficiency'] == 4.735354
-    assert round(results['capacity']) == 1184
-    assert round(results['capacity_kmsq']) == 148
+    assert round(results['cnr']) == 49.0
+    assert results['spectral_efficiency'] == 5.768987
+    assert round(results['capacity']) == 1442
+    assert round(results['capacity_kmsq']) == 180
 
 
 def test_calc_geographic_metrics():
@@ -56,7 +57,7 @@ def test_calc_geographic_metrics():
 
     # area_of_earth_covered = total_area_earth_km_sq * portion_of_earth_covered
     # network_density = number_of_satellites / area_of_earth_covered
-    # satelite_coverage_area = area_of_earth_covered / number_of_satellites
+    # satelite_coverage_area = (area_of_earth_covered / number_of_satellites) / 1000
     # mean_distance_between_assets = math.sqrt((1 / network_density)) / 2
     # distance = math.sqrt((mean_distance_between_assets**2) + (altitude_km**2))
 
@@ -66,7 +67,9 @@ def test_calc_geographic_metrics():
     # 1.41 km on average = math.sqrt((1 / 0.125 km^2 )) / (2)
     # 10.1 km = math.sqrt((1.41**2) + (10**2))
 
-    distance, satelite_coverage_area = calc_geographic_metrics(number_of_satellites, params)
+    distance, satelite_coverage_area = calc_geographic_metrics(
+        number_of_satellites, params
+    )
 
     assert round(distance) == 10
     assert satelite_coverage_area == 8
@@ -82,7 +85,9 @@ def test_calc_free_space_path_loss():
     i = 0
     random_variations = [1]
 
-    result = calc_free_space_path_loss(distance, params, i, random_variations)
+    result, random_variation = calc_free_space_path_loss(
+        distance, params, i, random_variations
+    )
 
     assert round(result) == 136
 
@@ -109,16 +114,29 @@ def test_antenna_gain():
     assert round(calc_antenna_gain(c, d, f, n)) == 38
 
 
+def test_calc_losses():
+    """
+    Unit test for estimating the transmission losses
+
+    """
+    rain_attenuation = 10
+    all_other_losses = 0.53
+
+    result = calc_losses(rain_attenuation, all_other_losses)
+
+    assert result == 10.53
+
+
 def test_calc_eirp():
     """
     Unit test for calculating the Equivalent Isotropically Radiated Power.
 
     """
-    power = 40 # watts
+    power = 30 # watts
     antenna_gain = 38 # dB
-    losses = 4 #dB
+    # losses = 4 #dB
 
-    assert round(calc_eirp(power, antenna_gain, losses)) == 74
+    assert round(calc_eirp(power, antenna_gain)) == 68
 
 
 def test_calc_received_power():
@@ -126,10 +144,12 @@ def test_calc_received_power():
     Unit test for calculating received power.
 
     """
-    eirp = 74 # dBi
+    eirp = 68 # dBi
     path_loss = 136 # dB
+    receiver_gain = 37 # dummy values
+    losses = 10.57
 
-    assert round(calc_received_power(eirp, path_loss)) == -62
+    assert round(calc_received_power(eirp, path_loss, receiver_gain, losses)) == -42
 
 
 def test_calc_noise():
@@ -151,21 +171,17 @@ def test_calc_cnr():
     assert round(calc_cnr(received_power, noise)) == 28
 
 
-def test_calc_spectral_efficiency():
+def test_calc_spectral_efficiency(setup_lut):
     """
     Unit test for finding the spectral efficnecy.
 
     """
-    lut = [
-        (0, 1),
-        (10, 2),
-        (20, 4),
-    ]
-
-    assert calc_spectral_efficiency(-2, lut) == 1 # bits/Hz/s
-    assert calc_spectral_efficiency(2, lut) == 1 # bits/Hz/s
-    assert calc_spectral_efficiency(15, lut) == 2 # bits/Hz/s
-    assert calc_spectral_efficiency(28, lut) == 4 # bits/Hz/s
+    #using actual lut
+    assert calc_spectral_efficiency(0, setup_lut) == 1.647211 # bits/Hz/s
+    assert calc_spectral_efficiency(7.5, setup_lut) == 2.193247 # bits/Hz/s
+    assert calc_spectral_efficiency(10.7, setup_lut) == 2.856231 # bits/Hz/s
+    assert calc_spectral_efficiency(18.83, setup_lut) == 5.593162 # bits/Hz/s
+    assert calc_spectral_efficiency(28, setup_lut) == 5.768987 # bits/Hz/s
 
 
 def test_calc_capacity():

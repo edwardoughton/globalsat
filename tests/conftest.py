@@ -18,6 +18,9 @@ def setup_params():
         'antenna_efficiency': 0.6,
         'power': 30, #dBw
         'losses': 4, #dB
+        'receiver_gain': 38, #dB
+        'rain_attenuation': 10, #Rain Attenuation
+        'all_other_losses': 0.53, #All other losses
     }
 
 @fixture(scope='function')

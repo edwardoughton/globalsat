@@ -25,6 +25,82 @@ RESULTS = os.path.join(BASE_PATH, '..', 'results')
 VIS = os.path.join(BASE_PATH, '..', 'vis', 'figures')
 
 
+def plot_capacity(data):
+    """
+    Create 2D engineering plots for system capacity model.
+
+    """
+    data.columns = [
+        'Constellation', 'Number of Satellites','Asset Distance',
+        'Coverage Area', 'Iteration', 'Free Space Path Loss',
+        'Random Variation', 'Antenna Gain', 'EIRP',
+        'Received Power', 'Noise', 'Carrier-to-Noise-Ratio',
+        'Spectral Efficiency', 'Channel Capacity', 'Area Capacity'
+    ]
+
+    data = data[[
+        'Constellation',
+        'Number of Satellites',
+        'Free Space Path Loss',
+        'Received Power',
+        'Carrier-to-Noise-Ratio',
+        'Spectral Efficiency',
+        'Channel Capacity',
+        'Area Capacity'
+    ]]
+
+    long_data = pd.melt(data,
+        id_vars=[
+            'Constellation', 'Number of Satellites'
+        ],
+        value_vars=[
+            'Free Space Path Loss',
+            'Received Power',
+            'Carrier-to-Noise-Ratio',
+            'Spectral Efficiency',
+            'Channel Capacity',
+            'Area Capacity'
+        ]
+    )
+
+    long_data.columns = ['Constellation', 'Number of Satellites', 'Metric', 'Value']
+
+    long_data = long_data.loc[long_data['Number of Satellites'] < 1000]
+
+    sns.set(font_scale=1.1)
+
+    plot = sns.relplot(
+        x="Number of Satellites", y='Value', linewidth=1.2, hue='Constellation',
+        col="Metric", col_wrap=2,row_order=['Starlink','Kuiper', 'OneWeb'],
+        palette=sns.color_palette("bright", 3),
+        kind="line", data=long_data,
+        facet_kws=dict(sharex=False, sharey=False), legend='full'#, ax=ax
+    )
+
+    # plot.set(xlim=(0, 1000))
+    handles = plot._legend_data.values()
+    labels = plot._legend_data.keys()
+    plot._legend.remove()
+    plot.fig.legend(handles=handles, labels=labels, loc='lower center', ncol=7)
+    plt.subplots_adjust(hspace=0.3, wspace=0.3, bottom=0.07)
+    plot.axes[0].set_ylabel('Free Space Path Loss (dB)')
+    plot.axes[1].set_ylabel('Received Power (dB)')
+    plot.axes[0].set_xlabel('Number of Satellites')
+    plot.axes[1].set_xlabel('Number of Satellites')
+    plot.axes[2].set_ylabel('Signal-to-Noise-Ratio (dB)')
+    plot.axes[0].set_xlabel('Number of Satellites')
+    plot.axes[3].set_ylabel('Spectral Efficiency (Bps/Hz)')
+    plot.axes[0].set_xlabel('Number of Satellites')
+    plot.axes[4].set_ylabel('Channel Capacity (Mbps)')
+    plot.axes[0].set_xlabel('Number of Satellites')
+    plot.axes[5].set_ylabel('Channel Capacity (Mbps/km^2)')
+    plot.axes[0].set_xlabel('Number of Satellites')
+
+    plt.savefig(os.path.join(VIS, 'engineering_metrics.png'), dpi=300)
+
+    return print('Completed plot_capacity')
+
+
 def get_regional_shapes():
     """
     """
@@ -67,8 +143,8 @@ def get_regional_shapes():
 def plot_regions_by_geotype(data, regions):
     """
     """
-    data = data.loc[data['scenario'] == 'baseline']
-    data = data.loc[data['constellation'] == 'Starlink']
+    # data = data.loc[data['scenario'] == 'baseline']
+    data = data.loc[data['Constellation'] == 'Starlink']
     data['pop_density_km2'] = round(data['pop_density_km2'])
     n = len(regions)
 
@@ -205,9 +281,11 @@ if __name__ == '__main__':
     if not os.path.exists(VIS):
         os.makedirs(VIS)
 
-    print('Loading regional data by pop density geotype')
-    path = os.path.join(RESULTS, 'results.csv')
+    print('Loading data by pop density geotype')
+    path = os.path.join(RESULTS, 'sim_results.csv')
     data = pd.read_csv(path)#[:1000]
+
+    plot_capacity(data)
 
     print('Loading shapes')
     path = os.path.join(DATA_INTERMEDIATE, 'all_regional_shapes.shp')
