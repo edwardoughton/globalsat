@@ -65,10 +65,6 @@ If you want to create the map try:
 
 Followed by:
 
-    python scripts/results.py
-
-And then:
-
     python vis/vis.py
 
 
