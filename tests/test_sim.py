@@ -26,7 +26,7 @@ def test_system_capacity(setup_params, setup_lut):
 
     assert results['number_of_satellites'] == 10
     assert round(results['distance']) == 10
-    assert results['satelite_coverage_area'] == 8
+    assert results['satellite_coverage_area'] == 10
     assert results['iteration'] == 0
     assert round(results['path_loss']) == 136
     assert round(results['antenna_gain']) == 38
@@ -36,7 +36,7 @@ def test_system_capacity(setup_params, setup_lut):
     assert round(results['cnr']) == 49.0
     assert results['spectral_efficiency'] == 5.768987
     assert round(results['capacity']) == 1442
-    assert round(results['capacity_kmsq']) == 180
+    assert round(results['capacity_kmsq']) == 144
 
 
 def test_calc_geographic_metrics():
@@ -51,13 +51,13 @@ def test_calc_geographic_metrics():
 
     params = {
         'total_area_earth_km_sq': 100,
-        'portion_of_earth_covered': 0.8,
+        # 'portion_of_earth_covered': 0.8,
         'altitude_km': 10,
     }
 
     # area_of_earth_covered = total_area_earth_km_sq * portion_of_earth_covered
     # network_density = number_of_satellites / area_of_earth_covered
-    # satelite_coverage_area = (area_of_earth_covered / number_of_satellites) / 1000
+    # satellite_coverage_area = (area_of_earth_covered / number_of_satellites) / 1000
     # mean_distance_between_assets = math.sqrt((1 / network_density)) / 2
     # distance = math.sqrt((mean_distance_between_assets**2) + (altitude_km**2))
 
@@ -67,12 +67,12 @@ def test_calc_geographic_metrics():
     # 1.41 km on average = math.sqrt((1 / 0.125 km^2 )) / (2)
     # 10.1 km = math.sqrt((1.41**2) + (10**2))
 
-    distance, satelite_coverage_area = calc_geographic_metrics(
+    distance, satellite_coverage_area = calc_geographic_metrics(
         number_of_satellites, params
     )
 
     assert round(distance) == 10
-    assert satelite_coverage_area == 8
+    assert satellite_coverage_area == 10
 
 
 def test_calc_free_space_path_loss():
