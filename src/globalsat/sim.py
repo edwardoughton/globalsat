@@ -35,7 +35,7 @@ def system_capacity(constellation, number_of_satellites, params, lut):
     """
     results = []
 
-    distance, satelite_coverage_area_km = calc_geographic_metrics(
+    distance, satellite_coverage_area_km = calc_geographic_metrics(
         number_of_satellites, params
         )
 
@@ -78,7 +78,7 @@ def system_capacity(constellation, number_of_satellites, params, lut):
             'constellation': constellation,
             'number_of_satellites': number_of_satellites,
             'distance': distance,
-            'satelite_coverage_area': satelite_coverage_area_km,
+            'satellite_coverage_area': satellite_coverage_area_km,
             'iteration': i,
             'path_loss': path_loss,
             'random_variation': random_variation,
@@ -89,7 +89,7 @@ def system_capacity(constellation, number_of_satellites, params, lut):
             'cnr': cnr,
             'spectral_efficiency': spectral_efficiency,
             'capacity': capacity,
-            'capacity_kmsq': capacity / satelite_coverage_area_km,
+            'capacity_kmsq': capacity / satellite_coverage_area_km,
         })
 
     return results
@@ -111,24 +111,21 @@ def calc_geographic_metrics(number_of_satellites, params):
     -------
     distance : float
         The distance between the transmitter and reciever in km.
-    satelite_coverage_area_km : float
+    satellite_coverage_area_km : float
         The area which each satellite covers on Earth's surface in km.
 
     """
-    area_of_earth_covered = (
-        params['total_area_earth_km_sq'] *
-        params['portion_of_earth_covered']
-    )
+    area_of_earth_covered = params['total_area_earth_km_sq']
 
     network_density = number_of_satellites / area_of_earth_covered
 
-    satelite_coverage_area_km = (area_of_earth_covered / number_of_satellites)
+    satellite_coverage_area_km = (area_of_earth_covered / number_of_satellites) #/ 1000
 
     mean_distance_between_assets = math.sqrt((1 / network_density)) / 2
 
     distance = math.sqrt(((mean_distance_between_assets)**2) + ((params['altitude_km'])**2))
 
-    return distance, satelite_coverage_area_km
+    return distance, satellite_coverage_area_km
 
 
 def calc_free_space_path_loss(distance, params, i, random_variations):
