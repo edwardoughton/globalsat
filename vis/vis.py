@@ -102,86 +102,52 @@ def plot_aggregated_engineering_metrics(data):
     plt.savefig(os.path.join(VIS, 'engineering_metrics.png'), dpi=300)
 
 
-def plot_engineering_metrics_per_user(data):
+def process_capacity_data(data):
     """
-    Plot the capacity per user (aggregate plots).
+    Process capacity data.
 
     """
-    data = data[[
-        'constellation','number_of_satellites',
-        'satellite_coverage_area', 'capacity'
-    ]].reset_index()
+    output = {}
 
-    data['constellation'] = data['constellation'].replace(regex='starlink', value='Starlink')
-    data['constellation'] = data['constellation'].replace(regex='oneweb', value='OneWeb')
-    data['constellation'] = data['constellation'].replace(regex='kuiper', value='Kuiper')
-
-    data = data.loc[data['number_of_satellites'] < 3000]
-
-    capacity_results = []
-
-    cost_per_sat_npv = 429903
-    over_booking_factor = 20
-
-    persons_per_km = 1
-    penetration = 20
-
-    subscribers = persons_per_km * (penetration/100)
-
-    for index, item in data.iterrows():
-        capacity_results.append({
-            'Constellation': item['constellation'],
-            'pop_density': persons_per_km,
-            'Number of Satellites': item['number_of_satellites'],
-            'user_capacity': (
-                item['capacity'] /
-                (item['satellite_coverage_area'] * (subscribers/over_booking_factor))),
-            'cost_per_user': (cost_per_sat_npv /
-                (item['satellite_coverage_area'] * subscribers))
-        })
-
-    capacity_results = pd.DataFrame(capacity_results)
-
-    per_cap_label = 'Per User Capacity ({} user per km^2)'.format(persons_per_km)
-    per_cost_label = 'Cost Per User ({} user per km^2)'.format(persons_per_km)
-
-    capacity_results.columns = [
-        'Constellation', 'Pop. Density', 'Number of Satellites',
-        per_cap_label, per_cost_label
+    constellations = [
+        'starlink',
+        'oneweb',
+        'kuiper',
     ]
 
-    long_data = pd.melt(capacity_results,
-        id_vars=['Constellation', 'Pop. Density', 'Number of Satellites'],
-        value_vars=[per_cap_label, per_cost_label])
-    long_data.columns = ['Constellation', 'Pop. Density', 'Number of Satellites',
-        'Metric', 'Value']
+    for constellation in constellations:
 
-    # sns.set(font_scale=1)
+        max_satellites_set = set() #get the maximum network density
+        coverage_area_set = set() #and therefore minimum coverage area
 
-    # palette_num = 6#len(pop_densities) + len(scenarios)
-    plot=sns.relplot(x="Number of Satellites", y='Value', linewidth=1.2,
-        hue='Constellation', col="Metric", #row="Pop. Density",
-        #row_order=['High','Baseline', 'Low'],
-        # palette=sns.color_palette("bright", palette_num),
-        kind="line", data=long_data,
-        facet_kws=dict(sharex=False, sharey=False), legend='full')
+        for idx, item in data.iterrows():
+            if constellation.lower() == item['Constellation'].lower():
+                max_satellites_set.add(item['Number of Satellites'])
+                coverage_area_set.add(item['Coverage Area'])
 
-    plot.fig.set_size_inches(8, 5)
-    handles = plot._legend_data.values()
-    labels = plot._legend_data.keys()
-    plot._legend.remove()
-    plot.fig.legend(handles=handles, labels=labels, loc='lower center', ncol=9)
-    # plot.fig.legend(handles=handles, labels=labels, loc='lower center', ncol=7)
-    # plot.set_ylabel('Per User Capacity (Mbps)')
-    # plot.axes[1].set_ylabel('Cost Per User ($USD)')
-    # plot.axes[2].set_ylabel('User Capacity (Mbps)')
-    # plot.axes[0].set_xlabel('Number of Satellites')
-    plt.subplots_adjust(hspace=0.25, wspace=.25, bottom=0.4)
-    plt.tight_layout()
-    plt.savefig(os.path.join(VIS,'supply_costs.png'), dpi=300)
+        max_satellites = max(list(max_satellites_set)) #max density
+        coverage_area = min(list(coverage_area_set)) #minimum coverage area
+
+        capacity_results = []
+
+        for idx, item in data.iterrows():
+            if constellation.lower() == item['Constellation'].lower():
+                if item['Number of Satellites'] == max_satellites:
+                    capacity_results.append(item['Channel Capacity']) #append to list
+
+        mean_capacity = sum(capacity_results) / len(capacity_results)
+
+        output[constellation] = {
+            'number_of_satellites': max_satellites,
+            'satellite_coverage_area': coverage_area,
+            'capacity': mean_capacity,
+            'capacity_kmsq': mean_capacity / coverage_area,
+        }
+
+    return output
 
 
-def panel_plot_of_per_user_metrics():
+def plot_panel_plot_of_per_user_metrics(capacity):
     """
 
     """
@@ -191,42 +157,33 @@ def panel_plot_of_per_user_metrics():
         'kuiper'
     ]
 
-    constellation_data = {
-        'starlink_capacity': 0.0129,
-        'oneweb_capacity': 0.001,
-        'kuiper_capacity': 0.009,
-        'starlink_coverage_area': 5000,
-        'oneweb_coverage_area': 750,
-        'kuiper_coverage_area': 3000
-    }
-    cost_per_sat_npv = 500000
+    cost_per_satellite_npv = 500000
 
     results = []
 
     for constellation in constellations:
         for i in range(5, 101):
 
-            i = i / 100
+            i = (i / 100)
 
-            if constellation == 'starlink':
-                capacity = constellation_data['starlink_capacity']
-                coverage_area = constellation_data['starlink_coverage_area']
-            elif constellation == 'oneweb':
-                capacity = constellation_data['oneweb_capacity']
-                coverage_area = constellation_data['oneweb_coverage_area']
-            elif constellation == 'kuiper':
-                capacity = constellation_data['kuiper_capacity']
-                coverage_area = constellation_data['kuiper_coverage_area']
+            if constellation.lower() == 'starlink':
+                capacity_kmsq = capacity[constellation]['capacity_kmsq']
+                coverage_area_km = capacity[constellation]['satellite_coverage_area']
+            elif constellation.lower() == 'oneweb':
+                capacity_kmsq = capacity[constellation]['capacity_kmsq']
+                coverage_area_km = capacity[constellation]['satellite_coverage_area']
+            elif constellation.lower() == 'kuiper':
+                capacity_kmsq = capacity[constellation]['capacity_kmsq']
+                coverage_area_km = capacity[constellation]['satellite_coverage_area']
             else:
-                print(constellation)
                 print('did not recognize constellation')
 
-            cost_kmsq = cost_per_sat_npv / coverage_area
+            cost_kmsq = cost_per_satellite_npv / coverage_area_km
 
             results.append({
                 'constellation': constellation,
                 'subscribers_kmsq': i,
-                'capacity_per_subscriber': capacity / i,
+                'capacity_per_subscriber': capacity_kmsq / (i / 20),
                 'cost_per_subscriber': cost_kmsq / i,
             })
 
@@ -237,19 +194,15 @@ def panel_plot_of_per_user_metrics():
     results['Constellation'] = results['Constellation'].replace(regex='oneweb', value='OneWeb')
     results['Constellation'] = results['Constellation'].replace(regex='kuiper', value='Kuiper')
 
-    return results
+    sns.set(font_scale=1.1)
 
-
-def plot_panel_plot_of_per_user_metrics(results):
-    """
-
-    """
+    #Now plot results
     fig, axs = plt.subplots(2, figsize=(8,8))
 
     axs[0] = sns.lineplot(x="subscribers_kmsq", y="capacity_per_subscriber",
                         hue="Constellation", data=results, ax=axs[0])
-    axs[0].set(xlabel='Subscriber Density (km^2)', ylabel='Capacity Per Active Subscriber (Mbps)')
-    axs[0].title.set_text('Capacity Per Active Subscriber')
+    axs[0].set(xlabel='Subscriber Density (km^2)', ylabel='Mean Capacity (Mbps)')
+    axs[0].title.set_text('Mean Capacity Per Subscriber (OBF: 20)')
 
     axs[1] = sns.lineplot(x="subscribers_kmsq", y="cost_per_subscriber",
                         hue="Constellation", data=results, ax=axs[1])
@@ -386,19 +339,20 @@ def plot_capacity_per_user_maps(data, regions):
 
         metric = 'per_user_capacity'
 
-        # bins = [-1,3,6,9,12,15,18,21,24,27, 1e9]
-        bins = [-1,2,4,6,8,10,12,14,16,18,1e9]
+        # bins = [-1,2,4,6,8,10,12,14,16,18,1e9]
+        # bins = [-1,5,10,15,20,25,30,35,40,45,1e9]
+        bins = [-1,10,20,30,40,50,60,70,80,90,1e9]
         labels = [
-            '<2 Mbps',
-            '<4 Mbps',
-            '<6 Mbps',
-            '<8 Mbps',
             '<10 Mbps',
-            '<12 Mbps',
-            '<14 Mbps',
-            '<16 Mbps',
-            '<18 Mbps',
-            '>20 Mbps',
+            '<20 Mbps',
+            '<30 Mbps',
+            '<40 Mbps',
+            '<50 Mbps',
+            '<60 Mbps',
+            '<70 Mbps',
+            '<80 Mbps',
+            '<90 Mbps',
+            '>90 Mbps',
         ]
         regions_merged['bin'] = pd.cut(
             regions_merged[metric],
@@ -416,7 +370,7 @@ def plot_capacity_per_user_maps(data, regions):
 
         letter = get_letter(constellation)
 
-        axs[i].set_title("({}) {} Per User Capacity Based on 0.1 Percent Adoption (n={})".format(
+        axs[i].set_title("({}) {} Mean Per User Capacity Based on 1 Percent Adoption (n={})".format(
             letter, constellation, n))
 
         i += 1
@@ -447,18 +401,18 @@ if __name__ == '__main__':
     if not os.path.exists(VIS):
         os.makedirs(VIS)
 
-    # print('Loading capacity simulation results')
-    # path = os.path.join(RESULTS, 'sim_results.csv')
-    # sim_results = pd.read_csv(path)#[:1000]
+    print('Loading capacity simulation results')
+    path = os.path.join(RESULTS, 'sim_results.csv')
+    sim_results = pd.read_csv(path)#[:1000]
 
-    # print('Plotting capacity simulation results')
-    # plot_aggregated_engineering_metrics(sim_results)
+    print('Plotting capacity simulation results')
+    plot_aggregated_engineering_metrics(sim_results)
 
-    # print('Generating data for panel plots')
-    # results = panel_plot_of_per_user_metrics()
+    print('Processing capacity data')
+    capacity = process_capacity_data(sim_results)
 
-    # print('Plotting per user panel plot')
-    # plot_panel_plot_of_per_user_metrics(results)
+    print('Generating data for panel plots')
+    plot_panel_plot_of_per_user_metrics(capacity)
 
     print('Loading shapes')
     path = os.path.join(DATA_INTERMEDIATE, 'all_regional_shapes.shp')
