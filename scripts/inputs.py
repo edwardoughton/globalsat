@@ -24,8 +24,10 @@ parameters = {
         'power': 30, #dBw
         'losses': 4, #dB
         'receiver_gain': 38,
-        'rain_attenuation': 10, #Rain Attenuation
+        'rain_attenuation': 0, #Rain Attenuation
         'all_other_losses': 0.53, #All other losses
+        'number_of_beams': 8, #Number of user beams per satellite
+        'overbooking_factor': 20, # 1 in 20 users access the network
     },
     'oneweb': {
         'number_of_satellites': 720,
@@ -43,8 +45,10 @@ parameters = {
         'power': 30, #dBw
         'losses': 4, #dB
         'receiver_gain': 38,
-        'rain_attenuation': 10, #Rain Attenuation
+        'rain_attenuation': 0, #Rain Attenuation
         'all_other_losses': 0.53, #All other losses
+        'number_of_beams': 16, #Number of user beams per satellite
+        'overbooking_factor': 20, # 1 in 20 users access the network
     },
     'kuiper': {
         'number_of_satellites': 3236,
@@ -61,8 +65,10 @@ parameters = {
         'antenna_efficiency': 0.6,
         'power': 30, #dBw
         'receiver_gain': 39,
-        'rain_attenuation': 10, #Rain Attenuation
+        'rain_attenuation': 0, #Rain Attenuation
         'all_other_losses': 0.53, #All other losses
+        'number_of_beams': 8, #Number of user beams per satellite
+        'overbooking_factor': 20, # 1 in 20 users access the network
     },
     # 'telesat': {
     #     'number_of_satellites': 300,
