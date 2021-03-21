@@ -191,5 +191,6 @@ def test_calc_capacity():
     """
     spectral_efficiency = 1 # bits per Hertz
     dl_bandwidth = 1e6 # Hertz
+    number_of_beams = 1
 
-    assert calc_capacity(spectral_efficiency, dl_bandwidth) == 1 #mbps
+    assert calc_capacity(spectral_efficiency, dl_bandwidth, number_of_beams) == 1 #mbps

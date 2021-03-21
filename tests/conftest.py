@@ -21,6 +21,7 @@ def setup_params():
         'receiver_gain': 38, #dB
         'rain_attenuation': 10, #Rain Attenuation
         'all_other_losses': 0.53, #All other losses
+        'number_of_beams': 1,
     }
 
 @fixture(scope='function')
