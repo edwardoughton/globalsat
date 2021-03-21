@@ -61,7 +61,7 @@ def process_capacity_data(data, constellations):
     return output
 
 
-def process_results(data, capacity, constellation, scenario):
+def process_results(data, capacity, constellation, scenario, parameters):
     """
     Process results.
 
@@ -69,7 +69,7 @@ def process_results(data, capacity, constellation, scenario):
     output = []
 
     adoption_rate = scenario[1]
-    # overbooking_factor = parameters['overbooking_factor']
+    overbooking_factor = parameters[constellation.lower()]['overbooking_factor']
     constellation_capacity = capacity[constellation]
     max_capacity = constellation_capacity['capacity_kmsq']
 
@@ -77,7 +77,7 @@ def process_results(data, capacity, constellation, scenario):
 
         users_per_km2 = item['pop_density_km2'] * (adoption_rate / 100)
 
-        active_users_km2 = users_per_km2 #/ overbooking_factor
+        active_users_km2 = users_per_km2 / overbooking_factor
 
         if active_users_km2 > 0:
             per_user_capacity = max_capacity / active_users_km2
@@ -107,13 +107,12 @@ if __name__ == '__main__':
         'Starlink',
         'OneWeb',
         'Kuiper',
-        # 'Telesat'
     ]
 
     SCENARIO = [
-        ('low', 0.05),
-        ('baseline', 0.1),
-        ('high', 0.2),
+        ('low', 0.5),
+        ('baseline', 1),
+        ('high', 2),
     ]
 
     results = []
@@ -130,7 +129,7 @@ if __name__ == '__main__':
     path = os.path.join(RESULTS, 'sim_results.csv')
     results.to_csv(path, index=False)
 
-    CAPACITY = process_capacity_data(results, CONSTELLATIONS)
+    capacity = process_capacity_data(results, CONSTELLATIONS)
 
     path = os.path.join(INTERMEDIATE, 'global_regional_population_lookup.csv')
     global_data = pd.read_csv(path)
@@ -141,7 +140,7 @@ if __name__ == '__main__':
 
         for scenario in SCENARIO:
 
-            results = process_results(global_data, CAPACITY, constellation, scenario)
+            results = process_results(global_data, capacity, constellation, scenario, parameters)
 
             all_results = all_results + results
 
