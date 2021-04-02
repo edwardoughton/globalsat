@@ -26,7 +26,7 @@ parameters = {
         'receiver_gain': 38,
         'rain_attenuation': 0, #Rain Attenuation
         'all_other_losses': 0.53, #All other losses
-        'number_of_beams': 8, #Number of user beams per satellite
+        'number_of_channels': 8, #Number of channels per satellite
         'overbooking_factor': 20, # 1 in 20 users access the network
     },
     'oneweb': {
@@ -47,7 +47,7 @@ parameters = {
         'receiver_gain': 38,
         'rain_attenuation': 0, #Rain Attenuation
         'all_other_losses': 0.53, #All other losses
-        'number_of_beams': 16, #Number of user beams per satellite
+        'number_of_channels': 16, #Number of channels per satellite
         'overbooking_factor': 20, # 1 in 20 users access the network
     },
     'kuiper': {
@@ -67,7 +67,7 @@ parameters = {
         'receiver_gain': 39,
         'rain_attenuation': 0, #Rain Attenuation
         'all_other_losses': 0.53, #All other losses
-        'number_of_beams': 8, #Number of user beams per satellite
+        'number_of_channels': 8, #Number of channels per satellite
         'overbooking_factor': 20, # 1 in 20 users access the network
     },
     # 'telesat': {

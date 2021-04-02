@@ -73,7 +73,7 @@ def system_capacity(constellation, number_of_satellites, params, lut):
         spectral_efficiency = calc_spectral_efficiency(cnr, lut)
 
         capacity = calc_capacity(spectral_efficiency, params['dl_bandwidth'],
-            params['number_of_beams'])
+            params['number_of_channels'])
 
         results.append({
             'constellation': constellation,
@@ -418,7 +418,7 @@ def calc_spectral_efficiency(cnr, lut):
             return spectral_efficiency
 
 
-def calc_capacity(spectral_efficiency, dl_bandwidth, number_of_beams):
+def calc_capacity(spectral_efficiency, dl_bandwidth, number_of_channels):
     """
     Calculate the channel capacity.
 
@@ -428,8 +428,8 @@ def calc_capacity(spectral_efficiency, dl_bandwidth, number_of_beams):
         The number of bits per Hertz able to be transmitted.
     dl_bandwidth: float
         The channel bandwidth in Hetz.
-    number_of_beams : int
-        The number of user beams per satellite.
+    number_of_channels : int
+        The number of user channels per satellite.
 
     Returns
     -------
@@ -437,7 +437,7 @@ def calc_capacity(spectral_efficiency, dl_bandwidth, number_of_beams):
         The channel capacity in Mbps.
 
     """
-    capacity = spectral_efficiency * dl_bandwidth * number_of_beams / (10**6)
+    capacity = spectral_efficiency * dl_bandwidth * number_of_channels / (10**6)
 
     return capacity
 
