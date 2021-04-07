@@ -12,6 +12,7 @@ from globalsat.sim import (
     calc_cnr,
     calc_spectral_efficiency,
     calc_capacity,
+    calc_agg_capacity
 )
 
 
@@ -35,7 +36,7 @@ def test_system_capacity(setup_params, setup_lut):
     assert round(results['noise']) == -90
     assert round(results['cnr']) == 49.0
     assert results['spectral_efficiency'] == 5.768987
-    assert round(results['capacity']) == 1442
+    assert round(results['channel_capacity']) == 1442
     assert round(results['capacity_kmsq']) == 144
 
 
@@ -51,7 +52,6 @@ def test_calc_geographic_metrics():
 
     params = {
         'total_area_earth_km_sq': 100,
-        # 'portion_of_earth_covered': 0.8,
         'altitude_km': 10,
     }
 
@@ -173,7 +173,7 @@ def test_calc_cnr():
 
 def test_calc_spectral_efficiency(setup_lut):
     """
-    Unit test for finding the spectral efficnecy.
+    Unit test for finding the spectral efficiency.
 
     """
     #using actual lut
@@ -186,11 +186,21 @@ def test_calc_spectral_efficiency(setup_lut):
 
 def test_calc_capacity():
     """
-    Unit test for finding the spectral efficnecy.
+    Unit test for calculating the channel capacity.
 
     """
     spectral_efficiency = 1 # bits per Hertz
     dl_bandwidth = 1e6 # Hertz
+
+    assert calc_capacity(spectral_efficiency, dl_bandwidth) == 1 #mbps
+
+
+def test_calc_agg_capacity():
+    """
+    Unit test for calculating the aggregate capacity.
+
+    """
+    channel_capacity = 100
     number_of_beams = 1
 
-    assert calc_capacity(spectral_efficiency, dl_bandwidth, number_of_beams) == 1 #mbps
+    assert calc_agg_capacity(channel_capacity, number_of_beams) == 100 #mbps
