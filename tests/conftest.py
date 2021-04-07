@@ -19,7 +19,7 @@ def setup_params():
         'power': 30, #dBw
         'losses': 4, #dB
         'receiver_gain': 38, #dB
-        'rain_attenuation': 10, #Rain Attenuation
+        'earth_atmospheric_losses': 10, #Rain Attenuation
         'all_other_losses': 0.53, #All other losses
         'number_of_channels': 1,
     }

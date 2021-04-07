@@ -17,14 +17,13 @@ parameters = {
         'total_area_earth_km_sq': 510000000, #Area of Earth in km^2
         'altitude_km': 550, #Altitude of starlink satellites in km
         'dl_frequency': 13.5*10**9, #Downlink frequency in Hertz
-        'dl_bandwidth': 0.25*10**9, #Downlink bandwidth in Hertz
+        'dl_bandwidth': 0.5*10**9, #Downlink bandwidth in Hertz
         'speed_of_light': 3.0*10**8, #Speed of light in vacuum
         'antenna_diameter': 0.7, #Metres
         'antenna_efficiency': 0.6,
         'power': 30, #dBw
-        'losses': 4, #dB
         'receiver_gain': 38,
-        'rain_attenuation': 0, #Rain Attenuation
+        'earth_atmospheric_losses': 10, #Rain Attenuation
         'all_other_losses': 0.53, #All other losses
         'number_of_channels': 8, #Number of channels per satellite
         'overbooking_factor': 20, # 1 in 20 users access the network
@@ -43,11 +42,10 @@ parameters = {
         'antenna_diameter': 0.75, #Metres
         'antenna_efficiency': 0.6,
         'power': 30, #dBw
-        'losses': 4, #dB
         'receiver_gain': 38,
-        'rain_attenuation': 0, #Rain Attenuation
+        'earth_atmospheric_losses': 10, #Rain Attenuation
         'all_other_losses': 0.53, #All other losses
-        'number_of_channels': 16, #Number of channels per satellite
+        'number_of_channels': 8, #Number of channels per satellite
         'overbooking_factor': 20, # 1 in 20 users access the network
     },
     'kuiper': {
@@ -65,7 +63,7 @@ parameters = {
         'antenna_efficiency': 0.6,
         'power': 30, #dBw
         'receiver_gain': 39,
-        'rain_attenuation': 0, #Rain Attenuation
+        'earth_atmospheric_losses': 10, #Rain Attenuation
         'all_other_losses': 0.53, #All other losses
         'number_of_channels': 8, #Number of channels per satellite
         'overbooking_factor': 20, # 1 in 20 users access the network

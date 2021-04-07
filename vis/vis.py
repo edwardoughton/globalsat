@@ -30,14 +30,17 @@ def plot_aggregated_engineering_metrics(data):
     Create 2D engineering plots for system capacity model.
 
     """
+
     data.columns = [
         'Constellation', 'Number of Satellites','Asset Distance',
         'Coverage Area', 'Iteration', 'Free Space Path Loss',
         'Random Variation', 'Antenna Gain', 'EIRP',
         'Received Power', 'Noise', 'Carrier-to-Noise-Ratio',
-        'Spectral Efficiency', 'Aggregate Channel Capacity', 'Area Capacity'
+        'Spectral Efficiency', 'Channel Capacity',
+        'Aggregate Channel Capacity', 'Area Capacity'
     ]
 
+    data['Channel Capacity'] = round(data['Channel Capacity'] / 1e3,2)
     data['Aggregate Channel Capacity'] = round(data['Aggregate Channel Capacity'] / 1e3)
 
     data = data[[
@@ -47,8 +50,8 @@ def plot_aggregated_engineering_metrics(data):
         'Received Power',
         'Carrier-to-Noise-Ratio',
         'Spectral Efficiency',
+        'Channel Capacity',
         'Aggregate Channel Capacity',
-        'Area Capacity'
     ]].reset_index()
 
     data['Constellation'] = data['Constellation'].replace(regex='starlink', value='Starlink')
@@ -64,8 +67,8 @@ def plot_aggregated_engineering_metrics(data):
             'Received Power',
             'Carrier-to-Noise-Ratio',
             'Spectral Efficiency',
+            'Channel Capacity',
             'Aggregate Channel Capacity',
-            'Area Capacity'
         ]
     )
 
@@ -77,7 +80,7 @@ def plot_aggregated_engineering_metrics(data):
 
     plot = sns.relplot(
         x="Number of Satellites", y='Value', linewidth=1.2, hue='Constellation',
-        col="Metric", col_wrap=2, #labels=['Starlink','Kuiper', 'OneWeb'],
+        col="Metric", col_wrap=2,
         palette=sns.color_palette("bright", 3),
         kind="line", data=long_data,
         facet_kws=dict(sharex=False, sharey=False), legend='full'#, ax=ax
@@ -92,13 +95,13 @@ def plot_aggregated_engineering_metrics(data):
     plot.axes[1].set_ylabel('Received Power (dB)')
     plot.axes[0].set_xlabel('Number of Satellites')
     plot.axes[1].set_xlabel('Number of Satellites')
-    plot.axes[2].set_ylabel('Signal-to-Noise-Ratio (dB)')
+    plot.axes[2].set_ylabel('Carrier-to-Noise-Ratio (dB)')
     plot.axes[0].set_xlabel('Number of Satellites')
     plot.axes[3].set_ylabel('Spectral Efficiency (Bps/Hz)')
     plot.axes[0].set_xlabel('Number of Satellites')
-    plot.axes[4].set_ylabel('Aggregate Channel Capacity (Gbps)')
+    plot.axes[4].set_ylabel('Channel Capacity (Gbps)')
     plot.axes[0].set_xlabel('Number of Satellites')
-    plot.axes[5].set_ylabel('Area Capacity (Mbps/km^2)')
+    plot.axes[5].set_ylabel('Aggregate Channel Capacity (Gbps)')
     plot.axes[0].set_xlabel('Number of Satellites')
 
     plt.savefig(os.path.join(VIS, 'engineering_metrics.png'), dpi=300)
@@ -135,7 +138,7 @@ def process_capacity_data(data):
         for idx, item in data.iterrows():
             if constellation.lower() == item['Constellation'].lower():
                 if item['Number of Satellites'] == max_satellites:
-                    capacity_results.append(item['Aggregate Channel Capacity']) #append to list
+                    capacity_results.append(item['Aggregate Channel Capacity'])
 
         mean_capacity = sum(capacity_results) / len(capacity_results)
 
@@ -367,9 +370,11 @@ def plot_capacity_per_user_maps(data, regions):
         axs[i].set_xlim(minx, maxx)
         axs[i].set_ylim(miny, maxy)
 
-        regions_merged.plot(column='bin', ax=axs[i], cmap='inferno_r', linewidth=0, legend=True)
+        regions_merged.plot(column='bin', ax=axs[i], cmap='inferno_r',
+            linewidth=0, legend=True)
 
-        ctx.add_basemap(axs[i], crs=regions_merged.crs, source=ctx.providers.CartoDB.Voyager)
+        ctx.add_basemap(axs[i], crs=regions_merged.crs,
+            source=ctx.providers.CartoDB.Voyager)
 
         letter = get_letter(constellation)
 
@@ -417,22 +422,22 @@ if __name__ == '__main__':
     print('Generating data for panel plots')
     plot_panel_plot_of_per_user_metrics(capacity)
 
-    # print('Loading shapes')
-    # path = os.path.join(DATA_INTERMEDIATE, 'all_regional_shapes.shp')
-    # if not os.path.exists(path):
-    #     shapes = get_regional_shapes()
-    #     shapes.to_file(path)
-    # else:
-    #     shapes = gpd.read_file(path, crs='epsg:4326')#[:1000]
+    print('Loading shapes')
+    path = os.path.join(DATA_INTERMEDIATE, 'all_regional_shapes.shp')
+    if not os.path.exists(path):
+        shapes = get_regional_shapes()
+        shapes.to_file(path)
+    else:
+        shapes = gpd.read_file(path, crs='epsg:4326')#[:1000]
 
-    # print('Loading data by pop density geotype')
-    # path = os.path.join(RESULTS, 'global_results.csv')
-    # global_results = pd.read_csv(path)#[:1000]
+    print('Loading data by pop density geotype')
+    path = os.path.join(RESULTS, 'global_results.csv')
+    global_results = pd.read_csv(path)#[:1000]
 
-    # # print('Plotting population density per area')
-    # # plot_regions_by_geotype(global_results, shapes)
+    print('Plotting population density per area')
+    plot_regions_by_geotype(global_results, shapes)
 
-    # print('Plotting capacity per user')
-    # plot_capacity_per_user_maps(global_results, shapes)
+    print('Plotting capacity per user')
+    plot_capacity_per_user_maps(global_results, shapes)
 
-    # print('Complete')
+    print('Complete')

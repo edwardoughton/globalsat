@@ -62,7 +62,7 @@ def system_capacity(constellation, number_of_satellites, params, lut):
 
         eirp = calc_eirp(params['power'], antenna_gain)
 
-        losses = calc_losses(params['rain_attenuation'], params['all_other_losses'])
+        losses = calc_losses(params['earth_atmospheric_losses'], params['all_other_losses'])
 
         noise = calc_noise()
 
@@ -72,8 +72,9 @@ def system_capacity(constellation, number_of_satellites, params, lut):
 
         spectral_efficiency = calc_spectral_efficiency(cnr, lut)
 
-        capacity = calc_capacity(spectral_efficiency, params['dl_bandwidth'],
-            params['number_of_channels'])
+        channel_capacity = calc_capacity(spectral_efficiency, params['dl_bandwidth'])
+
+        agg_capacity = calc_agg_capacity(channel_capacity, params['number_of_channels'])
 
         results.append({
             'constellation': constellation,
@@ -89,8 +90,9 @@ def system_capacity(constellation, number_of_satellites, params, lut):
             'noise': noise,
             'cnr': cnr,
             'spectral_efficiency': spectral_efficiency,
-            'capacity': capacity,
-            'capacity_kmsq': capacity / satellite_coverage_area_km,
+            'channel_capacity': channel_capacity,
+            'aggregate_capacity': agg_capacity,
+            'capacity_kmsq': agg_capacity / satellite_coverage_area_km,
         })
 
     return results
@@ -265,13 +267,13 @@ def calc_eirp(power, antenna_gain):
     return eirp
 
 
-def calc_losses(rain_attenuation, all_other_losses):
+def calc_losses(earth_atmospheric_losses, all_other_losses):
     """
     Estimates the transmission signal losses.
 
     Parameters
     ----------
-    rain_attentuation : int
+    earth_atmospheric_losses : int
         Signal losses from rain attenuation.
     all_other_losses : float
         All other signal losses.
@@ -282,7 +284,7 @@ def calc_losses(rain_attenuation, all_other_losses):
         The estimated transmission signal losses.
 
     """
-    losses = rain_attenuation + all_other_losses
+    losses = earth_atmospheric_losses + all_other_losses
 
     return losses
 
@@ -418,7 +420,7 @@ def calc_spectral_efficiency(cnr, lut):
             return spectral_efficiency
 
 
-def calc_capacity(spectral_efficiency, dl_bandwidth, number_of_channels):
+def calc_capacity(spectral_efficiency, dl_bandwidth):
     """
     Calculate the channel capacity.
 
@@ -428,18 +430,38 @@ def calc_capacity(spectral_efficiency, dl_bandwidth, number_of_channels):
         The number of bits per Hertz able to be transmitted.
     dl_bandwidth: float
         The channel bandwidth in Hetz.
+
+    Returns
+    -------
+    channel_capacity : float
+        The channel capacity in Mbps.
+
+    """
+    channel_capacity = spectral_efficiency * dl_bandwidth / (10**6)
+
+    return channel_capacity
+
+
+def calc_agg_capacity(channel_capacity, number_of_channels):
+    """
+    Calculate the aggregate capacity.
+
+    Parameters
+    ----------
+    channel_capacity : float
+        The channel capacity in Mbps.
     number_of_channels : int
         The number of user channels per satellite.
 
     Returns
     -------
-    capacity : float
-        The channel capacity in Mbps.
+    agg_capacity : float
+        The aggregate capacity in Mbps.
 
     """
-    capacity = spectral_efficiency * dl_bandwidth * number_of_channels / (10**6)
+    agg_capacity = channel_capacity * number_of_channels
 
-    return capacity
+    return agg_capacity
 
 
 def pairwise(iterable):
