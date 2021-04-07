@@ -41,20 +41,24 @@ def process_capacity_data(data, constellations):
         max_satellites = max(list(max_satellites_set)) #max density
         coverage_area = min(list(coverage_area_set)) #minimum coverage area
 
-        capacity_results = []
+        channel_capacity_results = []
+        aggregate_capacity_results = []
 
         for idx, item in data.iterrows():
             if constellation.lower() == item['constellation'].lower():
                 if item['number_of_satellites'] == max_satellites:
-                    capacity_results.append(item['capacity']) #append to list
+                    channel_capacity_results.append(item['channel_capacity']) #append to list
+                    aggregate_capacity_results.append(item['aggregate_capacity']) #append to list
 
-        mean_capacity = sum(capacity_results) / len(capacity_results)
+        mean_channel_capacity = sum(channel_capacity_results) / len(channel_capacity_results)
+        mean_agg_capacity = sum(aggregate_capacity_results) / len(aggregate_capacity_results)
 
         output[constellation] = {
             'number_of_satellites': max_satellites,
             'satellite_coverage_area': coverage_area,
-            'capacity': mean_capacity,
-            'capacity_kmsq': mean_capacity / coverage_area,
+            'channel_capacity': mean_channel_capacity,
+            'aggregate_capacity': mean_agg_capacity,
+            'capacity_kmsq': mean_agg_capacity / coverage_area,
         }
 
 
