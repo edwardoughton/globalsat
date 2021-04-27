@@ -65,7 +65,7 @@ def process_capacity_data(data, constellations):
     return output
 
 
-def process_results(data, capacity, constellation, scenario, parameters):
+def process_mean_results(data, capacity, constellation, scenario, parameters):
     """
     Process results.
 
@@ -105,6 +105,61 @@ def process_results(data, capacity, constellation, scenario, parameters):
     return output
 
 
+def process_stochastic_results(data, results, constellation, scenario, parameters):
+    """
+    Process results.
+
+    """
+    output = []
+
+    overbooking_factor = parameters[constellation.lower()]['overbooking_factor']
+
+    for i in range(0, 6):
+
+        if i == 0:
+            i = 0.1
+
+        for idx, result in results.iterrows():
+
+            if constellation.lower() == result['constellation']:
+
+                if constellation == 'Starlink':
+                    if not result['number_of_satellites'] == 5040:
+                        continue
+                if constellation == 'OneWeb':
+                    if not result['number_of_satellites'] == 720:
+                        continue
+                if constellation == 'Kuiper':
+                    if not result['number_of_satellites'] == 3240:
+                        continue
+
+                users_per_km2 = i
+
+                active_users_km2 = users_per_km2 / overbooking_factor
+
+                if active_users_km2 > 0:
+                    per_user_capacity = result['capacity_kmsq'] / active_users_km2
+                else:
+                    per_user_capacity = 0
+
+                output.append({
+                    'scenario': scenario[0],
+                    'constellation': constellation,
+                    'iteration': result['iteration'],
+                    # 'iso3': item['iso3'],
+                    # 'GID_id': item['regions'],
+                    # 'population': item['population'],
+                    # 'area_m': item['area_m'],
+                    'pop_density_km2': i,
+                    # 'adoption_rate': adoption_rate,
+                    'users_per_km2': users_per_km2,
+                    'active_users_km2': active_users_km2,
+                    'per_user_capacity': per_user_capacity,
+                })
+
+    return output
+
+
 if __name__ == '__main__':
 
     CONSTELLATIONS = [
@@ -133,6 +188,7 @@ if __name__ == '__main__':
     path = os.path.join(RESULTS, 'sim_results.csv')
     results.to_csv(path, index=False)
 
+    ##process global results
     capacity = process_capacity_data(results, CONSTELLATIONS)
 
     path = os.path.join(INTERMEDIATE, 'global_regional_population_lookup.csv')
@@ -144,9 +200,10 @@ if __name__ == '__main__':
 
         for scenario in SCENARIO:
 
-            results = process_results(global_data, capacity, constellation, scenario, parameters)
+            output = process_mean_results(global_data, capacity, constellation,
+                          scenario, parameters)
 
-            all_results = all_results + results
+            all_results = all_results + output
 
     all_results = pd.DataFrame(all_results)
 
@@ -154,4 +211,30 @@ if __name__ == '__main__':
         os.makedirs(RESULTS)
 
     path = os.path.join(RESULTS, 'global_results.csv')
+    all_results.to_csv(path, index=False)
+
+    ##process stochastic results
+    path = os.path.join(INTERMEDIATE, 'global_regional_population_lookup.csv')
+    global_data = pd.read_csv(path)#[:1]
+
+    all_results = []
+
+    for constellation in CONSTELLATIONS:
+
+        for scenario in SCENARIO:
+
+            if not scenario[0] == 'baseline':
+                continue
+
+            output = process_stochastic_results(global_data, results,
+                        constellation, scenario, parameters)
+
+            all_results = all_results + output
+
+    all_results = pd.DataFrame(all_results)
+
+    if not os.path.exists(RESULTS):
+        os.makedirs(RESULTS)
+
+    path = os.path.join(RESULTS, 'stochastic_user_capacity_results.csv')
     all_results.to_csv(path, index=False)
