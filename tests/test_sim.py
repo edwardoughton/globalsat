@@ -32,7 +32,7 @@ def test_system_capacity(setup_params, setup_lut):
     assert round(results['path_loss']) == 136
     assert round(results['antenna_gain']) == 38
     assert round(results['eirp']) == 68
-    assert round(results['received_power']) == -41
+    assert round(results['received_power']) == -41.0
     assert round(results['noise']) == -90
     assert round(results['cnr']) == 49.0
     assert results['spectral_efficiency'] == 5.768987
@@ -97,8 +97,8 @@ def test_generate_log_normal_dist_value():
     Unit test for generating random values using a lognormal distribution.
 
     """
-    assert round(generate_log_normal_dist_value(13.5, 2, 1, 1, 1)[0]) == 1
-    assert round(generate_log_normal_dist_value(13.5, 2, 1, None, 1)[0]) == 2
+    assert round(generate_log_normal_dist_value(13.5, 10, 7.8, 1, 1)[0]) == 2
+    assert round(generate_log_normal_dist_value(13.5, 1, 10, None, 1)[0]) == 1
 
 
 def test_antenna_gain():
