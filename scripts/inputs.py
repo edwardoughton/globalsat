@@ -12,8 +12,8 @@ parameters = {
         'number_of_satellites': 5040,
         'iterations': 100,
         'seed_value': 42,
-        'mu': 1, #Mean of distribution
-        'sigma': 7.8, #Standard deviation of distribution
+        'mu': 2, #Mean of distribution
+        'sigma': 10, #Standard deviation of distribution
         'total_area_earth_km_sq': 510000000, #Area of Earth in km^2
         'altitude_km': 550, #Altitude of starlink satellites in km
         'dl_frequency': 13.5*10**9, #Downlink frequency in Hertz
@@ -23,7 +23,7 @@ parameters = {
         'antenna_efficiency': 0.6,
         'power': 30, #dBw
         'receiver_gain': 38,
-        'earth_atmospheric_losses': 10, #Rain Attenuation
+        'earth_atmospheric_losses': 12, #Rain Attenuation
         'all_other_losses': 0.53, #All other losses
         'number_of_channels': 8, #Number of channels per satellite
         'overbooking_factor': 20, # 1 in 20 users access the network
@@ -32,8 +32,8 @@ parameters = {
         'number_of_satellites': 720,
         'iterations': 100,
         'seed_value': 42,
-        'mu': 1, #Mean of distribution
-        'sigma': 7.8, #Standard deviation of distribution
+        'mu': 2, #Mean of distribution
+        'sigma': 10, #Standard deviation of distribution
         'total_area_earth_km_sq': 510000000, #Area of Earth in km^2
         'altitude_km': 1200, #Altitude of starlink satellites in km
         'dl_frequency': 13.5*10**9, #Downlink frequency in Hertz
@@ -43,7 +43,7 @@ parameters = {
         'antenna_efficiency': 0.6,
         'power': 30, #dBw
         'receiver_gain': 38,
-        'earth_atmospheric_losses': 10, #Rain Attenuation
+        'earth_atmospheric_losses': 12, #Rain Attenuation
         'all_other_losses': 0.53, #All other losses
         'number_of_channels': 8, #Number of channels per satellite
         'overbooking_factor': 20, # 1 in 20 users access the network
@@ -52,8 +52,8 @@ parameters = {
         'number_of_satellites': 3236,
         'iterations': 100,
         'seed_value': 42,
-        'mu': 1, #Mean of distribution
-        'sigma': 7.8, #Standard deviation of distribution
+        'mu': 2, #Mean of distribution
+        'sigma': 10, #Standard deviation of distribution
         'total_area_earth_km_sq': 510000000, #Area of Earth in km^2
         'altitude_km': 610, #Altitude of starlink satellites in km
         'dl_frequency': 17.7*10**9, #Downlink frequency in Hertz
@@ -63,7 +63,7 @@ parameters = {
         'antenna_efficiency': 0.6,
         'power': 30, #dBw
         'receiver_gain': 39,
-        'earth_atmospheric_losses': 10, #Rain Attenuation
+        'earth_atmospheric_losses': 12, #Rain Attenuation
         'all_other_losses': 0.53, #All other losses
         'number_of_channels': 8, #Number of channels per satellite
         'overbooking_factor': 20, # 1 in 20 users access the network

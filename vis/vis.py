@@ -7,6 +7,7 @@ December 2020.
 
 """
 import os
+import sys
 import configparser
 import numpy as np
 import pandas as pd
@@ -23,6 +24,11 @@ DATA_RAW = os.path.join(BASE_PATH, 'raw')
 DATA_INTERMEDIATE = os.path.join(BASE_PATH, 'intermediate')
 RESULTS = os.path.join(BASE_PATH, '..', 'results')
 VIS = os.path.join(BASE_PATH, '..', 'vis', 'figures')
+
+ROOT_DIR = os.path.normpath(os.path.join(os.path.abspath(__file__), '..', '..', 'scripts'))
+sys.path.insert(0, ROOT_DIR)
+
+from inputs import parameters
 
 
 def plot_aggregated_engineering_metrics(data):
@@ -152,7 +158,7 @@ def process_capacity_data(data):
     return output
 
 
-def plot_panel_plot_of_per_user_metrics(capacity):
+def plot_panel_plot_of_per_user_metrics(capacity, parameters):
     """
 
     """
@@ -165,6 +171,9 @@ def plot_panel_plot_of_per_user_metrics(capacity):
     results = []
 
     for constellation in constellations:
+
+        overbooking_factor = parameters[constellation.lower()]['overbooking_factor']
+
         for i in range(5, 101):
 
             i = (i / 100)
@@ -189,7 +198,7 @@ def plot_panel_plot_of_per_user_metrics(capacity):
             results.append({
                 'constellation': constellation,
                 'subscribers_kmsq': i,
-                'capacity_per_subscriber': capacity_kmsq / (i / 20),
+                'capacity_per_subscriber': capacity_kmsq / (i / overbooking_factor),
                 'cost_per_subscriber': cost_kmsq / i,
             })
 
@@ -203,7 +212,7 @@ def plot_panel_plot_of_per_user_metrics(capacity):
     sns.set(font_scale=1.1)
 
     #Now plot results
-    fig, axs = plt.subplots(2, figsize=(7.5,7.5))
+    fig, axs = plt.subplots(2, figsize=(8,7.5))
 
     axs[0] = sns.lineplot(x="subscribers_kmsq", y="capacity_per_subscriber",
                         hue="Constellation", data=results, ax=axs[0])
@@ -420,7 +429,7 @@ if __name__ == '__main__':
     capacity = process_capacity_data(sim_results)
 
     print('Generating data for panel plots')
-    plot_panel_plot_of_per_user_metrics(capacity)
+    plot_panel_plot_of_per_user_metrics(capacity, parameters)
 
     print('Loading shapes')
     path = os.path.join(DATA_INTERMEDIATE, 'all_regional_shapes.shp')
