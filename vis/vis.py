@@ -30,7 +30,6 @@ sys.path.insert(0, ROOT_DIR)
 
 from inputs import parameters
 
-
 def plot_aggregated_engineering_metrics(data):
     """
     Create 2D engineering plots for system capacity model.
@@ -82,7 +81,7 @@ def plot_aggregated_engineering_metrics(data):
 
     long_data = long_data.loc[long_data['Number of Satellites'] < 1000]
 
-    sns.set(font_scale=1.1)
+    sns.set(font_scale=1.3, font="Times New Roman")
 
     plot = sns.relplot(
         x="Number of Satellites", y='Value', linewidth=1.2, hue='Constellation',
@@ -209,7 +208,7 @@ def plot_panel_plot_of_per_user_metrics(capacity, parameters):
     results['Constellation'] = results['Constellation'].replace(regex='oneweb', value='OneWeb')
     results['Constellation'] = results['Constellation'].replace(regex='kuiper', value='Kuiper')
 
-    sns.set(font_scale=1.1)
+    sns.set(font_scale=1, font="Times New Roman")
 
     #Now plot results
     fig, axs = plt.subplots(2, figsize=(8,7.5))
@@ -275,8 +274,6 @@ def plot_regions_by_geotype(data, regions):
     """
 
     """
-    # data = data.loc[data['scenario'] == 'baseline']
-
     data = data.loc[data['constellation'] == 'Starlink'].reset_index()
     data['pop_density_km2'] = round(data['pop_density_km2'])
     n = len(regions)
@@ -309,6 +306,8 @@ def plot_regions_by_geotype(data, regions):
         labels=labels
     )
 
+    sns.set(font_scale=1, font="Times New Roman")
+
     fig, ax = plt.subplots(1, 1, figsize=(15, 6))
 
     minx, miny, maxx, maxy = regions.total_bounds
@@ -338,6 +337,8 @@ def plot_capacity_per_user_maps(data, regions):
     regions = regions[['GID_id', 'geometry']]#[:1000]
 
     constellations = data['constellation'].unique()#[:1]
+
+    sns.set(font_scale=1, font="Times New Roman")
 
     fig, axs = plt.subplots(3, 1, figsize=(10, 12)) #width height
 
