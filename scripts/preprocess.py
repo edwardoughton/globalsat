@@ -51,7 +51,7 @@ def find_country_list(continent_list):
     path = os.path.join(DATA_RAW, 'gadm36_levels_shp', 'gadm36_0.shp')
     countries = gpd.read_file(path)
 
-    glob_info_path = os.path.join(DATA_RAW, 'global_information.csv')
+    glob_info_path = os.path.join(DATA_RAW, '..', 'global_information.csv')
     load_glob_info = pd.read_csv(glob_info_path, encoding = "ISO-8859-1")
     countries = countries.merge(load_glob_info, left_on='GID_0',
         right_on='ISO_3digit')
