@@ -30,6 +30,7 @@ sys.path.insert(0, ROOT_DIR)
 
 from inputs import parameters
 
+
 def plot_aggregated_engineering_metrics(data):
     """
     Create 2D engineering plots for system capacity model.
@@ -81,7 +82,7 @@ def plot_aggregated_engineering_metrics(data):
 
     long_data = long_data.loc[long_data['Number of Satellites'] < 1000]
 
-    sns.set(font_scale=1.3, font="Times New Roman")
+    sns.set(font_scale=1.1, font="Times New Roman", rc={'figure.figsize':(12,8)})
 
     plot = sns.relplot(
         x="Number of Satellites", y='Value', linewidth=1.2, hue='Constellation',
@@ -211,17 +212,17 @@ def plot_panel_plot_of_per_user_metrics(capacity, parameters):
     sns.set(font_scale=1, font="Times New Roman")
 
     #Now plot results
-    fig, axs = plt.subplots(2, figsize=(8,7.5))
+    fig, axs = plt.subplots(1, 2, figsize=(10, 5.5))
 
     axs[0] = sns.lineplot(x="subscribers_kmsq", y="capacity_per_subscriber",
                         hue="Constellation", data=results, ax=axs[0])
     axs[0].set(xlabel='Subscriber Density (km^2)', ylabel='Mean Capacity (Mbps)')
-    axs[0].title.set_text('Mean Capacity Per Subscriber (Busy Hour) (OBF: 20)')
+    axs[0].title.set_text('(A) Mean Capacity Per Subscriber (Busy Hour) (OBF: 20)')
 
     axs[1] = sns.lineplot(x="subscribers_kmsq", y="cost_per_subscriber",
                         hue="Constellation", data=results, ax=axs[1])
     axs[1].set(xlabel='Subscriber Density (km^2)', ylabel='NPV TCO Per Subscriber ($USD)')
-    axs[1].title.set_text('10-Year NPV TCO Per Subscriber')
+    axs[1].title.set_text('(B) 10-Year NPV TCO Per Subscriber')
 
     plt.subplots_adjust(hspace=0.25, wspace=.25, bottom=0.4)
     plt.tight_layout()
@@ -306,20 +307,20 @@ def plot_regions_by_geotype(data, regions):
         labels=labels
     )
 
-    sns.set(font_scale=1, font="Times New Roman")
+    sns.set(font_scale=.85, font="Times New Roman")
 
-    fig, ax = plt.subplots(1, 1, figsize=(15, 6))
+    fig, ax = plt.subplots(1, 1, figsize=(10, 5.5))#(13, 6))
 
     minx, miny, maxx, maxy = regions.total_bounds
     ax.set_xlim(minx+10, maxx)
     ax.set_ylim(miny-5, maxy)
 
     regions.plot(column='bin', ax=ax, cmap='inferno_r',
-    linewidth=0, legend=True, edgecolor='grey')
+        linewidth=0, legend=True, edgecolor='grey')
 
     ctx.add_basemap(ax, crs=regions.crs, source=ctx.providers.CartoDB.Voyager)
 
-    fig.suptitle('Population Density by Sub-National Region (n={})'.format(n))
+    fig.suptitle('Population Density by Sub-National Region (n={})'.format(n), y=0.87)
 
     fig.tight_layout()
     fig.savefig(os.path.join(VIS, 'region_by_pop_density.png'))
