@@ -14,6 +14,12 @@ constellations, in order to understand capacity, coverage and cost.
 This codebase provides an open-source techno-economic model to help analyze the global satellite fleet. Such a model can be used for numerous applications, such as assessing the role of new Low Earth Orbit (LEO) constellations in delivering universal broadband services.
 
 
+Citation
+---------
+
+- Ogutu, O.B., Oughton, E.J., 2021. A Techno-Economic Cost Framework for Satellite Networks Applied to Low Earth Orbit Constellations: Assessing    Starlink, OneWeb and Kuiper. [arXiv:2108.10834](https://arxiv.org/abs/2108.10834) [cs, eess].
+
+
 Reequired data
 ==============
 
