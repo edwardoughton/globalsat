@@ -11,10 +11,27 @@ timing, syncronization, positioning etc.
 However, we lack analytics to help model the engineering-economics of new global satellite
 constellations, in order to understand capacity, coverage and cost.
 
-This codebase provides an open-source model to help analyze the global satellite fleet. Such
-a model can be used for numerous applications, such as assessing the role of new Low Earth
-Orbit constellations in delivering universal broadband services.
+This codebase provides an open-source techno-economic model to help analyze the global satellite fleet. Such a model can be used for numerous applications, such as assessing the role of new Low Earth Orbit (LEO) constellations in delivering universal broadband services.
 
+
+Reequired data
+==============
+
+Some input datasets needs to be downloaded from their source.
+
+Firstly, download the Global Administrative Database (GADM), following the link below and making sure you download the "six separate layers.":
+
+- https://gadm.org/download_world.html
+
+Place the data into the following path `data/raw/gadm36_levels_shp`.
+
+Then download the WorldPop global settlement data from:
+
+- https://www.worldpop.org/geodata/summary?id=24777.
+
+Place the data (e.g. 'ppp_2020_1km_Aggregated.tiff') into `data/raw/settlement_layer`.
+
+Now you should be ready to start running the codebase.
 
 Using conda
 ===========
@@ -66,6 +83,7 @@ If you want to create the map try:
 Followed by:
 
     python vis/vis.py
+
 
 
 Background and funding
