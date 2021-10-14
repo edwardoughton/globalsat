@@ -61,7 +61,6 @@ def process_capacity_data(data, constellations):
             'capacity_kmsq': mean_agg_capacity / coverage_area,
         }
 
-
     return output
 
 
@@ -75,7 +74,10 @@ def process_mean_results(data, capacity, constellation, scenario, parameters):
     adoption_rate = scenario[1]
     overbooking_factor = parameters[constellation.lower()]['overbooking_factor']
     constellation_capacity = capacity[constellation]
+
     max_capacity = constellation_capacity['capacity_kmsq']
+    number_of_satellites = constellation_capacity['number_of_satellites']
+    satellite_coverage_area = constellation_capacity['satellite_coverage_area']
 
     for idx, item in data.iterrows():
 
@@ -91,6 +93,8 @@ def process_mean_results(data, capacity, constellation, scenario, parameters):
         output.append({
             'scenario': scenario[0],
             'constellation': constellation,
+            'number_of_satellites': number_of_satellites,
+            'satellite_coverage_area': satellite_coverage_area,
             'iso3': item['iso3'],
             'GID_id': item['regions'],
             'population': item['population'],
@@ -146,12 +150,9 @@ def process_stochastic_results(data, results, constellation, scenario, parameter
                     'scenario': scenario[0],
                     'constellation': constellation,
                     'iteration': result['iteration'],
-                    # 'iso3': item['iso3'],
-                    # 'GID_id': item['regions'],
-                    # 'population': item['population'],
-                    # 'area_m': item['area_m'],
+                    'number_of_satellites': result['number_of_satellites'],
+                    'satellite_coverage_area': result['satellite_coverage_area'],
                     'pop_density_km2': i,
-                    # 'adoption_rate': adoption_rate,
                     'users_per_km2': users_per_km2,
                     'active_users_km2': active_users_km2,
                     'per_user_capacity': per_user_capacity,
@@ -176,6 +177,7 @@ if __name__ == '__main__':
 
     results = []
 
+    ##generate simulation results for all constellation satellite densities
     for constellation, params in parameters.items():
         for number_of_satellites in range(60, params['number_of_satellites'] + 60, 60):
 
