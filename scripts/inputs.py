@@ -49,7 +49,7 @@ parameters = {
         'overbooking_factor': 20, # 1 in 20 users access the network
     },
     'kuiper': {
-        'number_of_satellites': 3236,
+        'number_of_satellites': 3240,
         'iterations': 100,
         'seed_value': 42,
         'mu': 2, #Mean of distribution

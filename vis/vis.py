@@ -222,7 +222,7 @@ def plot_panel_plot_of_per_user_metrics(capacity, parameters):
     axs[1] = sns.lineplot(x="subscribers_kmsq", y="cost_per_subscriber",
                         hue="Constellation", data=results, ax=axs[1])
     axs[1].set(xlabel='Subscriber Density (km^2)', ylabel='NPV TCO Per Subscriber ($USD)')
-    axs[1].title.set_text('(B) 10-Year NPV TCO Per Subscriber')
+    axs[1].title.set_text('(B) 5-Year NPV TCO Per Subscriber')
 
     plt.subplots_adjust(hspace=0.25, wspace=.25, bottom=0.4)
     plt.tight_layout()
