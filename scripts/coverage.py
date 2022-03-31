@@ -23,4 +23,3 @@ def coverage_area(latitude_interval):
                                 circle_area_at_latitude})
     print(coverage_data)
     return coverage_data 
-coverage_area(5)
