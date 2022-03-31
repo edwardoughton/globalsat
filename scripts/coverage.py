@@ -14,11 +14,13 @@ def coverage_area(latitude_interval):
                      ** 2 + ((earth_radius_poles**2)*(np.sin(np.radians(angles))))**2)
         denominator = ((earth_radius_poles*(np.cos(np.radians(angles))))
                        ** 2)+((earth_radius_poles*(np.sin(np.radians(angles))))**2)
-        earth_radius = np.sqrt(numerator/denominator)
+        radius_at_latitude = np.sqrt(numerator/denominator)
         latitude_change = angles-equator
-        area = 2*np.pi*earth_radius*((np.sin(latitude2))-(np.sin(equator)))
+        area = 2*np.pi*radius_at_latitude*((np.sin(np.radians(latitude2)))-(np.sin(np.radians(equator))))
+        circle_area_at_latitude = 2*np.pi*radius_at_latitude**2
         coverage_data.append({'Equator':equator,'Instantenous angle': angles,
-                                'Instantenous coverage area':area})
+                                'Area of a circle at the latitude':
+                                circle_area_at_latitude})
     print(coverage_data)
     return coverage_data 
-coverage_area(10)
+coverage_area(5)
