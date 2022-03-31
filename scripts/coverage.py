@@ -17,7 +17,7 @@ def coverage_area(latitude_interval):
         radius_at_latitude = np.sqrt(numerator/denominator)
         latitude_change = angles-equator
         area = 2*np.pi*radius_at_latitude*((np.sin(np.radians(latitude2)))-(np.sin(np.radians(equator))))
-        circle_area_at_latitude = 2*np.pi*radius_at_latitude**2
+        circle_area_at_latitude = 4*np.pi*radius_at_latitude**2
         coverage_data.append({'Equator':equator,'Instantenous angle': angles,
                                 'Area of a circle at the latitude':
                                 circle_area_at_latitude})
