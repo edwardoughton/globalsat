@@ -1,5 +1,7 @@
-import coverage as cg
+path = '/home/makavelli/Documents/GitHub Codes/'
+
+import coverage as cr
 import pandas as pd
-a = cg.coverage_area(30)
+a = cr.coverage_area(1)
 df = pd.DataFrame(a)
-df
+df.to_csv(path+'coverage_area.csv')
