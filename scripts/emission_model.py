@@ -2,6 +2,7 @@ import numpy as np
 import math
 import pandas as pd
 
+path = '/home/makavelli/Desktop/GitHub/globalsat/results/'
 def soyuz_FG(hypergolic,kerosene):
     alumina_emission = (hypergolic*1*0.001)+(kerosene*1*0.05)
     sulphur_emission = (hypergolic*0.7*0.001)+(kerosene*0.7*0.001)
