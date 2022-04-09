@@ -62,12 +62,13 @@ def per_sat_emission(name):
         fuel_mass = 488370                 #mass of fuel per launch
         fuel_per_sat = fuel_mass/sat_numb  #fuel per satellite
         emission = falcon_9(fuel_per_sat)  #emission per satellite
-        emission_results = pd.DataFrame(data=[*emission.items()], columns=['compound', 'amount']) #convert to dataframe
-        df = pd.DataFrame(emission_results['compound']) #create a dataframe from the main
+        emission_results = pd.DataFrame(data=[*emission.items()], columns=['Emission type', 'amount']) #convert to dataframe
+        # create a dataframe from the main
+        df = pd.DataFrame(emission_results['Emission type'])
         df2 = pd.DataFrame(emission_results["amount"].to_list(), columns=[
-            'amount', 'constellation']) #split the list inside the dataframe cells
+            'amount', 'Constellation']) #split the list inside the dataframe cells
         dfs = pd.concat([df, df2], axis=1) #merge the two dataframes
-        dfs['constellation'] = name        #assign the constellation name
+        dfs['Constellation'] = name        #assign the constellation name
         data = dfs
     elif name == 'kuiper':
         sat_numb = 60
@@ -76,13 +77,13 @@ def per_sat_emission(name):
         fm_hyp, fm_sod, fm_cry = m1/sat_numb, m2/sat_numb, m3 / \
             sat_numb  # mass per fuel type per satellite
         emission = ariane(fm_hyp, fm_sod, fm_cry) #emission per satellite per fuel type
-        emission_results = pd.DataFrame(data=[*emission.items()], columns=['compound',
+        emission_results = pd.DataFrame(data=[*emission.items()], columns=['Emission type',
                         'amount'])
-        df = pd.DataFrame(emission_results['compound'])
+        df = pd.DataFrame(emission_results['Emission type'])
         df2 = pd.DataFrame(emission_results["amount"].to_list(), columns=['amount',
-            'constellation'])
+            'Constellation'])
         dfk = pd.concat([df, df2], axis=1)
-        dfk['constellation'] = name
+        dfk['Constellation'] = name
         data = dfk
     elif name == 'oneweb':
         sat_numb = 36
@@ -90,12 +91,12 @@ def per_sat_emission(name):
         fm_hyp, fm_ker = m1/sat_numb, m2/sat_numb
         emission = soyuz_FG(fm_hyp, fm_ker)
         emission_results = pd.DataFrame(
-            data=[*emission.items()], columns=['compound', 'amount'])
-        df = pd.DataFrame(emission_results['compound'])
+            data=[*emission.items()], columns=['Emission type', 'amount'])
+        df = pd.DataFrame(emission_results['Emission type'])
         df2 = pd.DataFrame(emission_results["amount"].to_list(), columns=[
-            'amount', 'constellation'])
+            'amount', 'Constellation'])
         dfw = pd.concat([df, df2], axis=1)
-        dfw['constellation'] = name
+        dfw['Constellation'] = name
         data = dfw 
     else:
         print('Invalid Constellation name')
