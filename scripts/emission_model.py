@@ -77,7 +77,7 @@ def per_sat_emission(name):
         data = dfs
     elif name == 'kuiper':
         sat_numb = 60
-        # masses of hypergolic, solid and crayogenic fuels
+        # masses of hypergolic, solid and cryogenic fuels
         m1, m2, m3 = 10000, 480000, 184900
         fm_hyp, fm_sod, fm_cry = m1/sat_numb, m2/sat_numb, m3 / \
             sat_numb  # mass per fuel type per satellite
