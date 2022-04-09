@@ -1,5 +1,3 @@
-import numpy as np
-import math
 import pandas as pd
 
 path = '/home/makavelli/Desktop/GitHub/globalsat/results/'
@@ -17,7 +15,6 @@ def soyuz_FG(hypergolic, kerosene):
             'Carbon Oxides': [carbon_emission, 'name'], 'Cfc Gases': [cfc_gases, 'name'], 'Particulate Matter':
             [particulate_matter, 'name'], 'Photochemical Oxidation': [photo_oxidation, 'name'], }
 
-
 def falcon_9(kerosene):
     alumina_emission = (kerosene*0.05)
     sulphur_emission = (kerosene*0.001*0.7)
@@ -30,7 +27,6 @@ def falcon_9(kerosene):
             'Cfc Gases': [cfc_gases, 'name'], 'Particulate Matter': [particulate_matter,
             'name'], 'Photochemical Oxidation': [photo_oxidation, 'name']}
 
-
 def falcon_heavy(kerosene):
     alumina_emission = (kerosene*0.05)
     sulphur_emission = (kerosene*0.001*0.7)
@@ -41,7 +37,6 @@ def falcon_heavy(kerosene):
     return {'Aluminium Oxides': [alumina_emission, 'name'], 'Sulphur Oxides': [sulphur_emission, 'name'],
             'Carbon Oxides': carbon_emission, 'Cfc Gases': cfc_gases, 'Particulate Matter':
             [particulate_matter, 'name'], 'Photochemical Oxidation': [photo_oxidation, 'name']}
-
 
 def ariane(hypergolic, solid, cryogenic):
     alumina_emission = (solid*0.33*1)+(hypergolic*0.001*1)
@@ -59,7 +54,6 @@ def ariane(hypergolic, solid, cryogenic):
     return {'Aluminium Oxides': [alumina_emission, 'name'], 'Sulphur Oxides': [sulphur_emission, 'name'],
             'Carbon Oxides': [carbon_emission, 'name'], 'Cfc Gases': [cfc_gases, 'name'], 'Particulate Matter':
             [particulate_matter, 'name'], 'Photochemical Oxidation': [photo_oxidation, 'name']}
-
 
 def per_sat_emission(name):
     data = None 
