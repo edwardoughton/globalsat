@@ -11,10 +11,8 @@ def soyuz_FG(hypergolic, kerosene):
         (hypergolic*0.378*1.57)+(kerosene*0.528*1.57)
     cfc_gases = (hypergolic*0.016*0.7)+(kerosene*0.016*0.7)+(hypergolic*0.003*0.7) + \
         (kerosene*0.003*0.7)+(hypergolic*0.001*0.7)+(kerosene*0.001*0.7)
-    particulate_matter = (hypergolic*0.001*0.22)+(kerosene *
-                                                  0.001*0.22)+(hypergolic*0.001*1)+(kerosene*0.05*1)
-    photo_oxidation = (hypergolic*0.378*0.0456)+(kerosene *
-                                                 0.528*0.0456)+(hypergolic*0.001*1)+(kerosene*0.001*1)
+    particulate_matter = (hypergolic*0.001*0.22)+(kerosene *0.001*0.22)+(hypergolic*0.001*1)+(kerosene*0.05*1)
+    photo_oxidation = (hypergolic*0.378*0.0456)+(kerosene *0.528*0.0456)+(hypergolic*0.001*1)+(kerosene*0.001*1)
     return {'Aluminium Oxides': [alumina_emission, 'name'], 'Sulphur Oxides': [sulphur_emission, 'name'],
             'Carbon Oxides': [carbon_emission, 'name'], 'Cfc Gases': [cfc_gases, 'name'], 'Particulate Matter':
             [particulate_matter, 'name'], 'Photochemical Oxidation': [photo_oxidation, 'name'], }
@@ -30,7 +28,7 @@ def falcon_9(kerosene):
     return {'Aluminium Oxides': [alumina_emission, 'name'], 'Sulphur Oxides':
             [sulphur_emission, 'name'], 'Carbon Oxides': [carbon_emission, 'name'],
             'Cfc Gases': [cfc_gases, 'name'], 'Particulate Matter': [particulate_matter,
-                                                                     'name'], 'Photochemical Oxidation': [photo_oxidation, 'name']}
+            'name'], 'Photochemical Oxidation': [photo_oxidation, 'name']}
 
 
 def falcon_heavy(kerosene):
@@ -66,17 +64,16 @@ def ariane(hypergolic, solid, cryogenic):
 def per_sat_emission(name):
     data = None 
     if name == 'starlink':
-        sat_numb = 60
-        fuel_mass = 488370
-        fuel_per_sat = fuel_mass/sat_numb
-        emission = falcon_9(fuel_per_sat)
-        emission_results = pd.DataFrame(
-            data=[*emission.items()], columns=['compound', 'amount'])
-        df = pd.DataFrame(emission_results['compound'])
+        sat_numb = 60                      #number of satellites per launch
+        fuel_mass = 488370                 #mass of fuel per launch
+        fuel_per_sat = fuel_mass/sat_numb  #fuel per satellite
+        emission = falcon_9(fuel_per_sat)  #emission per satellite
+        emission_results = pd.DataFrame(data=[*emission.items()], columns=['compound', 'amount']) #convert to dataframe
+        df = pd.DataFrame(emission_results['compound']) #create a dataframe from the main
         df2 = pd.DataFrame(emission_results["amount"].to_list(), columns=[
-                           'amount', 'constellation'])
-        dfs = pd.concat([df, df2], axis=1)
-        dfs['constellation'] = name
+            'amount', 'constellation']) #split the list inside the dataframe cells
+        dfs = pd.concat([df, df2], axis=1) #merge the two dataframes
+        dfs['constellation'] = name        #assign the constellation name
         data = dfs
     elif name == 'kuiper':
         sat_numb = 60
@@ -84,12 +81,12 @@ def per_sat_emission(name):
         m1, m2, m3 = 10000, 480000, 184900
         fm_hyp, fm_sod, fm_cry = m1/sat_numb, m2/sat_numb, m3 / \
             sat_numb  # mass per fuel type per satellite
-        emission = ariane(fm_hyp, fm_sod, fm_cry)
+        emission = ariane(fm_hyp, fm_sod, fm_cry) #emission per satellite per fuel type
         emission_results = pd.DataFrame(data=[*emission.items()], columns=['compound',
-                                                                           'amount'])
+                        'amount'])
         df = pd.DataFrame(emission_results['compound'])
         df2 = pd.DataFrame(emission_results["amount"].to_list(), columns=['amount',
-                                                                          'constellation'])
+            'constellation'])
         dfk = pd.concat([df, df2], axis=1)
         dfk['constellation'] = name
         data = dfk
@@ -102,7 +99,7 @@ def per_sat_emission(name):
             data=[*emission.items()], columns=['compound', 'amount'])
         df = pd.DataFrame(emission_results['compound'])
         df2 = pd.DataFrame(emission_results["amount"].to_list(), columns=[
-                           'amount', 'constellation'])
+            'amount', 'constellation'])
         dfw = pd.concat([df, df2], axis=1)
         dfw['constellation'] = name
         data = dfw 
