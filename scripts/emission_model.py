@@ -64,7 +64,7 @@ def ariane(hypergolic, solid, cryogenic):
 
 
 def per_sat_emission(name):
-    data = None
+    data = None 
     if name == 'starlink':
         sat_numb = 60
         fuel_mass = 488370
@@ -75,9 +75,9 @@ def per_sat_emission(name):
         df = pd.DataFrame(emission_results['compound'])
         df2 = pd.DataFrame(emission_results["amount"].to_list(), columns=[
                            'amount', 'constellation'])
-        df3 = pd.concat([df, df2], axis=1)
-        df3['constellation'] = name
-        data = df3
+        dfs = pd.concat([df, df2], axis=1)
+        dfs['constellation'] = name
+        data = dfs
     elif name == 'kuiper':
         sat_numb = 60
         # masses of hypergolic, solid and crayogenic fuels
@@ -90,9 +90,9 @@ def per_sat_emission(name):
         df = pd.DataFrame(emission_results['compound'])
         df2 = pd.DataFrame(emission_results["amount"].to_list(), columns=['amount',
                                                                           'constellation'])
-        df3 = pd.concat([df, df2], axis=1)
-        df3['constellation'] = name
-        data = df3
+        dfk = pd.concat([df, df2], axis=1)
+        dfk['constellation'] = name
+        data = dfk
     elif name == 'oneweb':
         sat_numb = 36
         m1, m2 = 7360, 218150
@@ -103,9 +103,24 @@ def per_sat_emission(name):
         df = pd.DataFrame(emission_results['compound'])
         df2 = pd.DataFrame(emission_results["amount"].to_list(), columns=[
                            'amount', 'constellation'])
-        df3 = pd.concat([df, df2], axis=1)
-        df3['constellation'] = name
-        data = df3
+        dfw = pd.concat([df, df2], axis=1)
+        dfw['constellation'] = name
+        data = dfw 
     else:
         print('Invalid Constellation name')
     return data
+
+#starlink emission
+def starlink_emission():
+    starlink_data = per_sat_emission('starlink')
+    return starlink_data
+
+#oneweb emission
+def oneweb_emission():
+    oneweb_data = per_sat_emission('oneweb')
+    return oneweb_data
+
+#kuiper emission
+def kuiper_emission():
+    kuiper_data = per_sat_emission('kuiper')
+    return kuiper_data
