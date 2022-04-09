@@ -76,6 +76,8 @@ def system_capacity(constellation, number_of_satellites, params, lut):
 
         agg_capacity = calc_agg_capacity(channel_capacity, params['number_of_channels'])
 
+        sat_capacity = single_satellite_capacity(params['dl_bandwidth'], spectral_efficiency, params['number_of_channels'],params['polarization'])
+
         results.append({
             'constellation': constellation,
             'number_of_satellites': number_of_satellites,
@@ -93,6 +95,7 @@ def system_capacity(constellation, number_of_satellites, params, lut):
             'channel_capacity': channel_capacity,
             'aggregate_capacity': agg_capacity,
             'capacity_kmsq': agg_capacity / satellite_coverage_area_km,
+            'capacity_per_single_satellite': sat_capacity,
         })
 
     return results
@@ -463,6 +466,16 @@ def calc_agg_capacity(channel_capacity, number_of_channels):
 
     return agg_capacity
 
+
+def single_satellite_capacity(dl_bandwidth, spectral_efficiency, number_of_channels,polarization):
+    """
+    Calculate the capacity by each satellite
+        Bandwidth in MHz
+        Spectral efficiency 64QAM equivalent to 5.1152
+    """
+    sat_capacity = (dl_bandwidth/1000000)*spectral_efficiency*number_of_channels*polarization
+
+    return sat_capacity
 
 def pairwise(iterable):
     """
