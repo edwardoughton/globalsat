@@ -471,7 +471,7 @@ def single_satellite_capacity(dl_bandwidth, spectral_efficiency, number_of_chann
     """
     Calculate the capacity by each satellite
         Bandwidth in MHz
-        Spectral efficiency 64QAM equivalent to 5.1152
+        Spectral efficiency 64QAM equivalent to 5.1152, assuming every constellation uses 64QAM
     """
     sat_capacity = (dl_bandwidth/1000000)*spectral_efficiency*number_of_channels*polarization
 

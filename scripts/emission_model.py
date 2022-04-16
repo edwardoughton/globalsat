@@ -93,6 +93,7 @@ def per_sat_emission(name):
         emission_results = pd.DataFrame(
             data=[*emission.items()], columns=['Emission type', 'amount'])
         df = pd.DataFrame(emission_results['Emission type'])
+        print(emission_results)
         df2 = pd.DataFrame(emission_results["amount"].to_list(), columns=[
             'amount', 'Constellation'])
         dfw = pd.concat([df, df2], axis=1)
@@ -116,3 +117,4 @@ def oneweb_emission():
 def kuiper_emission():
     kuiper_data = per_sat_emission('kuiper')
     return kuiper_data
+print(oneweb_emission())
