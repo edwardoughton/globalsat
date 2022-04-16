@@ -10,6 +10,7 @@ December 2020
 parameters = {
     'starlink': {
         'number_of_satellites': 5040,
+        'name': 'Starlink',
         'iterations': 100,
         'seed_value': 42,
         'mu': 2, #Mean of distribution
@@ -27,10 +28,15 @@ parameters = {
         'all_other_losses': 0.53, #All other losses
         'number_of_channels': 8, #Number of channels per satellite
         'overbooking_factor': 20, # 1 in 20 users access the network
-        'polarization':2
+        'polarization':2,
+        'fuel_mass': 488370,
+        'fuel_mass_1': 0,
+        'fuel_mass_2': 0,
+        'fuel_mass_3': 0
     },
     'oneweb': {
         'number_of_satellites': 720,
+        'name': 'Oneweb',
         'iterations': 100,
         'seed_value': 42,
         'mu': 2, #Mean of distribution
@@ -48,10 +54,15 @@ parameters = {
         'all_other_losses': 0.53, #All other losses
         'number_of_channels': 8, #Number of channels per satellite
         'overbooking_factor': 20, # 1 in 20 users access the network
-        'polarization': 2
+        'polarization': 2,
+        'fuel_mass': 0,
+        'fuel_mass_1': 10000,
+        'fuel_mass_2': 480000,
+        'fuel_mass_3': 184900
     },
     'kuiper': {
         'number_of_satellites': 3240,
+        'name': 'Kuiper',
         'iterations': 100,
         'seed_value': 42,
         'mu': 2, #Mean of distribution
@@ -69,7 +80,11 @@ parameters = {
         'all_other_losses': 0.53, #All other losses
         'number_of_channels': 8, #Number of channels per satellite
         'overbooking_factor': 20, # 1 in 20 users access the network
-        'polarization': 2
+        'polarization': 2,
+        'fuel_mass': 0,
+        'fuel_mass_1': 7360,
+        'fuel_mass_2': 218150,
+        'fuel_mass_3': 0
     },
     # 'telesat': {
     #     'number_of_satellites': 300,

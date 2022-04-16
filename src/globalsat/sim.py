@@ -74,10 +74,16 @@ def system_capacity(constellation, number_of_satellites, params, lut):
 
         channel_capacity = calc_capacity(spectral_efficiency, params['dl_bandwidth'])
 
-        agg_capacity = calc_agg_capacity(channel_capacity, params['number_of_channels'])
+        agg_capacity = calc_agg_capacity(
+            channel_capacity, params['number_of_channels'], params['polarization'])
 
         sat_capacity = single_satellite_capacity(params['dl_bandwidth'], spectral_efficiency, params['number_of_channels'],params['polarization'])
 
+        al = calc_per_sat_emission(params, params['name'],params['fuel_mass'], params['fuel_mass_1'], params['fuel_mass_2'],params['fuel_mass_3'])
+        
+        aluminium_oxide_emission, sulphur_oxide_emission, carbon_oxide_emission, cfc_gases_emission, particulate_matter_emission, photochemical_oxidation_emission = al[
+            0], al[1], al[2], al[3], al[4], al[5]
+        
         results.append({
             'constellation': constellation,
             'number_of_satellites': number_of_satellites,
@@ -96,6 +102,25 @@ def system_capacity(constellation, number_of_satellites, params, lut):
             'aggregate_capacity': agg_capacity,
             'capacity_kmsq': agg_capacity / satellite_coverage_area_km,
             'capacity_per_single_satellite': sat_capacity,
+            'aluminium_oxide_emissions': aluminium_oxide_emission*number_of_satellites,
+            'sulphur_oxide_emissions': sulphur_oxide_emission*number_of_satellites,
+            'carbon_oxide_emissions': carbon_oxide_emission*number_of_satellites,
+            'cfc_gases_emissions': cfc_gases_emission*number_of_satellites,
+            'particulate_matter_emissions': particulate_matter_emission*number_of_satellites,
+            'photochemical_oxidation_emissions': photochemical_oxidation_emission*number_of_satellites,
+            'total_emissions': (aluminium_oxide_emission*number_of_satellites)+(sulphur_oxide_emission*number_of_satellites)+(carbon_oxide_emission*number_of_satellites)+(cfc_gases_emission*number_of_satellites) +
+            (particulate_matter_emission*number_of_satellites) +
+            (photochemical_oxidation_emission*number_of_satellites),
+            'aluminium_oxide_per_mbps': aluminium_oxide_emission*number_of_satellites/sat_capacity,
+            'sulphur_oxide_per_mbps': sulphur_oxide_emission*number_of_satellites/sat_capacity,
+            'carbon_oxide_per_mbps': carbon_oxide_emission*number_of_satellites/sat_capacity,
+            'cfc_gases_per_mbps': cfc_gases_emission*number_of_satellites/sat_capacity,
+            'particulate_matter_per_mbps': particulate_matter_emission*number_of_satellites/sat_capacity,
+            'photochemical_oxidation_per_mbps': photochemical_oxidation_emission*number_of_satellites/sat_capacity,
+            'total_emissions_per_mbps': (aluminium_oxide_emission/sat_capacity*number_of_satellites)+(sulphur_oxide_emission/sat_capacity*number_of_satellites) +
+            +(carbon_oxide_emission/sat_capacity*number_of_satellites)+(cfc_gases_emission/sat_capacity*number_of_satellites) +
+            (particulate_matter_emission/sat_capacity*number_of_satellites) +
+            (photochemical_oxidation_emission/sat_capacity*number_of_satellites)
         })
 
     return results
@@ -445,7 +470,7 @@ def calc_capacity(spectral_efficiency, dl_bandwidth):
     return channel_capacity
 
 
-def calc_agg_capacity(channel_capacity, number_of_channels):
+def calc_agg_capacity(channel_capacity, number_of_channels, polarization):
     """
     Calculate the aggregate capacity.
 
@@ -462,7 +487,7 @@ def calc_agg_capacity(channel_capacity, number_of_channels):
         The aggregate capacity in Mbps.
 
     """
-    agg_capacity = channel_capacity * number_of_channels
+    agg_capacity = channel_capacity * number_of_channels*polarization
 
     return agg_capacity
 
@@ -501,3 +526,83 @@ def pairwise(iterable):
     next(b, None)
 
     return zip(a, b)
+
+def soyuz_FG(hypergolic, kerosene):
+    alumina_emission = (hypergolic*1*0.001)+(kerosene*1*0.05)
+    sulphur_emission = (hypergolic*0.7*0.001)+(kerosene*0.7*0.001)
+    carbon_emission = (hypergolic*0.252*1)+(kerosene*0.352*1) + \
+        (hypergolic*0.378*1.57)+(kerosene*0.528*1.57)
+    cfc_gases = (hypergolic*0.016*0.7)+(kerosene*0.016*0.7)+(hypergolic*0.003*0.7) + \
+        (kerosene*0.003*0.7)+(hypergolic*0.001*0.7)+(kerosene*0.001*0.7)
+    particulate_matter = (hypergolic*0.001*0.22)+(kerosene *
+                                                  0.001*0.22)+(hypergolic*0.001*1)+(kerosene*0.05*1)
+    photo_oxidation = (hypergolic*0.378*0.0456)+(kerosene *
+                                                 0.528*0.0456)+(hypergolic*0.001*1)+(kerosene*0.001*1)
+    return alumina_emission, sulphur_emission, carbon_emission, cfc_gases, particulate_matter, photo_oxidation
+
+
+def falcon_9(kerosene):
+    alumina_emission = (kerosene*0.05)
+    sulphur_emission = (kerosene*0.001*0.7)
+    carbon_emission = (kerosene*0.352*1)+(0.528*kerosene*1.57)
+    cfc_gases = (kerosene*0.016*0.7)+(kerosene*0.003*0.7)+(kerosene*0.001*0.7)
+    particulate_matter = (kerosene*0.001*0.22)+(kerosene*0.05*1)
+    photo_oxidation = (kerosene*0.0456*0.528)+(kerosene*0.001*1)
+    return alumina_emission, sulphur_emission, carbon_emission, cfc_gases, particulate_matter, photo_oxidation
+
+
+def falcon_heavy(kerosene):
+    alumina_emission = (kerosene*0.05)
+    sulphur_emission = (kerosene*0.001*0.7)
+    carbon_emission = (kerosene*0.352*1)+(0.528*kerosene*1.57)
+    cfc_gases = (kerosene*0.016*0.7)+(kerosene*0.003*0.7)+(kerosene*0.001*0.7)
+    particulate_matter = (kerosene*0.001*0.22)+(kerosene*0.05*1)
+    photo_oxidation = (kerosene*0.0456*0.528)+(kerosene*0.001*1)
+    return alumina_emission, sulphur_emission, carbon_emission, cfc_gases, particulate_matter, photo_oxidation
+
+
+def ariane(hypergolic, solid, cryogenic):
+    alumina_emission = (solid*0.33*1)+(hypergolic*0.001*1)
+    sulphur_emission = (solid*0.005*0.7)+(cryogenic*0.001*0.7) + \
+        (hypergolic*0.001*0.7)+(solid*0.15*0.88)
+    carbon_emission = (solid*0.108*1)+(hypergolic*0.252) + \
+        (solid*0.162*1.57)+(hypergolic*0.378*1.57)
+    cfc_gases = (solid*0.08*0.7)+(cryogenic*0.016*0.7)+(hypergolic*0.016*0.7)+(solid*0.015*0.7)+(cryogenic*0.003*0.7) + \
+        (hypergolic*0.003*0.7)+(solid*0.005*0.7) + \
+        (cryogenic*0.001*0.7)+(hypergolic*0.001*0.7)+(solid*0.15*0.7)
+    particulate_matter = (solid*0.005*0.22)+(cryogenic*0.001*0.22) + \
+        (hypergolic*0.001*0.22)+(solid*0.33*1)+(hypergolic*0.001*1)
+    photo_oxidation = (solid*0.162*0.0456)+(hypergolic*0.378*0.0456) + \
+        (solid*0.005*1)+(cryogenic*0.001*1)+(hypergolic*0.001*1)
+    return alumina_emission, sulphur_emission, carbon_emission, cfc_gases, particulate_matter, photo_oxidation
+
+
+def calc_per_sat_emission(params, name, fuel_mass, fuel_mass_1, fuel_mass_2, fuel_mass_3):
+    al, sul, cb, cfc, pm, phc = None, None, None, None, None, None
+    if name == 'Starlink':
+        sat_number_per_launch = 60
+        fuel_per_sat = fuel_mass/sat_number_per_launch  # fuel per satellite
+        emission = falcon_9(fuel_per_sat)  # emission per satellite
+        aluminium, sulphur, carbon, cfc, matter, photochemical = emission[
+            0], emission[1], emission[2], emission[3], emission[4], emission[5]
+        al, sul, cb, cfc, pm, phc = aluminium, sulphur, carbon, cfc, matter, photochemical
+    elif name == 'Kuiper':
+        sat_number_per_launch = 60
+        # masses of hypergolic, solid and cryogenic fuels
+        fm_hyp, fm_sod, fm_cry = fuel_mass_1/sat_number_per_launch, fuel_mass_2/sat_number_per_launch, fuel_mass_3 / \
+            sat_number_per_launch  # mass per fuel type per satellite
+        # emission per satellite per fuel type
+        emission = ariane(fm_hyp, fm_sod, fm_cry)
+        aluminium, sulphur, carbon, cfc, matter, photochemical = emission[
+            0], emission[1], emission[2], emission[3], emission[4], emission[5]
+        al, sul, cb, cfc, pm, phc = aluminium, sulphur, carbon, cfc, matter, photochemical
+    elif name == 'Oneweb':
+        sat_number_per_launch = 36
+        fm_hyp, fm_ker = fuel_mass_1/sat_number_per_launch, fuel_mass_2/sat_number_per_launch
+        emission = soyuz_FG(fm_hyp, fm_ker)
+        aluminium, sulphur, carbon, cfc, matter, photochemical = emission[
+            0], emission[1], emission[2], emission[3], emission[4], emission[5]
+        al, sul, cb, cfc, pm, phc = aluminium, sulphur, carbon, cfc, matter, photochemical
+    else:
+        print('Invalid Constellation name')
+    return al, sul, cb, cfc, pm, phc
