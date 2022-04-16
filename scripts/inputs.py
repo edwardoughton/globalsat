@@ -28,11 +28,11 @@ parameters = {
         'all_other_losses': 0.53, #All other losses
         'number_of_channels': 8, #Number of channels per satellite
         'overbooking_factor': 20, # 1 in 20 users access the network
-        'polarization':2,
-        'fuel_mass': 488370,
-        'fuel_mass_1': 0,
-        'fuel_mass_2': 0,
-        'fuel_mass_3': 0
+        'polarization':2,         # Polarization
+        'fuel_mass': 488370,      #Kerosene fuel
+        'fuel_mass_1': 0,         #Hypergolic fuel
+        'fuel_mass_2': 0,         # Solid fuel
+        'fuel_mass_3': 0          # Cryogenic fuel
     },
     'oneweb': {
         'number_of_satellites': 720,
@@ -54,11 +54,11 @@ parameters = {
         'all_other_losses': 0.53, #All other losses
         'number_of_channels': 8, #Number of channels per satellite
         'overbooking_factor': 20, # 1 in 20 users access the network
-        'polarization': 2,
-        'fuel_mass': 0,
-        'fuel_mass_1': 10000,
-        'fuel_mass_2': 480000,
-        'fuel_mass_3': 184900
+        'polarization': 2,        #polarization 
+        'fuel_mass': 218150,      # Kerosene
+        'fuel_mass_1': 7360,      # Hypergolic fuel
+        'fuel_mass_2': 0,         # Solid fuel
+        'fuel_mass_3': 0          # Cryogenic fuel
     },
     'kuiper': {
         'number_of_satellites': 3240,
@@ -81,10 +81,10 @@ parameters = {
         'number_of_channels': 8, #Number of channels per satellite
         'overbooking_factor': 20, # 1 in 20 users access the network
         'polarization': 2,
-        'fuel_mass': 0,
-        'fuel_mass_1': 7360,
-        'fuel_mass_2': 218150,
-        'fuel_mass_3': 0
+        'fuel_mass': 0,        #Kerosene fuel
+        'fuel_mass_1': 10000,  # Hypergolic fuel
+        'fuel_mass_2': 480000,  # Solid fuel
+        'fuel_mass_3': 184900  # Cryogenic fuel
     },
     # 'telesat': {
     #     'number_of_satellites': 300,

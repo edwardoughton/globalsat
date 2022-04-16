@@ -528,6 +528,22 @@ def pairwise(iterable):
     return zip(a, b)
 
 def soyuz_FG(hypergolic, kerosene):
+    """
+    Calculate the emission of various compounds from Soyuz Rocket Vehicle.
+
+    Parameters
+    ----------
+    Hypergolic: float
+        Fuel amount in kg.
+    Kerosene: float
+        Fuel amount in kg.
+
+    Returns: float contained in a tuple
+    -------
+    Aluminium, carbon and sulphur oxide as well as Cfc gases, particulate matter and photochemical oxidation emissions : float
+        Emissions in kg.
+        
+    """
     alumina_emission = (hypergolic*1*0.001)+(kerosene*1*0.05)
     sulphur_emission = (hypergolic*0.7*0.001)+(kerosene*0.7*0.001)
     carbon_emission = (hypergolic*0.252*1)+(kerosene*0.352*1) + \
@@ -542,6 +558,20 @@ def soyuz_FG(hypergolic, kerosene):
 
 
 def falcon_9(kerosene):
+    """
+    Calculate the emission of various compounds from Falcon 9 Rocket Vehicle.
+
+    Parameters
+    ----------
+    Kerosene: float
+        Fuel amount in kg.
+
+    Returns: floats contained in a tuple
+    -------
+    Aluminium, carbon and sulphur oxide as well as Cfc gases, particulate matter and photochemical oxidation emissions : float
+        Emissions in kg.
+
+    """
     alumina_emission = (kerosene*0.05)
     sulphur_emission = (kerosene*0.001*0.7)
     carbon_emission = (kerosene*0.352*1)+(0.528*kerosene*1.57)
@@ -552,6 +582,20 @@ def falcon_9(kerosene):
 
 
 def falcon_heavy(kerosene):
+    """
+    Calculate the emission of various compounds from Falcon Heavy Rocket Vehicle.
+
+    Parameters
+    ----------
+    Kerosene: float
+        Fuel amount in kg.
+
+    Returns: floats in a tuple
+    -------
+    Aluminium, carbon and sulphur oxide as well as Cfc gases, particulate matter and photochemical oxidation emissions : float
+        Emissions in kg.
+
+    """
     alumina_emission = (kerosene*0.05)
     sulphur_emission = (kerosene*0.001*0.7)
     carbon_emission = (kerosene*0.352*1)+(0.528*kerosene*1.57)
@@ -562,6 +606,26 @@ def falcon_heavy(kerosene):
 
 
 def ariane(hypergolic, solid, cryogenic):
+    """
+    Calculate the emission of various compounds from Falcon Heavy Rocket Vehicle.
+
+    Parameters
+    ----------
+    Hypergolic: float
+        Fuel amount in kg.
+
+    Solid: float
+        Fuel amount in kg.
+    
+    cryogenic: float
+        Fuel amount in kg.
+
+    Returns: floats in a tuple
+    -------
+    Aluminium, carbon and sulphur oxide as well as Cfc gases, particulate matter and photochemical oxidation emissions : float
+        Emissions in kg.
+
+    """
     alumina_emission = (solid*0.33*1)+(hypergolic*0.001*1)
     sulphur_emission = (solid*0.005*0.7)+(cryogenic*0.001*0.7) + \
         (hypergolic*0.001*0.7)+(solid*0.15*0.88)
@@ -578,6 +642,31 @@ def ariane(hypergolic, solid, cryogenic):
 
 
 def calc_per_sat_emission(params, name, fuel_mass, fuel_mass_1, fuel_mass_2, fuel_mass_3):
+    """
+    Calculate the emissions by different constellations.
+
+    Parameters
+    ----------
+    name: string
+        name of the constellation in sentence case
+    fuel_mass: float
+        Kerosene fuel amount in kg.
+
+    fuel_mass_1: float
+        Hypergolic fuel amount in kg.
+
+    fuel_mass_2: float
+        Solid fuel amount in kg.
+
+    fuel_mass_3: float
+        Cryogenic fuel amount in kg.
+
+    Returns: floats in a tuple
+    -------
+    Aluminium, carbon and sulphur oxide as well as Cfc gases, particulate matter and photochemical oxidation emissions : float
+        Emissions in kg.
+
+    """
     al, sul, cb, cfc, pm, phc = None, None, None, None, None, None
     if name == 'Starlink':
         sat_number_per_launch = 60
@@ -598,7 +687,7 @@ def calc_per_sat_emission(params, name, fuel_mass, fuel_mass_1, fuel_mass_2, fue
         al, sul, cb, cfc, pm, phc = aluminium, sulphur, carbon, cfc, matter, photochemical
     elif name == 'Oneweb':
         sat_number_per_launch = 36
-        fm_hyp, fm_ker = fuel_mass_1/sat_number_per_launch, fuel_mass_2/sat_number_per_launch
+        fm_hyp, fm_ker = fuel_mass_1/sat_number_per_launch, fuel_mass/sat_number_per_launch
         emission = soyuz_FG(fm_hyp, fm_ker)
         aluminium, sulphur, carbon, cfc, matter, photochemical = emission[
             0], emission[1], emission[2], emission[3], emission[4], emission[5]
