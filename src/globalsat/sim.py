@@ -695,3 +695,4 @@ def calc_per_sat_emission(params, name, fuel_mass, fuel_mass_1, fuel_mass_2, fue
     else:
         print('Invalid Constellation name')
     return al, sul, cb, cfc, pm, phc           #shorthand for the emission compounds al=aluminium, sul = sulphur, cb = carbon.
+                                               #pm= particulate matter, phc = photochemical oxidation
