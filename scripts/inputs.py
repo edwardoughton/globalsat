@@ -27,7 +27,7 @@ parameters = {
         'all_other_losses': 0.53, #All other losses
         'number_of_channels': 8, #Number of channels per satellite
         'overbooking_factor': 20, # 1 in 20 users access the network
-        'polarization':2
+        'polarization': 2
     },
     'oneweb': {
         'number_of_satellites': 720,
