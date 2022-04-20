@@ -592,7 +592,7 @@ def falcon_heavy(kerosene):
 
     Returns: floats in a tuple
     -------
-    Aluminium, carbon and sulphur oxide as well as Cfc gases, particulate matter and photochemical oxidation emissions : float
+    Aluminium, carbon and sulphur oxides as well as Cfc gases, particulate matter and photochemical oxidation emissions : float
         Emissions in kg.
 
     """
