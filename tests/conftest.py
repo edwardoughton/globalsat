@@ -22,6 +22,7 @@ def setup_params():
         'earth_atmospheric_losses': 10, #Rain Attenuation
         'all_other_losses': 0.53, #All other losses
         'number_of_channels': 1,
+        'polarization': 2
     }
 
 @fixture(scope='function')

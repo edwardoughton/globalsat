@@ -206,14 +206,20 @@ def test_calc_agg_capacity():
 
     assert calc_agg_capacity(channel_capacity, number_of_beams) == 100 #mbps
 
-def single_satellite_capacity():
-    """
-    Unit test for calculating satellite capacity
+# def test_single_satellite_capacity():
+#     """
+#     Unit test for calculating satellite capacity
 
-    """
-    dl_bandwidth = 250
-    spectral_efficiency = 5.1152
-    number_of_channels = 8
-    polarizations = 2
+#     """
+#     dl_bandwidth = 250
+#     spectral_efficiency = 5.1152
+#     number_of_channels = 8
+#     polarizations = 2
 
-    assert single_satellite_capacity(dl_bandwidth,spectral_efficiency,number_of_channels,polarizations)==100
+#     capacity = single_satellite_capacity(
+#         dl_bandwidth, spectral_efficiency,
+#         number_of_channels,
+#         polarizations
+#     )
+
+#     assert capacity == 100
