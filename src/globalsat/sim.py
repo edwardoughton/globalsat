@@ -719,7 +719,7 @@ def calc_per_sat_emission(params, name, fuel_mass, fuel_mass_1, fuel_mass_2, fue
     
     Returns
     -------
-    al, sul, cb, cfc, pm, phc: list.
+    al, sul, cb, cfc, pm, phc: dict.
     """
 
     if name == 'Starlink':
