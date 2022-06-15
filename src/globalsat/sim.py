@@ -361,7 +361,7 @@ def calc_noise():
     transmission for 1 Mbps downlink.
 
     Required SNR (dB)
-    Detection bandwidth (BW) (Hz)
+    Detection bandwidth (BW) (Hz).
     k = Boltzmann constant.
     T = Temperature (Kelvins) (290 Kelvin = ~16 degrees celcius).
     NF = Receiver noise figure (dB).
