@@ -362,9 +362,9 @@ def calc_noise():
 
     Required SNR (dB)
     Detection bandwidth (BW) (Hz)
-    k = Boltzmann constant
-    T = Temperature (Kelvins) (290 Kelvin = ~16 degrees celcius)
-    NF = Receiver noise figure (dB)
+    k = Boltzmann constant.
+    T = Temperature (Kelvins) (290 Kelvin = ~16 degrees celcius).
+    NF = Receiver noise figure (dB).
 
     NoiseFloor (dBm) = 10log10(k * T * 1000) + NF + 10log10BW
 
