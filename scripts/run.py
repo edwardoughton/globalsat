@@ -9,10 +9,12 @@ December 2020
 from __future__ import division
 import configparser
 import os
+from numpy import savez_compressed
 import pandas as pd
 
 from globalsat.sim import system_capacity
 from inputs import parameters, lut
+from cost import cost_model
 
 pd.options.mode.chained_assignment = None 
 
@@ -354,3 +356,93 @@ def capacity_data_preparation():
     return save_data
 
 capacity_data_preparation()
+
+def emission_data_preparation(results_location):
+    """
+    Prepare the emission results for plotting in R.
+
+    Parameters
+    ----------
+    results_location: string
+        location of where to store the results.
+
+    Returns
+    -------
+    save_data : csv file
+        melted data
+
+    """
+    df = pd.read_csv(os.path.join(RESULTS, 'sim_results.csv'))
+
+    #select the required columns
+    df = df[['constellation', 'aluminium_oxide_emissions', 'sulphur_oxide_emissions',
+             'carbon_oxide_emissions', 'cfc_gases_emissions', 'particulate_matter_emissions', 
+             'photochemical_oxidation_emissions']] 
+
+    for i in range(len(df)):
+        if df['constellation'].iloc[i] == 'starlink':
+            df['constellation'].iloc[i] = 'Starlink'
+        elif df['constellation'].iloc[i] == 'oneweb':
+            df['constellation'].iloc[i] = 'OneWeb'
+        elif df['constellation'].iloc[i] == 'kuiper':
+            df['constellation'].iloc[i] = 'Kuiper'
+        else:
+            df['constellation'] = 'none'
+    #rename the columns
+    df1 = df
+
+    df.columns = ['Constellation', 'Aluminium Oxide', 'Sulphur IV Oxide', 'Carbon IV Oxide',
+                'Chlorofluorocarbon Gases', 'Particulate Matter', 'Photochemical Oxidation']
+
+    #Change the data into long data format
+    emission_data = pd.melt(df, id_vars=['Constellation'],
+                value_vars=['Aluminium Oxide', 'Sulphur IV Oxide', 'Carbon IV Oxide','Chlorofluorocarbon Gases', 
+                            'Particulate Matter', 'Photochemical Oxidation'])
+    emission_data.columns = ['Constellation', 'Emission Type', 'Emission Amount']
+
+    #save the results
+    save_data = emission_data.to_csv(results_location + 'emission_melted_data.csv')
+
+    return save_data
+
+emission_data_preparation(results_location)
+
+def process_cost_results(results_location):
+    """
+    Process the cost results.
+
+    Parameters
+    ----------
+    results_location: string
+        location of where to store the results.
+
+    Returns
+    -------
+    save_data : csv file
+        melted data
+
+    """
+    results = []
+
+    for key, item in parameters.items():
+        constellation_name = item["name"]
+        total_cost_ownership = cost_model(item["satellite_launch_cost"], 
+        item["ground_station_cost"], 
+        item["spectrum_cost"], 
+        item["regulation_fees"], 
+        item["digital_infrastructure_cost"], 
+        item["ground_station_energy"], 
+        item["subscriber_acquisition"],
+        item["staff_costs"], 
+        item["research_development"], 
+        item["maintenance"],
+        item["discount_rate"],
+        item["assessment_period"])
+        results.append({"Constellation":constellation_name, "Net Present Value":total_cost_ownership})
+
+    df = pd.DataFrame.from_dict(results) 
+    save_cost = df.to_csv (results_location +"cost_results.csv")
+
+    return save_cost
+
+process_cost_results(results_location)

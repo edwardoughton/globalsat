@@ -39,7 +39,7 @@ def system_capacity(constellation, number_of_satellites, params, lut):
     distance, satellite_coverage_area_km = calc_geographic_metrics(
         number_of_satellites, params
         )
-
+   
     random_variations = generate_log_normal_dist_value(
             params["dl_frequency"],
             params["mu"],
@@ -51,7 +51,7 @@ def system_capacity(constellation, number_of_satellites, params, lut):
     for i in range(0, params["iterations"]):
 
         path_loss, random_variation = calc_free_space_path_loss(
-            distance, params, i, random_variations
+            distance, params, params["iterations"], random_variations
         )
 
         antenna_gain = calc_antenna_gain(
@@ -128,7 +128,7 @@ def system_capacity(constellation, number_of_satellites, params, lut):
                                         + (emission_dict['photo_oxidation']/sat_capacity))/1000000
         })
 
-    return results
+    return print(results)
 
 
 def calc_geographic_metrics(number_of_satellites, params):
@@ -197,6 +197,39 @@ def calc_free_space_path_loss(distance, params, i, random_variations):
     random_variation = random_variations[i]
 
     return path_loss + random_variation, random_variation
+
+
+def calc_space_path_loss(distance, params):
+    """
+    Calculate the free space path loss in decibels.
+
+    FSPL(dB) = 20log(d) + 20log(f) + 32.44
+
+    Where distance (d) is in km and frequency (f) is MHz.
+
+    Parameters
+    ----------
+    distance : float
+        Distance between transmitter and receiver in metres.
+    params : dict
+        Contains all simulation parameters.
+    i : int
+        Iteration number.
+    random_variation : list
+        List of random variation components.
+
+    Returns
+    -------
+    path_loss : float
+        The free space path loss over the given distance.
+    random_variation : float
+        Stochastic component.
+    """
+    frequency_GHz = params["dl_frequency"]
+
+    path_loss = (20*math.log10(distance) + 20*math.log10(frequency_GHz)) + 92.45
+
+    return path_loss 
 
 
 def generate_log_normal_dist_value(frequency, mu, sigma, seed_value, draws):
@@ -318,9 +351,8 @@ def calc_losses(earth_atmospheric_losses, all_other_losses):
 
     """
     losses = earth_atmospheric_losses + all_other_losses
-
+    
     return losses
-
 
 def calc_received_power(eirp, path_loss, receiver_gain, losses):
     """
@@ -699,7 +731,7 @@ def ariane(hypergolic, solid, cryogenic):
     return emission_dict
 
 
-def calc_per_sat_emission(params, name, fuel_mass, fuel_mass_1, fuel_mass_2, fuel_mass_3):
+def calc_per_sat_emission(name, fuel_mass, fuel_mass_1, fuel_mass_2, fuel_mass_3):
     """
     calculate the emissions of the 6 compounds for each of the satellites 
     of the three constellations based on the rocket vehicle used.

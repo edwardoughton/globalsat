@@ -23,7 +23,7 @@ setup(
     description='Global satellite simulation model',
     long_description=readme(),
     long_description_content_type="text/markdown",
-    author='Ed Oughton/Bonface Osaro',
+    author='Ed Oughton/Bonface Osoro',
     author_email='eoughton@gmu.edu',
     url='https://github.com/edwardoughton/globalsat',
     packages=find_packages('src'),
