@@ -13,6 +13,10 @@ def uq_inputs_generator():
         for key, item in parameters.items():
             number_of_satellites = item["number_of_satellites"]
             name = item["name"]
+            iterations = item['iterations']
+            seed_value = item['seed_value']
+            mu = item['mu']
+            sigma = item['sigma']
             total_area_earth_km_sq = item["total_area_earth_km_sq"]
             altitude_km = gauss(item["altitude_km"], 5)
             dl_frequency_Hz = gauss(item["dl_frequency"], 0.1)
@@ -44,6 +48,10 @@ def uq_inputs_generator():
             assessment_period_year = item["assessment_period"]
 
             uq_parameters.append({"constellation": name, 
+                                  "iterations": iterations,
+                                  "seed_value": seed_value,
+                                  "mu": mu,
+                                  "sigma": sigma,
                                   "number_of_satellites": number_of_satellites,
                                   "total_area_earth_km_sq": total_area_earth_km_sq,
                                   "altitude_km": altitude_km,

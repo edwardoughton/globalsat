@@ -3,73 +3,124 @@ Inputs for Globalsat simulation.
 
 Written by Bonface Osoro & Ed Oughton.
 
-December 2020
+December 2022
 
 """
 
 parameters = {
     'starlink': {
-        'number_of_satellites': 5040,
+        'number_of_satellites': 4425,
+        'name':'Starlink',
         'iterations': 100,
         'seed_value': 42,
         'mu': 2, #Mean of distribution
         'sigma': 10, #Standard deviation of distribution
         'total_area_earth_km_sq': 510000000, #Area of Earth in km^2
-        'altitude_km': 550, #Altitude of starlink satellites in km
+        'altitude_km': 545, #Altitude of starlink satellites in km
         'dl_frequency': 13.5*10**9, #Downlink frequency in Hertz
         'dl_bandwidth': 0.5*10**9, #Downlink bandwidth in Hertz
         'speed_of_light': 3.0*10**8, #Speed of light in vacuum
-        'antenna_diameter': 0.7, #Metres
+        'antenna_diameter': 0.6, #Metres
         'antenna_efficiency': 0.6,
         'power': 30, #dBw
-        'receiver_gain': 38,
-        'earth_atmospheric_losses': 12, #Rain Attenuation
+        'receiver_gain': 30,
+        'earth_atmospheric_losses': 15, #Rain Attenuation
         'all_other_losses': 0.53, #All other losses
-        'number_of_channels': 8, #Number of channels per satellite
+        'number_of_channels': 4, #Number of channels per satellite
         'overbooking_factor': 20, # 1 in 20 users access the network
-        'polarization': 2
+        'polarization':2,
+        'fuel_mass': 488370,
+        'fuel_mass_1': 0,
+        'fuel_mass_2': 0,
+        'fuel_mass_3': 0,
+        'satellite_launch_cost': 250000000,
+        'ground_station_cost': 81180000,
+        'spectrum_cost': 125000000,
+        'regulation_fees': 720000,
+        'digital_infrastructure_cost': 6150000,
+        'ground_station_energy': 2000000,
+        'subscriber_acquisition': 50000000,
+        'staff_costs': 60000000,
+        'research_development': 7500000,
+        'maintenance': 8000000,
+        'discount_rate': 5,
+        'assessment_period': 5
     },
     'oneweb': {
         'number_of_satellites': 720,
+        'name': 'OneWeb',
         'iterations': 100,
         'seed_value': 42,
         'mu': 2, #Mean of distribution
         'sigma': 10, #Standard deviation of distribution
         'total_area_earth_km_sq': 510000000, #Area of Earth in km^2
-        'altitude_km': 1200, #Altitude of starlink satellites in km
+        'altitude_km': 1195, #Altitude of starlink satellites in km
         'dl_frequency': 13.5*10**9, #Downlink frequency in Hertz
         'dl_bandwidth': 0.25*10**9,
         'speed_of_light': 3.0*10**8, #Speed of light in vacuum
-        'antenna_diameter': 0.75, #Metres
+        'antenna_diameter': 0.65, #Metres
         'antenna_efficiency': 0.6,
         'power': 30, #dBw
-        'receiver_gain': 38,
-        'earth_atmospheric_losses': 12, #Rain Attenuation
+        'receiver_gain': 30,
+        'earth_atmospheric_losses': 15, #Rain Attenuation
         'all_other_losses': 0.53, #All other losses
         'number_of_channels': 8, #Number of channels per satellite
         'overbooking_factor': 20, # 1 in 20 users access the network
-        'polarization': 2
+        'polarization': 2,
+        'fuel_mass': 218150,
+        'fuel_mass_1': 7360,
+        'fuel_mass_2': 0,
+        'fuel_mass_3': 0,
+        'satellite_launch_cost': 250000000,
+        'ground_station_cost': 81180000,
+        'spectrum_cost': 125000000,
+        'regulation_fees': 720000,
+        'digital_infrastructure_cost': 6150000,
+        'ground_station_energy': 4,
+        'subscriber_acquisition': 50000000,
+        'staff_costs': 60000000,
+        'research_development': 7500000,
+        'maintenance': 8000000,
+        'discount_rate': 5,
+        'assessment_period': 5
     },
     'kuiper': {
-        'number_of_satellites': 3240,
+        'number_of_satellites': 3236,
+        'name': 'Kuiper',
         'iterations': 100,
         'seed_value': 42,
         'mu': 2, #Mean of distribution
         'sigma': 10, #Standard deviation of distribution
         'total_area_earth_km_sq': 510000000, #Area of Earth in km^2
-        'altitude_km': 610, #Altitude of starlink satellites in km
+        'altitude_km': 605, #Altitude of starlink satellites in km
         'dl_frequency': 17.7*10**9, #Downlink frequency in Hertz
         'dl_bandwidth': 0.25*10**9,
         'speed_of_light': 3.0*10**8, #Speed of light in vacuum
-        'antenna_diameter': 1, #Metres
+        'antenna_diameter': 0.9, #Metres
         'antenna_efficiency': 0.6,
         'power': 30, #dBw
-        'receiver_gain': 39,
-        'earth_atmospheric_losses': 12, #Rain Attenuation
+        'receiver_gain': 31,
+        'earth_atmospheric_losses': 15, #Rain Attenuation
         'all_other_losses': 0.53, #All other losses
         'number_of_channels': 8, #Number of channels per satellite
         'overbooking_factor': 20, # 1 in 20 users access the network
-        'polarization': 2
+        'polarization': 2,
+        'fuel_mass': 0,
+        'fuel_mass_1':10000,
+        'fuel_mass_2': 480000,
+        'fuel_mass_3': 184900,
+        'satellite_launch_cost': 1,
+        'ground_station_cost': 1,
+        'spectrum_cost': 1,
+        'regulation_fees': 2,
+        'digital_infrastructure_cost': 3,
+        'ground_station_energy': 4,
+        'subscriber_acquisition': 4,
+        'staff_costs': 5,
+        'research_development': 4,
+        'maintenance': 3,
+        'discount_rate': 5,
+        'assessment_period': 5
     },
     # 'telesat': {
     #     'number_of_satellites': 300,
