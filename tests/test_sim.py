@@ -300,4 +300,4 @@ def test_emission_per_sat():
 
     sat_emissions = calc_per_sat_emission(name, fuel_mass, fuel_mass_1, fuel_mass_2, fuel_mass_3)
 
-    return sat_emissions   #'alumina_emission': 158410.0 for Kuiper
+    return sat_emissions   #'alumina_emission': 158410.0 for Kuiper.
