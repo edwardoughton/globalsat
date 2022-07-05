@@ -13,7 +13,12 @@ from globalsat.sim import (
     calc_spectral_efficiency,
     calc_capacity,
     single_satellite_capacity,
-    calc_agg_capacity
+    calc_agg_capacity,
+    soyuz_FG,
+    falcon_9,
+    falcon_heavy,
+    ariane,
+    calc_per_sat_emission
 )
 
 
@@ -206,20 +211,91 @@ def test_calc_agg_capacity():
 
     assert calc_agg_capacity(channel_capacity, number_of_beams) == 100 #mbps
 
-# def test_single_satellite_capacity():
-#     """
-#     Unit test for calculating satellite capacity
 
-#     """
-#     dl_bandwidth = 250
-#     spectral_efficiency = 5.1152
-#     number_of_channels = 8
-#     polarizations = 2
+def test_single_satellite_capacity():
+    """
+    Unit test for calculating satellite capacity
 
-#     capacity = single_satellite_capacity(
-#         dl_bandwidth, spectral_efficiency,
-#         number_of_channels,
-#         polarizations
-#     )
+    """
+    dl_bandwidth_Hz = 250000000
+    spectral_efficiency = 5.1152
+    number_of_channels = 8
+    polarizations = 2
 
-#     assert capacity == 100
+    capacity = single_satellite_capacity(dl_bandwidth_Hz, spectral_efficiency,
+               number_of_channels, polarizations)
+
+    return capacity == 20460.8
+
+
+def test_soyuz_FG():
+    """
+    Unit test for calculating soyuz FG emissions.
+
+    """
+    hypergolic = 218150
+    kerosene = 7360
+
+    emission = soyuz_FG(hypergolic, kerosene) 
+
+    return emission                         #alumina_emission': 586.15       
+
+
+def test_falcon_heavy():
+    """
+    Unit test for calculating falcon heavy emission.
+    
+    """
+    kerosene = 1397000
+
+    emissions = falcon_heavy(kerosene) 
+
+    return emissions                 #'alumina_emission': 69850
+
+
+def test_falcon_9():
+    """
+    Unit test for calculating falcon 9 emissions.
+    
+    """
+    kerosene = 488370
+
+    emissions = falcon_9(kerosene) 
+
+    return emissions           #'alumina_emission': 24418.5
+
+
+def test_ariane():
+    """
+    Unit test for calculating ariane 5 emissions.
+    
+    """  
+    hypergolic = 10000
+
+    solid = 480000
+
+    cryogenic = 184900
+
+    emissions = ariane(hypergolic, solid, cryogenic)
+
+    return emissions               #'alumina_emission': 158410.0
+
+
+def test_emission_per_sat():
+    """
+    Unit test for calculating emission for every satellite.
+    
+    """
+    name = "Kuiper"
+
+    fuel_mass = 0
+
+    fuel_mass_1 = 10000
+
+    fuel_mass_2 = 480000
+
+    fuel_mass_3 = 184900
+
+    sat_emissions = calc_per_sat_emission(name, fuel_mass, fuel_mass_1, fuel_mass_2, fuel_mass_3)
+
+    return sat_emissions   #'alumina_emission': 158410.0 for Kuiper.
