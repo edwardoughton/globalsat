@@ -68,6 +68,8 @@ for item in uq_dict:
     emission_dict = gb.calc_per_sat_emission(item["constellation"], item["fuel_mass_kg"],
                     item["fuel_mass_1_kg"], item["fuel_mass_2_kg"], item["fuel_mass_3_kg"])
 
+    sat_density_per_area = satellite_coverage_area_km               
+
 
     results.append({"constellation": constellation, 
                     "signal_path": distance,
