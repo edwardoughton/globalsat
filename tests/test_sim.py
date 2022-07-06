@@ -226,7 +226,7 @@ def test_single_satellite_capacity():
     capacity = single_satellite_capacity(dl_bandwidth_Hz, spectral_efficiency,
                number_of_channels, polarizations)
 
-    return capacity == 20460.8
+    assert capacity == 20460.8
 
 
 def test_soyuz_fg():
@@ -237,40 +237,40 @@ def test_soyuz_fg():
     hypergolic = 218150
     kerosene = 7360
 
-    emission = soyuz_fg(hypergolic, kerosene) 
+    emission = soyuz_fg(hypergolic, kerosene)
 
-    return emission                         #alumina_emission': 586.15       
+    assert emission                         #alumina_emission': 586.15
 
 
 def test_falcon_heavy():
     """
     Unit test for calculating falcon heavy emission.
-    
+
     """
     kerosene = 1397000
 
-    emissions = falcon_heavy(kerosene) 
+    emissions = falcon_heavy(kerosene)
 
-    return emissions                 #'alumina_emission': 69850
+    assert emissions['alumina_emission'] == 69850                  #'alumina_emission': 69850
 
 
 def test_falcon_9():
     """
     Unit test for calculating falcon 9 emissions.
-    
+
     """
     kerosene = 488370
 
-    emissions = falcon_9(kerosene) 
+    emissions = falcon_9(kerosene)
 
-    return emissions           #'alumina_emission': 24418.5
+    assert emissions['alumina_emission'] == 24418.5           #'alumina_emission': 24418.5
 
 
 def test_ariane():
     """
     Unit test for calculating ariane 5 emissions.
-    
-    """  
+
+    """
     hypergolic = 10000
 
     solid = 480000
@@ -279,17 +279,18 @@ def test_ariane():
 
     emissions = ariane(hypergolic, solid, cryogenic)
 
-    return emissions               #'alumina_emission': 158410.0
+    assert emissions['alumina_emission'] == 158410.0               #'alumina_emission': 158410.0
 
 
 def test_emission_per_sat():
     """
     Unit test for calculating emission for every satellite.
-    
+
     """
     names = ["Starlink", "Kuiper", "OneWeb"]
 
     for name in names:
+
         fuel_mass = 0
 
         fuel_mass_1 = 10000
@@ -300,4 +301,4 @@ def test_emission_per_sat():
 
         sat_emissions = calc_per_sat_emission(name, fuel_mass, fuel_mass_1, fuel_mass_2, fuel_mass_3)
 
-    return sat_emissions   #'alumina_emission': 158410.0 for Kuiper.
+    assert sat_emissions['alumina_emission'] == 158410.0   #'alumina_emission': 158410.0 for Kuiper.
