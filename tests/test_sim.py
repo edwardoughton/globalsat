@@ -14,7 +14,7 @@ from globalsat.sim import (
     calc_capacity,
     single_satellite_capacity,
     calc_agg_capacity,
-    soyuz_FG,
+    soyuz_fg,
     falcon_9,
     falcon_heavy,
     ariane,
@@ -43,7 +43,7 @@ def test_system_capacity(setup_params, setup_lut):
     assert round(results['cnr']) == 49.0
     assert results['spectral_efficiency'] == 5.768987
     assert round(results['channel_capacity']) == 1442
-    assert round(results['capacity_kmsq']) == 144
+    assert round(results['capacity_kmsq']) == 288
 
 
 def test_calc_geographic_metrics():
@@ -207,9 +207,10 @@ def test_calc_agg_capacity():
 
     """
     channel_capacity = 100
-    number_of_beams = 1
+    number_of_channels = 1
+    polarization = 2
 
-    assert calc_agg_capacity(channel_capacity, number_of_beams) == 100 #mbps
+    assert calc_agg_capacity(channel_capacity, number_of_channels, polarization) == 200 #mbps
 
 
 def test_single_satellite_capacity():
@@ -228,7 +229,7 @@ def test_single_satellite_capacity():
     return capacity == 20460.8
 
 
-def test_soyuz_FG():
+def test_soyuz_fg():
     """
     Unit test for calculating soyuz FG emissions.
 
@@ -236,7 +237,7 @@ def test_soyuz_FG():
     hypergolic = 218150
     kerosene = 7360
 
-    emission = soyuz_FG(hypergolic, kerosene) 
+    emission = soyuz_fg(hypergolic, kerosene) 
 
     return emission                         #alumina_emission': 586.15       
 

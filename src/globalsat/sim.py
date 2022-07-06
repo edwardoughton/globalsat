@@ -3,7 +3,7 @@ Globalsat simulation model.
 
 Developed by Bonface Osaro and Ed Oughton.
 
-December 2020
+December 2022
 
 """
 import math
@@ -74,14 +74,12 @@ def system_capacity(constellation, number_of_satellites, params, lut):
 
         channel_capacity = calc_capacity(spectral_efficiency, params['dl_bandwidth'])
 
-        agg_capacity = calc_agg_capacity(channel_capacity, params['number_of_channels'])
+        agg_capacity = calc_agg_capacity(channel_capacity, params['number_of_channels'],
+                       params['polarization'])
 
-        sat_capacity = single_satellite_capacity(
-            params['dl_bandwidth'],
-            spectral_efficiency,
-            params['number_of_channels'],
-            params['polarization']
-        )
+        sat_capacity = single_satellite_capacity(params['dl_bandwidth'],
+                       spectral_efficiency, params['number_of_channels'],
+                       params['polarization'])
 
         results.append({
             'constellation': constellation,
@@ -450,28 +448,6 @@ def calc_capacity(spectral_efficiency, dl_bandwidth):
     return channel_capacity
 
 
-def calc_agg_capacity(channel_capacity, number_of_channels):
-    """
-    Calculate the aggregate capacity.
-
-    Parameters
-    ----------
-    channel_capacity : float
-        The channel capacity in Mbps.
-    number_of_channels : int
-        The number of user channels per satellite.
-
-    Returns
-    -------
-    agg_capacity : float
-        The aggregate capacity in Mbps.
-
-    """
-    agg_capacity = channel_capacity * number_of_channels
-
-    return agg_capacity
-
-
 def single_satellite_capacity(dl_bandwidth, spectral_efficiency,
     number_of_channels, polarization):
     """
@@ -498,6 +474,52 @@ def single_satellite_capacity(dl_bandwidth, spectral_efficiency,
 
     return sat_capacity
 
+def calc_agg_capacity(channel_capacity, number_of_channels, polarization):
+    """
+    Calculate the aggregate capacity.
+
+    Parameters
+    ----------
+    channel_capacity : float
+        The channel capacity in Mbps.
+    number_of_channels : int
+        The number of user channels per satellite.
+
+    Returns
+    -------
+    agg_capacity : float
+        The aggregate capacity in Mbps.
+
+    """
+    agg_capacity = channel_capacity * number_of_channels * polarization
+
+    return agg_capacity
+
+
+def single_satellite_capacity(dl_bandwidth, spectral_efficiency, number_of_channels,polarization):
+    """
+    Calculate the capacity by each satellite
+
+    Parameters
+    ----------
+    dl_bandwidth : float
+        Bandwidth in MHz.
+    spectra_efficiency : float
+        Spectral efficiency 64QAM equivalent to 5.1152.
+    number_of_channels : int
+        Number of channels for each constellation.
+    polarization : int
+        Number of polarizations.
+
+    Returns
+    -------
+    sat_capacity : float
+        Capacity of a single satellite.
+
+    """
+    sat_capacity = (dl_bandwidth/1000000)*spectral_efficiency*number_of_channels*polarization
+
+    return sat_capacity
 
 def pairwise(iterable):
     """
@@ -523,3 +545,192 @@ def pairwise(iterable):
     next(b, None)
 
     return zip(a, b)
+
+
+def soyuz_fg(hypergolic, kerosene):
+    """
+    Calculate the emissions of the 6 compounds for Soyuz FG rocket vehicle.
+
+    Parameters
+    ----------
+    hypergolic : float
+        Hypergolic fuel used by the rocket in kilograms.
+    kerosene : float
+        Kerosene fuel used by the rocket in kilograms.
+
+    Returns
+    -------
+    my_dict : dict
+        A dict containing all estimated emissions.
+
+    """
+    emissions_dict = {}
+
+    emissions_dict['alumina_emission'] = (hypergolic*1*0.001) + (kerosene*1*0.05)
+
+    emissions_dict['sulphur_emission'] = (hypergolic*0.7*0.001) + (kerosene*0.7*0.001)
+
+    emissions_dict['carbon_emission'] = (hypergolic*0.252*1) + (kerosene*0.352*1)
+
+    emissions_dict['cfc_gases'] = (hypergolic*0.016*0.7) + (kerosene*0.016*0.7) \
+                                  + (hypergolic*0.003*0.7) + (kerosene*0.003*0.7) \
+                                  + (hypergolic*0.001*0.7) + (kerosene*0.001*0.7)
+
+    emissions_dict['particulate_matter'] = (hypergolic*0.001*0.22) + (kerosene *0.001*0.22) \
+                                           + (hypergolic*0.001*1) + (kerosene*0.05*1)
+
+    emissions_dict['photo_oxidation'] = (hypergolic*0.378*0.0456) + (kerosene *0.528*0.0456) \
+                                        + (hypergolic*0.001*1) + (kerosene*0.001*1)
+
+    return emissions_dict
+
+
+def falcon_9(kerosene):
+    """
+    calculate the emissions of the 6 compounds for Falcon 9 rocket vehicle.
+
+    Parameters
+    ----------
+    kerosene: float
+        Kerosene fuel used by the rocket in kilograms.
+
+    Returns
+    -------
+    alumina_emission, sulphur_emission, carbon_emission, cfc,gases,
+        particulate_matter, photo_oxidation: list.
+
+    """
+    emission_dict = {}
+
+    emission_dict['alumina_emission'] = (kerosene*0.05)
+
+    emission_dict['sulphur_emission'] = (kerosene*0.001*0.7)
+
+    emission_dict['carbon_emission'] = (kerosene*0.352*1)
+
+    emission_dict['cfc_gases'] = (kerosene*0.016*0.7) + (kerosene*0.003*0.7) \
+                                 + (kerosene*0.001*0.7)
+
+    emission_dict['particulate_matter'] = (kerosene*0.001*0.22) + (kerosene*0.05*1)
+
+    emission_dict['photo_oxidation'] = (kerosene*0.0456*0.528) + (kerosene*0.001*1)
+
+    return emission_dict
+
+
+def falcon_heavy(kerosene):
+    """
+    calculate the emissions of the 6 compounds for Falcon Heavy rocket vehicle.
+
+    Parameters
+    ----------
+    kerosene: float
+        Kerosene fuel used by the rocket in kilograms.
+
+    Returns
+    -------
+    alumina_emission, sulphur_emission, carbon_emission, cfc,gases,
+        particulate_matter, photo_oxidation: list.
+
+    """
+    emission_dict = {}
+
+    emission_dict['alumina_emission'] = kerosene*0.05
+
+    emission_dict['sulphur_emission'] = (kerosene*0.001*0.7)
+
+    emission_dict['carbon_emission'] = (kerosene*0.352*1)
+
+    emission_dict['cfc_gases'] = (kerosene*0.016*0.7) + (kerosene*0.003*0.7) \
+                                 + (kerosene*0.001*0.7)
+
+    emission_dict['particulate_matter'] = (kerosene*0.001*0.22) + (kerosene*0.05*1)
+
+    emission_dict['photo_oxidation'] = (kerosene*0.0456*0.528) + (kerosene*0.001*1)
+
+    return emission_dict
+
+
+def ariane(hypergolic, solid, cryogenic):
+    """
+    calculate the emissions of the 6 compounds for Ariane 5 space.
+
+    Parameters
+    ----------
+    hypergolic: float
+        Hypergolic fuel used by the rocket in kilograms.
+    solid: float
+        solid fuel used by the rocket in kilograms.
+    cryogenic: float
+        cryogenic fuel used by the rocket in kilograms.
+
+    Returns
+    -------
+    alumina_emission, sulphur_emission, carbon_emission, cfc,gases,
+        particulate_matter, photo_oxidation: list.
+
+    """
+    emission_dict = {}
+
+    emission_dict['alumina_emission'] = (solid*0.33*1) + (hypergolic*0.001*1)
+
+    emission_dict['sulphur_emission'] = (solid*0.005*0.7) + (cryogenic*0.001*0.7) \
+                                        + (hypergolic*0.001*0.7)+(solid*0.15*0.88)
+
+    emission_dict['carbon_emission'] = (solid*0.108*1) + (hypergolic*0.252)
+
+    emission_dict['cfc_gases'] = (solid*0.08*0.7) + (cryogenic*0.016*0.7) \
+                                 + (hypergolic*0.016*0.7) + (solid*0.015*0.7) \
+                                 + (cryogenic*0.003*0.7) + (hypergolic*0.003*0.7) \
+                                 + (solid*0.005*0.7) + (cryogenic*0.001*0.7) \
+                                 + (hypergolic*0.001*0.7) + (solid*0.15*0.7)
+
+    emission_dict['particulate_matter'] = (solid*0.005*0.22) + (cryogenic*0.001*0.22) \
+                                          + (hypergolic*0.001*0.22) + (solid*0.33*1) \
+                                          + (hypergolic*0.001*1)
+
+    emission_dict['photo_oxidation'] = (solid*0.162*0.0456) + (hypergolic*0.378*0.0456) \
+                                       + (solid*0.005*1) + (cryogenic*0.001*1) \
+                                       + (hypergolic*0.001*1)
+
+    return emission_dict
+
+
+def calc_per_sat_emission(name, fuel_mass, fuel_mass_1, fuel_mass_2, fuel_mass_3):
+    """
+    calculate the emissions of the 6 compounds for each of the satellites
+    of the three constellations based on the rocket vehicle used.
+
+    Parameters
+    ----------
+    name: string
+        Name of the constellation.
+    fuel_mass: int
+        mass of kerosene used by the rockets in kilograms.
+    fuel_mass_1: int
+        mass of hypergolic fuel used by the rockets in kilograms.
+    fuel_mass_2: int
+        mass of solid fuel used by the rockets in kilogram.
+    fuel_mass_3: int
+        mass of cryogenic fuel used by the rockets in kilogram.
+
+    Returns
+    -------
+    al, sul, cb, cfc, pm, phc: dict.
+    """
+
+    if name == 'Starlink':
+        emission_dict = falcon_9(fuel_mass)  # Emission per satellite
+
+    elif name == 'Kuiper':
+        fm_hyp, fm_sod, fm_cry = fuel_mass_1, fuel_mass_2, fuel_mass_3
+        emission_dict = ariane(fm_hyp, fm_sod, fm_cry)
+
+    elif name == 'OneWeb':
+        fm_hyp, fm_ker = fuel_mass_1, fuel_mass_2
+        emission_dict = soyuz_fg(fm_hyp, fm_ker)
+
+    else:
+        print('Invalid Constellation name')
+
+    return emission_dict

@@ -26,11 +26,17 @@ results = []
 for item in uq_dict:
     constellation = item["constellation"]
 
+    random_variations = gb.generate_log_normal_dist_value(
+        item['dl_frequency_Hz'],
+        item['mu'],
+        item['sigma'],
+        item['seed_value'],
+        item['iterations'])
+
     distance, satellite_coverage_area_km = gb.calc_geographic_metrics(
                                            item["number_of_satellites"], item)
 
-    path_loss = (20*math.log10(distance) 
-                + 20*math.log10(item["dl_frequency_Hz"]/1e9)) + 92.45
+    path_loss = 20*math.log10(distance) + 20*math.log10(item['dl_frequency_Hz']/1e9) + 92.45
 
     losses = gb.calc_losses(item["earth_atmospheric_losses_dB"], 
                      item["all_other_losses_dB"])
@@ -59,6 +65,9 @@ for item in uq_dict:
                    spectral_efficiency, item["number_of_channels"], 
                    item["polarization"])
 
+    emission_dict = gb.calc_per_sat_emission(item["constellation"], item["fuel_mass_kg"],
+                    item["fuel_mass_1_kg"], item["fuel_mass_2_kg"], item["fuel_mass_3_kg"])
+
 
     results.append({"constellation": constellation, 
                     "signal_path": distance,
@@ -70,7 +79,20 @@ for item in uq_dict:
                     "spectral_efficiency": spectral_efficiency,
                     "channel_capacity": channel_capacity,
                     "agg_capacity": agg_capacity,
-                    "sat_capacity": sat_capacity})
+                    "sat_capacity": sat_capacity,
+                    "capacity_per_single_satellite": sat_capacity,
+                    "aluminium_oxide_emissions_t":emission_dict['alumina_emission']/1000,
+                    "sulphur_oxide_emissions_t": emission_dict['sulphur_emission']/1000,
+                    "carbon_oxide_emissions_t": emission_dict['carbon_emission']/1000,
+                    "cfc_gases_emissions_t": emission_dict['cfc_gases']/1000,
+                    "particulate_matter_emissions_t": emission_dict['particulate_matter']/1000,
+                    "photochemical_oxidation_emissions_t": emission_dict['photo_oxidation']/1000,
+                    "total_emissions_t": ((emission_dict['alumina_emission'])
+                                       + (emission_dict['sulphur_emission'])
+                                       + (emission_dict['carbon_emission'])
+                                       + (emission_dict['cfc_gases']) 
+                                       + (emission_dict['particulate_matter'])
+                                       + (emission_dict['photo_oxidation']))/1000})
 
     df = pd.DataFrame.from_dict(results)
     df.to_csv("uq_results.csv")
