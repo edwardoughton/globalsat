@@ -74,7 +74,7 @@ def system_capacity(constellation, number_of_satellites, params, lut):
 
         channel_capacity = calc_capacity(spectral_efficiency, params['dl_bandwidth'])
 
-        agg_capacity = calc_agg_capacity(channel_capacity, params['number_of_channels'], 
+        agg_capacity = calc_agg_capacity(channel_capacity, params['number_of_channels'],
                        params['polarization'])
 
         sat_capacity = single_satellite_capacity(params['dl_bandwidth'],
@@ -557,7 +557,7 @@ def soyuz_fg(hypergolic, kerosene):
         Hypergolic fuel used by the rocket in kilograms.
     kerosene : float
         Kerosene fuel used by the rocket in kilograms.
-    
+
     Returns
     -------
     my_dict : dict
@@ -593,7 +593,7 @@ def falcon_9(kerosene):
     ----------
     kerosene: float
         Kerosene fuel used by the rocket in kilograms.
-    
+
     Returns
     -------
     alumina_emission, sulphur_emission, carbon_emission, cfc,gases,
@@ -603,9 +603,9 @@ def falcon_9(kerosene):
     emission_dict = {}
 
     emission_dict['alumina_emission'] = (kerosene*0.05)
-    
+
     emission_dict['sulphur_emission'] = (kerosene*0.001*0.7)
-    
+
     emission_dict['carbon_emission'] = (kerosene*0.352*1)
 
     emission_dict['cfc_gases'] = (kerosene*0.016*0.7) + (kerosene*0.003*0.7) \
@@ -626,19 +626,19 @@ def falcon_heavy(kerosene):
     ----------
     kerosene: float
         Kerosene fuel used by the rocket in kilograms.
-    
+
     Returns
     -------
     alumina_emission, sulphur_emission, carbon_emission, cfc,gases,
         particulate_matter, photo_oxidation: list.
 
     """
-    emission_dict = {} 
+    emission_dict = {}
 
     emission_dict['alumina_emission'] = kerosene*0.05
-   
+
     emission_dict['sulphur_emission'] = (kerosene*0.001*0.7)
-    
+
     emission_dict['carbon_emission'] = (kerosene*0.352*1)
 
     emission_dict['cfc_gases'] = (kerosene*0.016*0.7) + (kerosene*0.003*0.7) \
@@ -663,7 +663,7 @@ def ariane(hypergolic, solid, cryogenic):
         solid fuel used by the rocket in kilograms.
     cryogenic: float
         cryogenic fuel used by the rocket in kilograms.
-    
+
     Returns
     -------
     alumina_emission, sulphur_emission, carbon_emission, cfc,gases,
@@ -698,7 +698,7 @@ def ariane(hypergolic, solid, cryogenic):
 
 def calc_per_sat_emission(name, fuel_mass, fuel_mass_1, fuel_mass_2, fuel_mass_3):
     """
-    calculate the emissions of the 6 compounds for each of the satellites 
+    calculate the emissions of the 6 compounds for each of the satellites
     of the three constellations based on the rocket vehicle used.
 
     Parameters
@@ -713,7 +713,7 @@ def calc_per_sat_emission(name, fuel_mass, fuel_mass_1, fuel_mass_2, fuel_mass_3
         mass of solid fuel used by the rockets in kilogram.
     fuel_mass_3: int
         mass of cryogenic fuel used by the rockets in kilogram.
-    
+
     Returns
     -------
     al, sul, cb, cfc, pm, phc: dict.
@@ -723,7 +723,7 @@ def calc_per_sat_emission(name, fuel_mass, fuel_mass_1, fuel_mass_2, fuel_mass_3
         emission_dict = falcon_9(fuel_mass)  # Emission per satellite
 
     elif name == 'Kuiper':
-        fm_hyp, fm_sod, fm_cry = fuel_mass_1, fuel_mass_2, fuel_mass_3   
+        fm_hyp, fm_sod, fm_cry = fuel_mass_1, fuel_mass_2, fuel_mass_3
         emission_dict = ariane(fm_hyp, fm_sod, fm_cry)
 
     elif name == 'OneWeb':
@@ -734,29 +734,3 @@ def calc_per_sat_emission(name, fuel_mass, fuel_mass_1, fuel_mass_2, fuel_mass_3
         print('Invalid Constellation name')
 
     return emission_dict
-
-
-def pairwise(iterable):
-    """
-    Return iterable of 2-tuples in a sliding window.
-
-    Parameters
-    ----------
-    iterable: list
-        Sliding window
-
-    Returns
-    -------
-    list of tuple
-        Iterable of 2-tuples
-
-    Example
-    -------
-    >>> list(pairwise([1,2,3,4]))
-        [(1,2),(2,3),(3,4)]
-
-    """
-    a, b = tee(iterable)
-    next(b, None)
-
-    return zip(a, b)
