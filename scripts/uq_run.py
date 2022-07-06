@@ -26,6 +26,8 @@ results = []
 for item in uq_dict:
     constellation = item["constellation"]
 
+    number_of_satellites = item["number_of_satellites"]
+
     random_variations = gb.generate_log_normal_dist_value(
         item['dl_frequency_Hz'],
         item['mu'],
@@ -68,8 +70,13 @@ for item in uq_dict:
     emission_dict = gb.calc_per_sat_emission(item["constellation"], item["fuel_mass_kg"],
                     item["fuel_mass_1_kg"], item["fuel_mass_2_kg"], item["fuel_mass_3_kg"])
 
-    sat_density_per_area = satellite_coverage_area_km               
-
+    total_cost_ownership = cost_model(item["satellite_launch_cost"], item["ground_station_cost"], 
+                           item["spectrum_cost"], item["regulation_fees"], 
+                           item["digital_infrastructure_cost"], item["ground_station_energy"], 
+                           item["subscriber_acquisition"], item["staff_costs"], 
+                           item["research_development"], item["maintenance"], 
+                           item["discount_rate"], item["assessment_period_year"])             
+    cost_per_capacity = total_cost_ownership / sat_capacity* number_of_satellites
 
     results.append({"constellation": constellation, 
                     "signal_path": distance,
@@ -77,12 +84,17 @@ for item in uq_dict:
                     "path_loss": path_loss,
                     "losses": losses,
                     "antenna_gain": antenna_gain,
+                    "eirp_dB": eirp,
+                    "noise": noise,
+                    "received_power_dB": received_power,
                     "cnr": cnr,
                     "spectral_efficiency": spectral_efficiency,
                     "channel_capacity": channel_capacity,
                     "agg_capacity": agg_capacity,
-                    "sat_capacity": sat_capacity,
                     "capacity_per_single_satellite": sat_capacity,
+                    "capacity_per_area_mbps/sqkm": agg_capacity/item["coverage_area_per_sat_sqkm"],
+                    "total_cost_ownership": total_cost_ownership,
+                    "cost_per_capacity": cost_per_capacity,
                     "aluminium_oxide_emissions_t":emission_dict['alumina_emission']/1000,
                     "sulphur_oxide_emissions_t": emission_dict['sulphur_emission']/1000,
                     "carbon_oxide_emissions_t": emission_dict['carbon_emission']/1000,
