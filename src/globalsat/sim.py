@@ -458,7 +458,8 @@ def single_satellite_capacity(dl_bandwidth, spectral_efficiency,
     dl_bandwidth :
         Bandwidth in MHz.
     spectral_efficiency :
-        Spectral efficiency 64QAM equivalent to 5.1152, assuming every constellation uses 64QAM
+        Spectral efficiency 64QAM equivalent to 5.1152,
+        assuming every constellation uses 64QAM
     number_of_channels :
         ...
     number_of_channels :
@@ -470,9 +471,15 @@ def single_satellite_capacity(dl_bandwidth, spectral_efficiency,
         Satellite capacity.
 
     """
-    sat_capacity = (dl_bandwidth/1000000)*spectral_efficiency*number_of_channels*polarization
+    sat_capacity = (
+        (dl_bandwidth/1000000) *
+        spectral_efficiency *
+        number_of_channels *
+        polarization
+    )
 
     return sat_capacity
+
 
 def calc_agg_capacity(channel_capacity, number_of_channels, polarization):
     """
@@ -495,31 +502,6 @@ def calc_agg_capacity(channel_capacity, number_of_channels, polarization):
 
     return agg_capacity
 
-
-def single_satellite_capacity(dl_bandwidth, spectral_efficiency, number_of_channels,polarization):
-    """
-    Calculate the capacity by each satellite
-
-    Parameters
-    ----------
-    dl_bandwidth : float
-        Bandwidth in MHz.
-    spectra_efficiency : float
-        Spectral efficiency 64QAM equivalent to 5.1152.
-    number_of_channels : int
-        Number of channels for each constellation.
-    polarization : int
-        Number of polarizations.
-
-    Returns
-    -------
-    sat_capacity : float
-        Capacity of a single satellite.
-
-    """
-    sat_capacity = (dl_bandwidth/1000000)*spectral_efficiency*number_of_channels*polarization
-
-    return sat_capacity
 
 def pairwise(iterable):
     """
@@ -545,6 +527,46 @@ def pairwise(iterable):
     next(b, None)
 
     return zip(a, b)
+
+
+def calc_per_sat_emission(name, fuel_mass, fuel_mass_1, fuel_mass_2, fuel_mass_3):
+    """
+    calculate the emissions of the 6 compounds for each of the satellites
+    of the three constellations based on the rocket vehicle used.
+
+    Parameters
+    ----------
+    name: string
+        Name of the constellation.
+    fuel_mass: int
+        mass of kerosene used by the rockets in kilograms.
+    fuel_mass_1: int
+        mass of hypergolic fuel used by the rockets in kilograms.
+    fuel_mass_2: int
+        mass of solid fuel used by the rockets in kilogram.
+    fuel_mass_3: int
+        mass of cryogenic fuel used by the rockets in kilogram.
+
+    Returns
+    -------
+    al, sul, cb, cfc, pm, phc: dict.
+    """
+
+    if name == 'Starlink':
+        emission_dict = falcon_9(fuel_mass)  # Emission per satellite
+
+    elif name == 'Kuiper':
+        fm_hyp, fm_sod, fm_cry = fuel_mass_1, fuel_mass_2, fuel_mass_3
+        emission_dict = ariane(fm_hyp, fm_sod, fm_cry)
+
+    elif name == 'OneWeb':
+        fm_hyp, fm_ker = fuel_mass_1, fuel_mass_2
+        emission_dict = soyuz_fg(fm_hyp, fm_ker)
+
+    else:
+        print('Invalid Constellation name')
+
+    return emission_dict
 
 
 def soyuz_fg(hypergolic, kerosene):
@@ -692,45 +714,5 @@ def ariane(hypergolic, solid, cryogenic):
     emission_dict['photo_oxidation'] = (solid*0.162*0.0456) + (hypergolic*0.378*0.0456) \
                                        + (solid*0.005*1) + (cryogenic*0.001*1) \
                                        + (hypergolic*0.001*1)
-
-    return emission_dict
-
-
-def calc_per_sat_emission(name, fuel_mass, fuel_mass_1, fuel_mass_2, fuel_mass_3):
-    """
-    calculate the emissions of the 6 compounds for each of the satellites
-    of the three constellations based on the rocket vehicle used.
-
-    Parameters
-    ----------
-    name: string
-        Name of the constellation.
-    fuel_mass: int
-        mass of kerosene used by the rockets in kilograms.
-    fuel_mass_1: int
-        mass of hypergolic fuel used by the rockets in kilograms.
-    fuel_mass_2: int
-        mass of solid fuel used by the rockets in kilogram.
-    fuel_mass_3: int
-        mass of cryogenic fuel used by the rockets in kilogram.
-
-    Returns
-    -------
-    al, sul, cb, cfc, pm, phc: dict.
-    """
-
-    if name == 'Starlink':
-        emission_dict = falcon_9(fuel_mass)  # Emission per satellite
-
-    elif name == 'Kuiper':
-        fm_hyp, fm_sod, fm_cry = fuel_mass_1, fuel_mass_2, fuel_mass_3
-        emission_dict = ariane(fm_hyp, fm_sod, fm_cry)
-
-    elif name == 'OneWeb':
-        fm_hyp, fm_ker = fuel_mass_1, fuel_mass_2
-        emission_dict = soyuz_fg(fm_hyp, fm_ker)
-
-    else:
-        print('Invalid Constellation name')
 
     return emission_dict
