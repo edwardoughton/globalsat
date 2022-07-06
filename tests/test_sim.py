@@ -287,16 +287,17 @@ def test_emission_per_sat():
     Unit test for calculating emission for every satellite.
     
     """
-    name = "Kuiper"
+    names = ["Starlink", "Kuiper", "OneWeb"]
 
-    fuel_mass = 0
+    for name in names:
+        fuel_mass = 0
 
-    fuel_mass_1 = 10000
+        fuel_mass_1 = 10000
 
-    fuel_mass_2 = 480000
+        fuel_mass_2 = 480000
 
-    fuel_mass_3 = 184900
+        fuel_mass_3 = 184900
 
-    sat_emissions = calc_per_sat_emission(name, fuel_mass, fuel_mass_1, fuel_mass_2, fuel_mass_3)
+        sat_emissions = calc_per_sat_emission(name, fuel_mass, fuel_mass_1, fuel_mass_2, fuel_mass_3)
 
     return sat_emissions   #'alumina_emission': 158410.0 for Kuiper.

@@ -54,6 +54,7 @@ def uq_inputs_generator():
                                   "sigma": sigma,
                                   "number_of_satellites": number_of_satellites,
                                   "total_area_earth_km_sq": total_area_earth_km_sq,
+                                  "coverage_area_per_sat_sqkm": total_area_earth_km_sq/number_of_satellites,
                                   "altitude_km": altitude_km,
                                   "dl_frequency_Hz": dl_frequency_Hz,
                                   "dl_bandwidth_Hz": dl_bandwidth_Hz,
