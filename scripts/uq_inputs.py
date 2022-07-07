@@ -7,7 +7,7 @@ def uq_inputs_generator():
     path = "/Users/osoro/Codebase/globalsat/data/"
     uq_parameters = []
 
-    N = 5 #Number of datapoints to generate
+    N = 1000 #Number of datapoints to generate
 
     for number in range(N):
         for key, item in parameters.items():
