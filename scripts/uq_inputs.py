@@ -34,16 +34,16 @@ def uq_inputs_generator():
             fuel_mass_1_kg = item["fuel_mass_1"]
             fuel_mass_2_kg = item["fuel_mass_2"]
             fuel_mass_3_kg = item["fuel_mass_3"]
-            satellite_launch_cost = item["satellite_launch_cost"]
-            ground_station_cost = item["ground_station_cost"]
-            spectrum_cost = item["spectrum_cost"]
-            regulation_fees = item["regulation_fees"]
-            digital_infrastructure_cost = item["digital_infrastructure_cost"]
-            ground_station_energy = item["ground_station_energy"]
-            subscriber_acquisition = item["subscriber_acquisition"]
-            staff_costs = item["staff_costs"]
-            research_development = item["research_development"]
-            maintenance = item["maintenance"]
+            satellite_launch_cost = gauss(item["satellite_launch_cost"], 10000000)
+            ground_station_cost = gauss(item["ground_station_cost"], 5000000)
+            spectrum_cost = gauss(item["spectrum_cost"], 20000000)
+            regulation_fees = gauss(item["regulation_fees"], 2000000)
+            digital_infrastructure_cost = gauss(item["digital_infrastructure_cost"], 1000000)
+            ground_station_energy = gauss(item["ground_station_energy"], 1000000)
+            subscriber_acquisition = gauss(item["subscriber_acquisition"], 10000000)
+            staff_costs = gauss(item["staff_costs"], 10000000)
+            research_development = gauss(item["research_development"], 1000000)
+            maintenance = gauss(item["maintenance"], 1000000)
             discount_rate = item["discount_rate"]
             assessment_period_year = item["assessment_period"]
 
@@ -54,6 +54,7 @@ def uq_inputs_generator():
                                   "sigma": sigma,
                                   "number_of_satellites": number_of_satellites,
                                   "total_area_earth_km_sq": total_area_earth_km_sq,
+                                  "coverage_area_per_sat_sqkm": total_area_earth_km_sq/number_of_satellites,
                                   "altitude_km": altitude_km,
                                   "dl_frequency_Hz": dl_frequency_Hz,
                                   "dl_bandwidth_Hz": dl_bandwidth_Hz,

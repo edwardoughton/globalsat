@@ -226,7 +226,7 @@ def test_single_satellite_capacity():
     capacity = single_satellite_capacity(dl_bandwidth_Hz, spectral_efficiency,
                number_of_channels, polarizations)
 
-    return capacity == 20460.8
+    assert capacity == 20460.8
 
 
 def test_soyuz_fg():
@@ -237,66 +237,107 @@ def test_soyuz_fg():
     hypergolic = 218150
     kerosene = 7360
 
-    emission = soyuz_fg(hypergolic, kerosene) 
-
-    return emission                         #alumina_emission': 586.15       
-
-
-def test_falcon_heavy():
-    """
-    Unit test for calculating falcon heavy emission.
-    
-    """
-    kerosene = 1397000
-
-    emissions = falcon_heavy(kerosene) 
-
-    return emissions                 #'alumina_emission': 69850
+    emission = soyuz_fg(hypergolic, kerosene)
+    assert emission['alumina_emission'] == 586.15   
+    assert emission["sulphur_emission"] == 157.857
+    assert emission["carbon_emission"] == 57564.520000000004
+    assert emission["cfc_gases"] == 3157.1399999999994
+    assert emission["particulate_matter"] == 635.7622
+    assert emission["photo_oxidation"] == 4162.923167999999                         
 
 
 def test_falcon_9():
     """
-    Unit test for calculating falcon 9 emissions.
-    
+    Unit test for calculating falcon heavy emission.
+
     """
     kerosene = 488370
 
-    emissions = falcon_9(kerosene) 
+    emission = falcon_9(kerosene)
 
-    return emissions           #'alumina_emission': 24418.5
+    assert emission['alumina_emission'] == 24418.5                  
+    assert emission["sulphur_emission"] == 341.859
+    assert emission["carbon_emission"] == 171906.24
+    assert emission["cfc_gases"] == 6837.18
+    assert emission["particulate_matter"] == 24525.9414
+    assert emission["photo_oxidation"] == 12246.756816000003
+
+
+def test_falcon_heavy():
+    """
+    Unit test for calculating falcon 9 emissions.
+
+    """
+    kerosene = 1397000
+
+    emission = falcon_heavy(kerosene)
+
+    assert emission['alumina_emission'] == 69850.0          
+    assert emission["sulphur_emission"] == 977.9
+    assert emission["carbon_emission"] == 491744.0
+    assert emission["cfc_gases"] == 19558.0
+    assert emission["particulate_matter"] == 70157.34
+    assert emission["photo_oxidation"] == 35032.289600000004
 
 
 def test_ariane():
     """
     Unit test for calculating ariane 5 emissions.
-    
-    """  
+
+    """
     hypergolic = 10000
-
     solid = 480000
-
     cryogenic = 184900
 
-    emissions = ariane(hypergolic, solid, cryogenic)
+    emission = ariane(hypergolic, solid, cryogenic)
 
-    return emissions               #'alumina_emission': 158410.0
+    assert emission['alumina_emission'] == 158410.0               
+    assert emission["sulphur_emission"] == 65176.43
+    assert emission["carbon_emission"] == 54360.0
+    assert emission["cfc_gases"] == 86728.6
+    assert emission["particulate_matter"] == 158980.878
+    assert emission["photo_oxidation"] == 6313.124
 
 
 def test_emission_per_sat():
     """
     Unit test for calculating emission for every satellite.
-    
+
     """
-    name = "Kuiper"
+
+    fuel_mass = 488370
+    fuel_mass_1 = 0
+    fuel_mass_2 = 0
+    fuel_mass_3 = 0
+    sat_emissions = calc_per_sat_emission("Starlink", fuel_mass, fuel_mass_1, fuel_mass_2, fuel_mass_3)
+    assert sat_emissions['alumina_emission'] == 24418.5   #'alumina_emission': 158410.0 for Kuiper.
+    assert sat_emissions["sulphur_emission"] == 341.859
+    assert sat_emissions["carbon_emission"] == 171906.24
+    assert sat_emissions["cfc_gases"] == 6837.18
+    assert sat_emissions["particulate_matter"] == 24525.9414
+    assert sat_emissions["photo_oxidation"] == 12246.756816000003
+    
+    fuel_mass = 218150
+    fuel_mass_1 = 7360
+    fuel_mass_2 = 0
+    fuel_mass_3 = 0
+
+    sat_emissions = calc_per_sat_emission("OneWeb", fuel_mass, fuel_mass_1, fuel_mass_2, fuel_mass_3)
+    assert sat_emissions['alumina_emission'] == 7.36 
+    assert sat_emissions["sulphur_emission"] == 5.152
+    assert sat_emissions["carbon_emission"] == 1854.72
+    assert sat_emissions["cfc_gases"] == 103.04
+    assert sat_emissions["particulate_matter"] == 8.9792
+    assert sat_emissions["photo_oxidation"] == 134.222848
 
     fuel_mass = 0
-
     fuel_mass_1 = 10000
-
     fuel_mass_2 = 480000
-
     fuel_mass_3 = 184900
-
-    sat_emissions = calc_per_sat_emission(name, fuel_mass, fuel_mass_1, fuel_mass_2, fuel_mass_3)
-
-    return sat_emissions   #'alumina_emission': 158410.0 for Kuiper.
+    sat_emissions = calc_per_sat_emission("Kuiper", fuel_mass, fuel_mass_1, fuel_mass_2, fuel_mass_3)
+    assert sat_emissions['alumina_emission'] == 158410.0 
+    assert sat_emissions["sulphur_emission"] == 65176.43
+    assert sat_emissions["carbon_emission"] == 54360.0
+    assert sat_emissions["cfc_gases"] == 86728.6
+    assert sat_emissions["particulate_matter"] == 158980.878
+    assert sat_emissions["photo_oxidation"] == 6313.124
