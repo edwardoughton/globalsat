@@ -19,9 +19,11 @@ from cost import cost_model
 
 #Import the data.
 
-df = pd.read_csv("uq_parameters.csv")
+data_path = "/Users/osoro/Codebase/globalsat/data/"
+df = pd.read_csv(data_path + "uq_parameters.csv")
 uq_dict = df.to_dict('records') #Convert the csv to list
 
+path = "/Users/osoro/Codebase/globalsat/results/"
 results = []
 for item in uq_dict:
     constellation = item["constellation"]
@@ -109,4 +111,4 @@ for item in uq_dict:
                                        + (emission_dict['photo_oxidation']))/1000})
 
     df = pd.DataFrame.from_dict(results)
-    df.to_csv("uq_results.csv")
+    df.to_csv(path + "uq_results.csv")

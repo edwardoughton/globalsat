@@ -4,7 +4,7 @@ from random import gauss
 from inputs import parameters, lut
 
 def uq_inputs_generator():
-
+    path = "/Users/osoro/Codebase/globalsat/data/"
     uq_parameters = []
 
     N = 5 #Number of datapoints to generate
@@ -85,7 +85,7 @@ def uq_inputs_generator():
                                   "assessment_period_year": assessment_period_year})
     
     df = pd.DataFrame.from_dict(uq_parameters)
-    df.to_csv("uq_parameters.csv")
+    df.to_csv(path + "uq_parameters.csv")
             
     return df.shape
 uq_inputs_generator()
