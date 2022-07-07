@@ -7,7 +7,7 @@ def uq_inputs_generator():
 
     uq_parameters = []
 
-    N = 1000 #Number of datapoints to generate
+    N = 5 #Number of datapoints to generate
 
     for number in range(N):
         for key, item in parameters.items():
