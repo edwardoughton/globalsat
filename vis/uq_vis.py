@@ -7,12 +7,12 @@ results = "/Users/osoro/Codebase/globalsat/vis/"
 
 df = pd.read_csv(data + "uq_results.csv")
 
-#Select the required columns.
+# Select the required columns.
 df = df[["constellation", "signal_path", "satellite_coverage_area_km", 
          "path_loss", "losses", "antenna_gain", "eirp_dB", "received_power_dB", 
          "cnr", "spectral_efficiency","agg_capacity", "capacity_per_area_mbps/sqkm"]]
 
-#Rename columns.
+# Rename columns.
 df.columns = ["Constellation", "Signal path(km)","Satellite coverage area(km)", 
               "Path Loss(dB)", "Losses(dB)", "Antenna gain(dB)",
               "EIRP (dB)", "Received power(dB)", "CNR(dB)", 

@@ -80,6 +80,18 @@ for item in uq_dict:
                            item["discount_rate"], item["assessment_period_year"])             
     cost_per_capacity = total_cost_ownership / sat_capacity* number_of_satellites
 
+    aluminium_oxide_emissions = emission_dict['alumina_emission']
+    sulphur_oxide_emissions = emission_dict['sulphur_emission']
+    carbon_oxide_emissions = emission_dict['carbon_emission']
+    cfc_gases_emissions = emission_dict['cfc_gases']
+    particulate_matter_emissions = emission_dict['particulate_matter']
+    photochemical_oxidation_emissions = emission_dict['photo_oxidation']
+    total_emissions = aluminium_oxide_emissions + sulphur_oxide_emissions \
+                      + carbon_oxide_emissions + cfc_gases_emissions \
+                      + particulate_matter_emissions \
+                      + photochemical_oxidation_emissions
+
+
     results.append({"constellation": constellation, 
                     "signal_path": distance,
                     "satellite_coverage_area_km": satellite_coverage_area_km,
@@ -97,18 +109,13 @@ for item in uq_dict:
                     "capacity_per_area_mbps/sqkm": agg_capacity/item["coverage_area_per_sat_sqkm"],
                     "total_cost_ownership": total_cost_ownership,
                     "cost_per_capacity": cost_per_capacity,
-                    "aluminium_oxide_emissions_t":emission_dict['alumina_emission']/1000,
-                    "sulphur_oxide_emissions_t": emission_dict['sulphur_emission']/1000,
-                    "carbon_oxide_emissions_t": emission_dict['carbon_emission']/1000,
-                    "cfc_gases_emissions_t": emission_dict['cfc_gases']/1000,
-                    "particulate_matter_emissions_t": emission_dict['particulate_matter']/1000,
-                    "photochemical_oxidation_emissions_t": emission_dict['photo_oxidation']/1000,
-                    "total_emissions_t": ((emission_dict['alumina_emission'])
-                                       + (emission_dict['sulphur_emission'])
-                                       + (emission_dict['carbon_emission'])
-                                       + (emission_dict['cfc_gases']) 
-                                       + (emission_dict['particulate_matter'])
-                                       + (emission_dict['photo_oxidation']))/1000})
+                    "aluminium_oxide_emissions": aluminium_oxide_emissions,
+                    "sulphur_oxide_emissions": sulphur_oxide_emissions,
+                    "carbon_oxide_emissions": carbon_oxide_emissions,
+                    "cfc_gases_emissions": cfc_gases_emissions,
+                    "particulate_matter_emissions": particulate_matter_emissions,
+                    "photochemical_oxidation_emissions": photochemical_oxidation_emissions,
+                    "total_emissions_t": total_emissions})
 
     df = pd.DataFrame.from_dict(results)
     df.to_csv(path + "uq_results.csv")
