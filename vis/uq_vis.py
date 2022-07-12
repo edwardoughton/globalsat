@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 import seaborn as sns 
 import matplotlib.pyplot as plt
 
@@ -22,8 +23,9 @@ df.columns = ["Constellation", "Signal path(km)","Satellite coverage area(km)",
 # Plot the Heatmap. 
 plt.figure(figsize=(20,15))
 corr = df.corr()
+matrix = np.triu(corr)
 sns.set(font_scale=2)
-sns.heatmap(corr,annot=True, annot_kws={"size": 16}, cmap="GnBu")
+sns.heatmap(corr,annot=True, mask=matrix, annot_kws={"size": 16}, cmap="GnBu")
 plt.title("Aggregate Capacity Heatmap", fontsize = 25, fontfamily = "Helvetica")
 plt.tight_layout()
 plt.savefig(results + "aggregate_heatmap.jpg", dpi = 480)
@@ -34,9 +36,9 @@ x_axis = ["Constellation", "Signal path(km)", "Path Loss(dB)",
           "Received power(dB)", "CNR(dB)"]
 
 for ax in x_axis:
-    plt.figure(figsize=(5,5))
+    plt.figure(figsize=(20,15))
     sns.set(font_scale=2)
     sns.jointplot(x = ax, y = "Aggregate Capacity(Mbps)", 
-                  kind = "scatter", data = df, height = 5, cmap="GnBu")
+                  kind = "scatter", data = df, cmap="GnBu")
     plt.tight_layout()
     plt.savefig(results + str(ax) + ".jpg", dpi = 480)
