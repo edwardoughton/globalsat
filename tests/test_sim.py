@@ -154,6 +154,7 @@ def test_calc_received_power():
     path_loss = 136 # dB
     receiver_gain = 37 # dummy values
     losses = 10.57
+    #calc_received_power = eirp+path_loss+receiver_gain+losses
 
     assert round(calc_received_power(eirp, path_loss, receiver_gain, losses)) == -42
 
@@ -197,6 +198,7 @@ def test_calc_capacity():
     """
     spectral_efficiency = 1 # bits per Hertz
     dl_bandwidth = 1e6 # Hertz
+    #calc_capacity = spectral_efficiency*dl_bandwidth/1e6
 
     assert calc_capacity(spectral_efficiency, dl_bandwidth) == 1 #mbps
 
@@ -209,6 +211,7 @@ def test_calc_agg_capacity():
     channel_capacity = 100
     number_of_channels = 1
     polarization = 2
+    #calc_agg_capacity = channel_capacity*number_of_channels*polarization
 
     assert calc_agg_capacity(channel_capacity, number_of_channels, polarization) == 200 #mbps
 
@@ -222,6 +225,7 @@ def test_single_satellite_capacity():
     spectral_efficiency = 5.1152
     number_of_channels = 8
     polarizations = 2
+    #capacity = (dl_bandwidth_Hz/1000000)*spectral_efficiency*number_of_channels*polarizations
 
     capacity = single_satellite_capacity(dl_bandwidth_Hz, spectral_efficiency,
                number_of_channels, polarizations)
@@ -236,6 +240,16 @@ def test_soyuz_fg():
     """
     hypergolic = 218150
     kerosene = 7360
+    #emission['alumina_emission'] = (hypergolic*1*0.001) + (kerosene*1*0.05)
+    # emission["sulphur_emission"] = (hypergolic*0.7*0.001) + (kerosene*0.7*0.001)
+    # emission["carbon_emission"] = (hypergolic*0.252*1) + (kerosene*0.352*1)
+    # emission["cfc_gases"] = (hypergolic*0.016*0.7) + (kerosene*0.016*0.7) 
+                            #  + (hypergolic*0.003*0.7) + (kerosene*0.003*0.7) 
+                            # + (hypergolic*0.001*0.7) + (kerosene*0.001*0.7)
+    # emission["particulate_matter"] = (hypergolic*0.001*0.22) + (kerosene *0.001*0.22) 
+                                    # + (hypergolic*0.001*1) + (kerosene*0.05*1)
+    # emission["photo_oxidation"] = (hypergolic*0.378*0.0456) + (kerosene *0.528*0.0456) 
+                                # + (hypergolic*0.001*1) + (kerosene*0.001*1)
 
     emission = soyuz_fg(hypergolic, kerosene)
     assert emission['alumina_emission'] == 586.15   
@@ -252,9 +266,15 @@ def test_falcon_9():
 
     """
     kerosene = 488370
+    #emission['alumina_emission'] = (kerosene*0.05)
+    # emission["sulphur_emission"] = (kerosene*0.001*0.7)
+    # emission["carbon_emission"] = (kerosene*0.352*1)
+    # emission["cfc_gases"] = (kerosene*0.016*0.7) + (kerosene*0.003*0.7) 
+                              #+ (kerosene*0.001*0.7)
+    # emission["particulate_matter"] = (kerosene*0.001*0.22) + (kerosene*0.05*1)
+    # emission["photo_oxidation"] = (kerosene*0.0456*0.528) + (kerosene*0.001*1)
 
     emission = falcon_9(kerosene)
-
     assert emission['alumina_emission'] == 24418.5                  
     assert emission["sulphur_emission"] == 341.859
     assert emission["carbon_emission"] == 171906.24
@@ -269,9 +289,15 @@ def test_falcon_heavy():
 
     """
     kerosene = 1397000
+    #emission['alumina_emission'] = (kerosene*0.05)
+    # emission["sulphur_emission"] = (kerosene*0.001*0.7)
+    # emission["carbon_emission"] = (kerosene*0.352*1)
+    # emission["cfc_gases"] = (kerosene*0.016*0.7) + (kerosene*0.003*0.7) 
+                              #+ (kerosene*0.001*0.7)
+    # emission["particulate_matter"] = (kerosene*0.001*0.22) + (kerosene*0.05*1)
+    # emission["photo_oxidation"] = (kerosene*0.0456*0.528) + (kerosene*0.001*1)
 
     emission = falcon_heavy(kerosene)
-
     assert emission['alumina_emission'] == 69850.0          
     assert emission["sulphur_emission"] == 977.9
     assert emission["carbon_emission"] == 491744.0
@@ -288,9 +314,23 @@ def test_ariane():
     hypergolic = 10000
     solid = 480000
     cryogenic = 184900
+    #emission['alumina_emission'] = (solid*0.33*1) + (hypergolic*0.001*1)
+    # emission["sulphur_emission"] = (solid*0.005*0.7) + (cryogenic*0.001*0.7) 
+                                    # + (hypergolic*0.001*0.7)+(solid*0.15*0.88)
+    # emission["carbon_emission"] = (solid*0.108*1) + (hypergolic*0.252)
+    # emission["cfc_gases"] = (solid*0.08*0.7) + (cryogenic*0.016*0.7) 
+                            #  + (hypergolic*0.016*0.7) + (solid*0.015*0.7) 
+                            #  + (cryogenic*0.003*0.7) + (hypergolic*0.003*0.7) 
+                            #  + (solid*0.005*0.7) + (cryogenic*0.001*0.7) 
+                            #  + (hypergolic*0.001*0.7) + (solid*0.15*0.7)
+    # emission["particulate_matter"] = (solid*0.005*0.22) + (cryogenic*0.001*0.22) 
+                                    #   + (hypergolic*0.001*0.22) + (solid*0.33*1) 
+                                    #   + (hypergolic*0.001*1)
+    # emission["photo_oxidation"] = (solid*0.162*0.0456) + (hypergolic*0.378*0.0456) 
+                                #    + (solid*0.005*1) + (cryogenic*0.001*1) 
+                                #    + (hypergolic*0.001*1)
 
     emission = ariane(hypergolic, solid, cryogenic)
-
     assert emission['alumina_emission'] == 158410.0               
     assert emission["sulphur_emission"] == 65176.43
     assert emission["carbon_emission"] == 54360.0
@@ -309,6 +349,14 @@ def test_emission_per_sat():
     fuel_mass_1 = 0
     fuel_mass_2 = 0
     fuel_mass_3 = 0
+    #emission['alumina_emission'] = (kerosene*0.05)
+    # emission["sulphur_emission"] = (kerosene*0.001*0.7)
+    # emission["carbon_emission"] = (kerosene*0.352*1)
+    # emission["cfc_gases"] = (kerosene*0.016*0.7) + (kerosene*0.003*0.7) 
+                              #+ (kerosene*0.001*0.7)
+    # emission["particulate_matter"] = (kerosene*0.001*0.22) + (kerosene*0.05*1)
+    # emission["photo_oxidation"] = (kerosene*0.0456*0.528) + (kerosene*0.001*1)
+
     sat_emissions = calc_per_sat_emission("Starlink", fuel_mass, fuel_mass_1, fuel_mass_2, fuel_mass_3)
     assert sat_emissions['alumina_emission'] == 24418.5   #'alumina_emission': 158410.0 for Kuiper.
     assert sat_emissions["sulphur_emission"] == 341.859
@@ -321,6 +369,16 @@ def test_emission_per_sat():
     fuel_mass_1 = 7360
     fuel_mass_2 = 0
     fuel_mass_3 = 0
+    #emission['alumina_emission'] = (hypergolic*1*0.001) + (kerosene*1*0.05)
+    # emission["sulphur_emission"] = (hypergolic*0.7*0.001) + (kerosene*0.7*0.001)
+    # emission["carbon_emission"] = (hypergolic*0.252*1) + (kerosene*0.352*1)
+    # emission["cfc_gases"] = (hypergolic*0.016*0.7) + (kerosene*0.016*0.7) 
+                            #  + (hypergolic*0.003*0.7) + (kerosene*0.003*0.7) 
+                            # + (hypergolic*0.001*0.7) + (kerosene*0.001*0.7)
+    # emission["particulate_matter"] = (hypergolic*0.001*0.22) + (kerosene *0.001*0.22) 
+                                    # + (hypergolic*0.001*1) + (kerosene*0.05*1)
+    # emission["photo_oxidation"] = (hypergolic*0.378*0.0456) + (kerosene *0.528*0.0456) 
+                                # + (hypergolic*0.001*1) + (kerosene*0.001*1)
 
     sat_emissions = calc_per_sat_emission("OneWeb", fuel_mass, fuel_mass_1, fuel_mass_2, fuel_mass_3)
     assert sat_emissions['alumina_emission'] == 7.36 
@@ -334,6 +392,22 @@ def test_emission_per_sat():
     fuel_mass_1 = 10000
     fuel_mass_2 = 480000
     fuel_mass_3 = 184900
+    #emission['alumina_emission'] = (solid*0.33*1) + (hypergolic*0.001*1)
+    # emission["sulphur_emission"] = (solid*0.005*0.7) + (cryogenic*0.001*0.7) 
+                                    # + (hypergolic*0.001*0.7)+(solid*0.15*0.88)
+    # emission["carbon_emission"] = (solid*0.108*1) + (hypergolic*0.252)
+    # emission["cfc_gases"] = (solid*0.08*0.7) + (cryogenic*0.016*0.7) 
+                            #  + (hypergolic*0.016*0.7) + (solid*0.015*0.7) 
+                            #  + (cryogenic*0.003*0.7) + (hypergolic*0.003*0.7) 
+                            #  + (solid*0.005*0.7) + (cryogenic*0.001*0.7) 
+                            #  + (hypergolic*0.001*0.7) + (solid*0.15*0.7)
+    # emission["particulate_matter"] = (solid*0.005*0.22) + (cryogenic*0.001*0.22) 
+                                    #   + (hypergolic*0.001*0.22) + (solid*0.33*1) 
+                                    #   + (hypergolic*0.001*1)
+    # emission["photo_oxidation"] = (solid*0.162*0.0456) + (hypergolic*0.378*0.0456) 
+                                #    + (solid*0.005*1) + (cryogenic*0.001*1) 
+                                #    + (hypergolic*0.001*1)
+
     sat_emissions = calc_per_sat_emission("Kuiper", fuel_mass, fuel_mass_1, fuel_mass_2, fuel_mass_3)
     assert sat_emissions['alumina_emission'] == 158410.0 
     assert sat_emissions["sulphur_emission"] == 65176.43

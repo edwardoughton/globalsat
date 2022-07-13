@@ -29,6 +29,8 @@ parameters = {
         'number_of_channels': 8, #Number of channels per satellite
         'overbooking_factor': 20, # 1 in 20 users access the network
         'polarization':2,
+        'monthly_traffic_GB': 25,
+        'percent_of_traffic': 15,
         'fuel_mass': 488370,
         'fuel_mass_1': 0,
         'fuel_mass_2': 0,
@@ -67,6 +69,8 @@ parameters = {
         'number_of_channels': 8, #Number of channels per satellite
         'overbooking_factor': 20, # 1 in 20 users access the network
         'polarization': 2,
+        'monthly_traffic_GB': 25,
+        'percent_of_traffic': 15,
         'fuel_mass': 218150,
         'fuel_mass_1': 7360,
         'fuel_mass_2': 0,
@@ -105,6 +109,8 @@ parameters = {
         'number_of_channels': 8, #Number of channels per satellite
         'overbooking_factor': 20, # 1 in 20 users access the network
         'polarization': 2,
+        'monthly_traffic_GB': 25,
+        'percent_of_traffic': 15,
         'fuel_mass': 0,
         'fuel_mass_1':10000,
         'fuel_mass_2': 480000,
