@@ -37,6 +37,9 @@ def uq_inputs_generator():
                                   (item["all_other_losses"] + 0.2))
             number_of_channels = item["number_of_channels"]
             polarization = item["polarization"]
+            monthly_traffic = uniform((item["monthly_traffic_GB"]), 
+                              (item["monthly_traffic_GB"] + 10))
+            traffic_percent = item["percent_of_traffic"]
             fuel_mass_kg = item["fuel_mass"]
             fuel_mass_1_kg = item["fuel_mass_1"]
             fuel_mass_2_kg = item["fuel_mass_2"]
@@ -84,6 +87,8 @@ def uq_inputs_generator():
                                   "all_other_losses_dB": all_other_losses_dB,
                                   "number_of_channels": number_of_channels,
                                   "polarization": polarization,
+                                  "monthly_traffic_GB": monthly_traffic,
+                                  "percent_of_traffic": traffic_percent,
                                   "fuel_mass_kg": fuel_mass_kg,
                                   "fuel_mass_1_kg": fuel_mass_1_kg,
                                   "fuel_mass_2_kg": fuel_mass_2_kg,

@@ -16,6 +16,7 @@ import pandas as pd
 import globalsat.sim as gb
 from inputs import lut
 from cost import cost_model
+from demand import demand_model
 pd.options.mode.chained_assignment = None #Suppress pandas outdate errors.
 
 #Import the data.
@@ -70,6 +71,9 @@ for item in uq_dict:
                    spectral_efficiency, item["number_of_channels"], 
                    item["polarization"])
 
+    demand_density_mbps_sqkm = demand_model(item["monthly_traffic_GB"], 
+                               item["percent_of_traffic"])
+
     emission_dict = gb.calc_per_sat_emission(item["constellation"], item["fuel_mass_kg"],
                     item["fuel_mass_1_kg"], item["fuel_mass_2_kg"], item["fuel_mass_3_kg"])
 
@@ -108,6 +112,7 @@ for item in uq_dict:
                     "agg_capacity": agg_capacity,
                     "capacity_per_single_satellite": sat_capacity,
                     "capacity_per_area_mbps/sqkm": agg_capacity/item["coverage_area_per_sat_sqkm"],
+                    "demand_density_mbps_sqkm": demand_density_mbps_sqkm,
                     "total_cost_ownership": total_cost_ownership,
                     "cost_per_capacity": cost_per_capacity,
                     "aluminium_oxide_emissions": aluminium_oxide_emissions,
